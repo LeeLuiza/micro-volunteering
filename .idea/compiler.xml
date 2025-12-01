@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="micro-volunteering" target="21" />
+      <module name="micro-volunteering.app" target="21" />
+      <module name="micro-volunteering.main" target="21" />
+      <module name="micro-volunteering.test" target="21" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">micro-volunteering</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="enter_password">Введите пароль</string>
+    <string name="enter_full_name">Введите ФИО</string>
+    <string name="password_short">Пароль слишком короткий</string>
+    <string name="email_organization">Email организации</string>
+    <string name="incorrect_phone_number">Некорректный номер телефона</string>
+    <string name="incorrect_age">Возраст должен быть 14+</string>
+    <string name="enter_city">Укажите город</string>
+    <string name="enter_legal_name">Введите юр. наименование</string>
+    <string name="incorrect_INN">Некорректный ИНН</string>
+    <string name="enter_registration_address">Введите адрес регистрации</string>
+    <string name="enter_public_name">Введите публичное название</string>
+    <string name="enter_phone_number">Укажите телефон менеджера</string>
+    <string name="incorrect_email_address">Некорректный Email</string>
+    <string name="error_no_internet">Проверьте подключение к интернету</string>
+    <string name="error_server_message">Ошибка сервера: %d</string>
+    <string name="error_unknown">Неизвестная ошибка</string>
+</resources>
