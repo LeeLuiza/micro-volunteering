@@ -10,4 +10,6 @@ object AuthConstants {
     const val HEADER_BEARER_PREFIX = "Bearer "
 
     const val NO_AUTH_HEADER = "NO_AUTH"
+
+    const val MESSAGE = "message"
 }

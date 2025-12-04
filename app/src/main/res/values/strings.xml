@@ -18,4 +18,6 @@
     <string name="error_no_internet">Проверьте подключение к интернету</string>
     <string name="error_server_message">Ошибка сервера: %d</string>
     <string name="error_unknown">Неизвестная ошибка</string>
+    <string name="error_code">Код ошибки: %d</string>
+    <string name="error_session_expired">Сессия истекла. Пожалуйста, войдите снова</string>
 </resources>

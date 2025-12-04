@@ -19,7 +19,7 @@ object RetrofitModule {
     @Provides
     fun provideOkHttp(tokenManager: TokenManager) : OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(ErrorInterceptor())
+            .addInterceptor(ErrorInterceptor(tokenManager))
             .addInterceptor(AuthInterceptor(tokenManager))
             .build()
     }
