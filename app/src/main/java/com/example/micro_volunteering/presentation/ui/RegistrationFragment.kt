@@ -83,7 +83,8 @@ class RegistrationFragment : Fragment() {
 
         viewModel.navigate.observe(viewLifecycleOwner) { isNavigate ->
             if (isNavigate) {
-                findNavController().navigate(R.id.action_registrationFragment_to_taskListFragment)
+                val action = RegistrationFragmentDirections.actionRegistrationFragmentToTaskListFragment(args.userType)
+                findNavController().navigate(action)
                 viewModel.onNavigationDone()
             }
         }

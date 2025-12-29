@@ -9,4 +9,6 @@ interface VolunteeringRepository {
     ) : User?
     fun authorizationUser(login: String, password: String) : User?
     fun getTasks() : List<Task>
+    fun getTask(id: Int) : Task?
+    fun getTasksOrganization() : List<Task>
 }

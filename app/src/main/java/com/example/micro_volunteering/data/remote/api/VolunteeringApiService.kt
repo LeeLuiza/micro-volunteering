@@ -8,6 +8,8 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface VolunteeringApiService {
 
@@ -21,4 +23,10 @@ interface VolunteeringApiService {
 
     @GET("/tasks")
     fun getTasks() : List<TaskResponse>
+
+    @GET("/tasks/{id}")
+    fun getTasksOrganization(@Path("id") id: Int) : List<TaskResponse>
+
+    @GET("/task")
+    fun getTask(@Query("id") id: Int) : TaskResponse
 }

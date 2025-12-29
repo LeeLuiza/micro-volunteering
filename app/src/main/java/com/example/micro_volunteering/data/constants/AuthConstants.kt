@@ -5,6 +5,7 @@ object AuthConstants {
     const val KEY_REFRESH_TOKEN = "REFRESH_TOKEN"
 
     const val AUTH_PREFERENCES = "auth_preferences"
+    internal const val KEY_USER_ID = "user_id"
 
     const val HEADER_AUTHORIZATION = "Authorization"
     const val HEADER_BEARER_PREFIX = "Bearer "

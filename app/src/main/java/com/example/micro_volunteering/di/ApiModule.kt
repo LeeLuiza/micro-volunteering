@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.example.micro_volunteering.data.local.TokenManager
 import com.example.micro_volunteering.data.constants.AuthConstants.AUTH_PREFERENCES
+import com.example.micro_volunteering.data.local.UserPreferences
 import com.example.micro_volunteering.data.mapper.TaskMapper
 import com.example.micro_volunteering.data.mapper.UserMapper
 import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
@@ -27,8 +28,8 @@ object ApiModule {
     }
 
     @Provides
-    fun provideRepository(api: VolunteeringApiService, tokenManager: TokenManager) : VolunteeringRepository {
-        return VolunteeringRepositoryImpl(api, tokenManager, UserMapper(), TaskMapper())
+    fun provideRepository(api: VolunteeringApiService, tokenManager: TokenManager, userPreferences: UserPreferences) : VolunteeringRepository {
+        return VolunteeringRepositoryImpl(api, tokenManager, userPreferences, UserMapper(), TaskMapper())
     }
 
     @Provides
@@ -44,6 +45,11 @@ object ApiModule {
     @Provides
     fun provideTokenManager(sharedPreferences : SharedPreferences) : TokenManager {
         return TokenManager(sharedPreferences)
+    }
+
+    @Provides
+    fun provideUserPreferences(sharedPreferences : SharedPreferences) : UserPreferences {
+        return UserPreferences(sharedPreferences)
     }
 
     @Provides

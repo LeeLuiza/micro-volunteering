@@ -30,7 +30,7 @@ object RetrofitModule {
             ignoreUnknownKeys = true
         }
         return Retrofit.Builder()
-            .baseUrl("")
+            .baseUrl("http://localhost:8080/")
             .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()

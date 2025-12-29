@@ -74,7 +74,8 @@ class AuthorizationFragment : Fragment() {
 
         viewModel.navigate.observe(viewLifecycleOwner) { isNavigate ->
             if (isNavigate) {
-                findNavController().navigate(R.id.action_authorizationFragment_to_taskListFragment)
+                val action = AuthorizationFragmentDirections.actionAuthorizationFragmentToTaskListFragment(args.userType)
+                findNavController().navigate(action)
                 viewModel.onNavigationDone()
             }
         }

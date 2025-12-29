@@ -1,6 +1,7 @@
 package com.example.micro_volunteering.data.repository
 
 import com.example.micro_volunteering.data.local.TokenManager
+import com.example.micro_volunteering.data.local.UserPreferences
 import com.example.micro_volunteering.data.mapper.TaskMapper
 import com.example.micro_volunteering.data.mapper.UserMapper
 import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
@@ -14,6 +15,7 @@ import javax.inject.Inject
 class VolunteeringRepositoryImpl @Inject constructor(
     private val api: VolunteeringApiService,
     private val tokenManager: TokenManager,
+    private val userPreferences: UserPreferences,
     private val userMapper: UserMapper,
     private val taskMapper: TaskMapper
 ) : VolunteeringRepository {
@@ -23,6 +25,7 @@ class VolunteeringRepositoryImpl @Inject constructor(
         return try {
             val response = api.registration(RegisterRequest(fullName, phone, age, city, password))
             tokenManager.saveTokens(response.accessToken, response.refreshToken)
+            userPreferences.saveUserId(response.user.id.toString())
             userMapper.toDomain(response.user)
         }
         catch (e: Exception) {
@@ -34,6 +37,7 @@ class VolunteeringRepositoryImpl @Inject constructor(
         return try {
             val response = api.authorization(LoginRequest(login, password))
             tokenManager.saveTokens(response.accessToken, response.refreshToken)
+            userPreferences.saveUserId(response.user.id.toString())
             userMapper.toDomain(response.user)
         }
         catch (e: Exception){
@@ -47,7 +51,34 @@ class VolunteeringRepositoryImpl @Inject constructor(
             response.map { it -> taskMapper.toDomain(it) }
         }
         catch (e: Exception) {
-            return emptyList<Task>()
+            emptyList<Task>()
+        }
+    }
+
+    override fun getTask(id: Int): Task? {
+        return try {
+            val response = api.getTask(id)
+            taskMapper.toDomain(response)
+        }
+        catch (e: Exception) {
+            null
+        }
+    }
+
+    override fun getTasksOrganization(): List<Task> {
+        return try {
+            val id = userPreferences.getUserId()?.toInt()
+
+            if (id != null) {
+                val response = api.getTasksOrganization(id)
+                response.map { it -> taskMapper.toDomain(it) }
+            }
+            else {
+                return emptyList<Task>()
+            }
+        }
+        catch (e: Exception) {
+            emptyList<Task>()
         }
     }
 

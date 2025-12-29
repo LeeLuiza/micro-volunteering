@@ -5,4 +5,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TaskResponse(
     val id: Int,
+    val title: String,
+    val description: String,
+    val address: String,
+    val organizationName: String,
+    val category: String,
+    val volunteersNeeded: Int
 )
