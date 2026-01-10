@@ -33,12 +33,10 @@ class AuthorizationViewModel @Inject constructor(
         _isLoading.value = true
 
         viewModelScope.launch {
-            val user = useCase.authorizationUser(login, password)
+            val isSuccess = useCase.authorizationUser(login, password)
             _isLoading.value = false
 
-            if (user != null) {
-                _navigate.value = true
-            }
+            _navigate.value = isSuccess
         }
     }
 

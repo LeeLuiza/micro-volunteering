@@ -7,11 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.micro_volunteering.databinding.FragmentTaskBinding
 import com.example.micro_volunteering.presentation.viewmodel.TaskViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
+@AndroidEntryPoint
 class TaskFragment : Fragment() {
     private lateinit var binding: FragmentTaskBinding
     private val viewModel: TaskViewModel by viewModels()
@@ -32,6 +35,15 @@ class TaskFragment : Fragment() {
 
         observeViewModel()
         loadTasks()
+
+        binding.btnCorrect.setOnClickListener {
+            val currentTask = viewModel.tasks.value
+
+            if (currentTask != null) {
+                val action = TaskFragmentDirections.actionTaskFragmentToUpdateTaskFragment(currentTask)
+                findNavController().navigate(action)
+            }
+        }
     }
 
     private fun observeViewModel() {
@@ -46,6 +58,15 @@ class TaskFragment : Fragment() {
             if (task != null) {
                 binding.progressBar.isVisible = false
                 binding.content.isVisible = true
+
+                binding.title.text = task.title
+                binding.description.text = task.description
+                binding.category.text = task.category
+                binding.countVol.text = task.volunteersNeeded.toString()
+                binding.address.text = task.address
+                binding.date.text = task.date
+                binding.organization.text = task.organizationName
+                binding.btnCorrect.isVisible = viewModel.isUserOrganization()
             }
         }
     }

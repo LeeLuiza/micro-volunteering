@@ -1,16 +1,77 @@
 package com.example.micro_volunteering.data.mapper
 
-import com.example.micro_volunteering.data.remote.dto.response.UserResponse
-import com.example.micro_volunteering.domain.model.User
+import com.example.micro_volunteering.data.remote.dto.request.OrganizationProfileRequest
+import com.example.micro_volunteering.data.remote.dto.request.RegisterOrganizationRequest
+import com.example.micro_volunteering.data.remote.dto.request.RegisterVolunteerRequest
+import com.example.micro_volunteering.data.remote.dto.request.VolunteerProfileRequest
+import com.example.micro_volunteering.data.remote.dto.response.OrganizationProfileResponse
+import com.example.micro_volunteering.data.remote.dto.response.VolunteerProfileResponse
+import com.example.micro_volunteering.domain.model.UpdateProfileParams
+import com.example.micro_volunteering.domain.model.UserProfile
 
 class UserMapper {
 
-    fun toDomain(user: UserResponse) = User(
-        id = user.id,
+    fun toDomainUserInfo(user: VolunteerProfileResponse) = UserProfile.Volunteer(
         name = user.name,
         password = user.password,
         phone = user.phone,
+        email = user.email,
+        age = user.age,
+        city = user.city
+    )
+
+    fun toDomainUserInfo(user: OrganizationProfileResponse) = UserProfile.Organization(
+        legalName = user.legalName,
+        inn = user.inn,
+        legalAddress = user.legalAddress,
+        displayName = user.displayName,
+        managerPhone = user.managerPhone,
+        phoneOrg = user.phoneOrg,
+        email = user.email,
+        city = user.city,
+        isVerified = user.isVerified,
+        password = user.password
+    )
+
+    fun toDtoUserProfile(user: UserProfile.Volunteer) = RegisterVolunteerRequest(
+        fullName = user.name,
+        phone = user.phone,
+        age = user.age.toString(),
+        city = user.city,
+        email = user.email,
+        password = user.password
+    )
+
+    fun toDtoUserProfile(user: UserProfile.Organization) = RegisterOrganizationRequest(
+        legalName = user.legalName,
+        inn = user.inn,
+        legalAddress = user.legalName,
+        displayName = user.displayName,
+        managerPhone = user.managerPhone,
+        phoneOrg = user.phoneOrg,
+        email = user.email,
+        city = user.city,
+        password = user.password
+    )
+
+    fun toDtoUpdateProfile(user: UpdateProfileParams.Volunteer, id: Int) = VolunteerProfileRequest(
+        id = id,
+        name = user.name,
+        phone = user.phone,
         age = user.age,
         city = user.city,
+        email = user.email
+    )
+
+    fun toDtoUpdateProfile(user: UpdateProfileParams.Organization, id: Int) = OrganizationProfileRequest(
+        id = id,
+        legalName = user.legalName,
+        inn = user.inn,
+        legalAddress = user.legalAddress,
+        displayName = user.displayName,
+        managerPhone = user.managerPhone,
+        phoneOrg = user.phoneOrg,
+        email = user.email,
+        city = user.city
     )
 }

@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.args)
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
+    id ("kotlin-parcelize")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -62,4 +64,6 @@ dependencies {
 
     implementation (libs.androidx.navigation.fragment.ktx)
     implementation (libs.androidx.navigation.ui.ktx)
+
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 }

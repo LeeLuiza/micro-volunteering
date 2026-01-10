@@ -12,6 +12,7 @@ class TaskMapper {
         address = task.address,
         organizationName = task.organizationName,
         category = task.category,
-        volunteersNeeded = task.volunteersNeeded
+        volunteersNeeded = task.volunteersNeeded,
+        date = task.date
     )
 }

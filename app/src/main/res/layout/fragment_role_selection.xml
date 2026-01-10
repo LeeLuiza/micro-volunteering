@@ -4,13 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     tools:context=".presentation.ui.RoleSelectionFragment">
 
     <Button
         android:id="@+id/btn_volunteer"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="Я Волонтер"
+        android:text="@string/volunteer"
+        android:layout_marginHorizontal="64dp"
         android:textSize="16sp"/>
 
     <Button
@@ -19,7 +21,8 @@
         android:layout_height="60dp"
         android:layout_marginTop="24dp"
         android:backgroundTint="#4CAF50"
-        android:text="Мы Организация"
+        android:layout_marginHorizontal="64dp"
+        android:text="@string/organization"
         android:textSize="16sp"/>
 
 </LinearLayout>

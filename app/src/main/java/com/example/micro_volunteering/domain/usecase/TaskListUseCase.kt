@@ -7,7 +7,7 @@ import javax.inject.Inject
 class TaskListUseCase @Inject constructor(
     private val repository: VolunteeringRepository
 ) {
-    fun getTasks() : List<Task> {
+    suspend fun getTasks() : List<Task> {
         return repository.getTasks()
     }
 }

@@ -8,9 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentAuthorizationBinding
-import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.presentation.viewmodel.AuthorizationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigation.fragment.navArgs
@@ -32,13 +30,6 @@ class AuthorizationFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (args.userType == UserRole.ORGANIZATION) {
-            binding.nameLogin.text = getString(R.string.email_organization)
-            binding.fullNameEdit.inputType = android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-        } else {
-            binding.nameLogin.text = getString(R.string.enter_full_name)
-        }
-
         binding.login.setOnClickListener {
             viewModel.authorizationUser(
                 binding.fullNameEdit.text.toString(),
@@ -74,7 +65,7 @@ class AuthorizationFragment : Fragment() {
 
         viewModel.navigate.observe(viewLifecycleOwner) { isNavigate ->
             if (isNavigate) {
-                val action = AuthorizationFragmentDirections.actionAuthorizationFragmentToTaskListFragment(args.userType)
+                val action = AuthorizationFragmentDirections.actionAuthorizationFragmentToTaskListFragment()
                 findNavController().navigate(action)
                 viewModel.onNavigationDone()
             }

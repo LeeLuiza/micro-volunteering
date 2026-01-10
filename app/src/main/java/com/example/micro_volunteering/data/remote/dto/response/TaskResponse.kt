@@ -10,5 +10,6 @@ data class TaskResponse(
     val address: String,
     val organizationName: String,
     val category: String,
-    val volunteersNeeded: Int
+    val volunteersNeeded: Int,
+    val date: String
 )

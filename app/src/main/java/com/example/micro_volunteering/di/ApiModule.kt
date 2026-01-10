@@ -11,7 +11,12 @@ import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
 import com.example.micro_volunteering.data.repository.VolunteeringRepositoryImpl
 import com.example.micro_volunteering.domain.repository.VolunteeringRepository
 import com.example.micro_volunteering.domain.usecase.AuthorizationUserUseCase
+import com.example.micro_volunteering.domain.usecase.CreateTaskUseCase
+import com.example.micro_volunteering.domain.usecase.GetUserRoleUseCase
 import com.example.micro_volunteering.domain.usecase.RegistrationUserUseCase
+import com.example.micro_volunteering.domain.usecase.UpdateTaskUseCase
+import com.example.micro_volunteering.domain.usecase.UpdateUserInfoUseCase
+import com.example.micro_volunteering.domain.usecase.UserInfoUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,6 +45,31 @@ object ApiModule {
     @Provides
     fun provideRegistrationUserUseCase(repository: VolunteeringRepository) : RegistrationUserUseCase {
         return RegistrationUserUseCase(repository)
+    }
+
+    @Provides
+    fun provideCreateTaskUseCase(repository: VolunteeringRepository) : CreateTaskUseCase {
+        return CreateTaskUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetUserRoleUseCase(repository: VolunteeringRepository) : GetUserRoleUseCase {
+        return GetUserRoleUseCase(repository)
+    }
+
+    @Provides
+    fun provideUpdateTaskUseCase(repository: VolunteeringRepository) : UpdateTaskUseCase {
+        return UpdateTaskUseCase(repository)
+    }
+
+    @Provides
+    fun provideUserInfoUseCase(repository: VolunteeringRepository) : UserInfoUseCase {
+        return UserInfoUseCase(repository)
+    }
+
+    @Provides
+    fun provideUpdateUserInfoUseCase(repository: VolunteeringRepository) : UpdateUserInfoUseCase {
+        return UpdateUserInfoUseCase(repository)
     }
 
     @Provides

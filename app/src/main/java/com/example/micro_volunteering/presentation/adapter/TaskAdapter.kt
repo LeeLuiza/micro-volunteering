@@ -9,7 +9,7 @@ import com.example.micro_volunteering.R
 import com.example.micro_volunteering.domain.model.Task
 
 class TaskAdapter(
-    private val tasks: List<Task>,
+    private var tasks: List<Task>,
     private val onItemClick: (Int) -> Unit
 ) : RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
     override fun onCreateViewHolder(
@@ -46,5 +46,10 @@ class TaskAdapter(
                 onItemClick(item.id)
             }
         }
+    }
+
+    fun updateTasks(newTasks: List<Task>) {
+        tasks = newTasks
+        notifyDataSetChanged()
     }
 }

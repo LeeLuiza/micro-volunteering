@@ -15,15 +15,15 @@ import com.example.micro_volunteering.databinding.FragmentTaskListBinding
 import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.presentation.adapter.TaskAdapter
 import com.example.micro_volunteering.presentation.viewmodel.TaskListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
+@AndroidEntryPoint
 class TaskListFragment : Fragment() {
 
     private lateinit var binding: FragmentTaskListBinding
     private val viewModel: TaskListViewModel by viewModels()
     private lateinit var adapter: TaskAdapter
-
-    private val args: AuthorizationFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +38,12 @@ class TaskListFragment : Fragment() {
 
         setupRecyclerView()
         observeViewModel()
-        loadTasks()
+        viewModel.loadTasks()
+
+        binding.btnNewTask.setOnClickListener {
+            val action = TaskListFragmentDirections.actionTaskListFragmentToCreateTaskFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private fun setupRecyclerView() {
@@ -57,21 +62,19 @@ class TaskListFragment : Fragment() {
                 binding.progressBar.isVisible = true
                 binding.recyclerViewTasks.isVisible = false
             }
+            else {
+                binding.progressBar.isVisible = false
+                binding.recyclerViewTasks.isVisible = true
+            }
         }
 
         viewModel.tasks.observe(viewLifecycleOwner) { tasks ->
             if (tasks.isNotEmpty()) {
                 binding.progressBar.isVisible = false
                 binding.recyclerViewTasks.isVisible = true
+                adapter.updateTasks(tasks)
+                binding.btnNewTask.isVisible = viewModel.isUserOrganization()
             }
-        }
-    }
-
-    private fun loadTasks() {
-        if (args.userType == UserRole.ORGANIZATION) {
-            viewModel.loadTasksOrganization()
-        } else {
-            viewModel.loadTasks()
         }
     }
 }

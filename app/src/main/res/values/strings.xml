@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">micro-volunteering</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="enter_password">Введите пароль</string>
     <string name="enter_full_name">Введите ФИО</string>
@@ -20,4 +19,50 @@
     <string name="error_unknown">Неизвестная ошибка</string>
     <string name="error_code">Код ошибки: %d</string>
     <string name="error_session_expired">Сессия истекла. Пожалуйста, войдите снова</string>
+    <string name="tasks">Задачи</string>
+    <string name="notification">Уведомления</string>
+    <string name="account">Аккаунт</string>
+    <string name="volunteer">Я Волонтер</string>
+    <string name="organization">Мы Организация</string>
+    <string name="verified">"Верифицировано"</string>
+    <string name="authorization">Авторизация</string>
+    <string name="enter_email">Введите почту</string>
+    <string name="password">Пароль</string>
+    <string name="enter">Войти</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="name">Название</string>
+    <string name="name_profile">Название: %s</string>
+    <string name="description">Описание</string>
+    <string name="address">Адрес</string>
+    <string name="address_profile">Адрес: %s</string>
+    <string name="category">Категория</string>
+    <string name="number_volunteers">Количество волонтеров</string>
+    <string name="create">Создать</string>
+    <string name="registration">Регистрация</string>
+    <string name="FCs">ФИО</string>
+    <string name="age">Возраст</string>
+    <string name="age_profile">Возраст: %s</string>
+    <string name="email">Email</string>
+    <string name="legal_name">Юридическое наименование (ООО/АО)</string>
+    <string name="inn">ИНН</string>
+    <string name="inn_profile">ИНН: %s</string>
+    <string name="registration_address">Адрес регистрации</string>
+    <string name="name_organization">Название организации</string>
+    <string name="name_organization_profile">Название организации: %s</string>
+    <string name="manager_phone">Телефон менеджера</string>
+    <string name="manager_phone_profile">Телефон менеджера: %s</string>
+    <string name="number">Телефон</string>
+    <string name="number_profile">Телефон: %s</string>
+    <string name="city">Город</string>
+    <string name="city_profile">Город: %s</string>
+    <string name="have_account">Уже есть аккаунт? Войти</string>
+    <string name="edit_task">Редактировать задачу</string>
+    <string name="create_task">Создание задачи</string>
+    <string name="task">Задачи</string>
+    <string name="plus">+</string>
+    <string name="save">Сохранить</string>
+    <string name="edit_profile">Редактирование профиля</string>
+    <string name="mail">Почта: %s</string>
+    <string name="edit">Редактировать</string>
+    <string name="phone_organization">Телефон организации: %s</string>
 </resources>

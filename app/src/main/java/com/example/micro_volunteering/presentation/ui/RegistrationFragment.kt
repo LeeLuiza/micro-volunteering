@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentRegistrationBinding
+import com.example.micro_volunteering.domain.model.UserProfile
 import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.presentation.viewmodel.RegistrationViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,35 +33,27 @@ class RegistrationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.registerButton.setOnClickListener {
-            if (args.userType == UserRole.ORGANIZATION) {
-                viewModel.registrationOrganization(
-                    binding.orgLegalNameEdit.text.toString(),
-                    binding.orgInnEdit.text.toString(),
-                    binding.orgAddressEdit.text.toString(),
-                    binding.orgNameEdit.text.toString(),
-                    binding.orgManagerPhoneEdit.text.toString(),
-                    binding.orgEmailEdit.text.toString(),
-                    binding.phoneEdit.text.toString(),
-                    binding.cityEdit.text.toString(),
-                    binding.passwordEdit.text.toString()
-                )
-            } else {
-                viewModel.registrationVolunteer(
-                    binding.fullNameEdit.text.toString(),
-                    binding.phoneEdit.text.toString(),
-                    binding.ageEdit.text.toString(),
-                    binding.cityEdit.text.toString(),
-                    binding.passwordEdit.text.toString(),
-                )
-            }
+            callViewModel()
         }
 
-        binding.authorisationButton.setOnClickListener {
+        binding.authorizationButton.setOnClickListener {
             val action = RegistrationFragmentDirections.actionRegistrationFragmentToAuthorizationFragment(args.userType)
             findNavController().navigate(action)
         }
 
+        displayData()
         observeViewModel()
+    }
+
+    private fun displayData() {
+        if (args.userType == UserRole.ORGANIZATION) {
+            binding.containerVolunteer.isVisible = false
+            binding.containerOrganization.isVisible = true
+        }
+        else {
+            binding.containerVolunteer.isVisible = true
+            binding.containerOrganization.isVisible = false
+        }
     }
 
     private fun observeViewModel() {
@@ -83,10 +75,40 @@ class RegistrationFragment : Fragment() {
 
         viewModel.navigate.observe(viewLifecycleOwner) { isNavigate ->
             if (isNavigate) {
-                val action = RegistrationFragmentDirections.actionRegistrationFragmentToTaskListFragment(args.userType)
+                val action = RegistrationFragmentDirections.actionRegistrationFragmentToTaskListFragment()
                 findNavController().navigate(action)
                 viewModel.onNavigationDone()
             }
         }
+    }
+
+    fun callViewModel() {
+        val user = if (args.userType == UserRole.ORGANIZATION) {
+            UserProfile.Organization(
+                binding.orgLegalNameEdit.text.toString(),
+                binding.orgInnEdit.text.toString(),
+                binding.orgAddressEdit.text.toString(),
+                binding.orgNameEdit.text.toString(),
+                binding.orgManagerPhoneEdit.text.toString(),
+                binding.phoneEdit.text.toString(),
+                binding.orgEmailEdit.text.toString(),
+                binding.cityEdit.text.toString(),
+                false,
+                binding.passwordEdit.text.toString()
+            )
+        } else {
+            val ageString = binding.ageEdit.text.toString()
+            val ageInt = ageString.toIntOrNull() ?: 0
+
+            UserProfile.Volunteer(
+                binding.fullNameEdit.text.toString(),
+                binding.passwordEdit.text.toString(),
+                binding.phoneEdit.text.toString(),
+                binding.mailEdit.text.toString(),
+                ageInt,
+                binding.cityEdit.text.toString(),
+            )
+        }
+        viewModel.registration(user)
     }
 }
