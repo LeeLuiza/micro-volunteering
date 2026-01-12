@@ -39,32 +39,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"
-            android:text="@string/mail"/>
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"
-            android:text="@string/city"/>
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"
-            android:text="@string/number"/>
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"
-            android:text="@string/age"/>
+            android:textSize="18sp"/>
 
         <View
             android:layout_width="0dp"

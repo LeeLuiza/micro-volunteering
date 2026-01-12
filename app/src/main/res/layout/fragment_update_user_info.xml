@@ -29,40 +29,70 @@
         android:orientation="vertical"
         android:visibility="gone">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/FCs"/>
+
         <EditText
             android:id="@+id/full_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"/>
+            android:layout_marginTop="16dp"
+            android:text="@string/email"/>
 
         <EditText
             android:id="@+id/mail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"/>
+            android:layout_marginTop="16dp"
+            android:text="@string/city"/>
 
         <EditText
             android:id="@+id/city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"/>
+            android:layout_marginTop="16dp"
+            android:text="@string/number"/>
 
         <EditText
             android:id="@+id/phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"/>
+            android:layout_marginTop="16dp"
+            android:text="@string/age"/>
 
         <EditText
             android:id="@+id/age"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"/>
+            android:layout_marginHorizontal="16dp"/>
 
     </LinearLayout>
 
@@ -72,61 +102,103 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:text="@string/legal_name"/>
+
         <EditText
             android:id="@+id/legal_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"/>
+            android:text="@string/inn"/>
 
         <EditText
             android:id="@+id/inn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"/>
+            android:layout_marginTop="16dp"
+            android:text="@string/email"/>
 
         <EditText
             android:id="@+id/mail_org"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"/>
+            android:layout_marginHorizontal="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/city"
+            android:layout_marginHorizontal="16dp"/>
 
         <EditText
             android:id="@+id/city_org"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"/>
+            android:text="@string/registration_address"/>
 
         <EditText
             android:id="@+id/legal_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"/>
+            android:text="@string/name_organization"/>
 
         <EditText
             android:id="@+id/display_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"/>
+            android:text="@string/manager_phone"/>
 
         <EditText
             android:id="@+id/manager_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"/>
+            android:layout_marginHorizontal="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/number_org"
+            android:layout_marginHorizontal="16dp"/>
 
         <EditText
             android:id="@+id/phone_org"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:textSize="18sp"/>
+            android:layout_marginHorizontal="16dp"/>
 
     </LinearLayout>
 

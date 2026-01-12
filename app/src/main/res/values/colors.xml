@@ -2,4 +2,21 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Фон, кнопки и верхняя штука, буквы  -->
+    <color name="app_background">#F5F7F6</color>
+    <color name="brand_primary">#3D8168</color>
+    <color name="text_primary">#1C352D</color>
+
+    <!-- Нижняя навигация -->
+    <color name="bottom_nav_bg">#2D5A4B</color>
+    <color name="bottom_nav_item_active">#FFFFFF</color>
+    <color name="bottom_nav_item_inactive">#B3FFFFFF</color>
+
+    <!-- Элементы списка -->
+    <color name="item_background">#F0F0F0</color>
+
+    <color name="nav_active_indicator">#336200EE</color>
+
+
 </resources>

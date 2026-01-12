@@ -1,8 +1,21 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Microvolunteering" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <item name="colorPrimary">@color/brand_primary</item>     <!-- #3D8168 -->
+        <item name="colorPrimaryVariant">@color/brand_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- 2. Фон приложения -->
+        <item name="android:windowBackground">@color/app_background</item>
+
+        <!-- 3. Верхняя плашка -->
+        <item name="android:statusBarColor">@color/brand_primary</item>
+
+        <!-- 4. Текст -->
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="colorSecondary">@color/brand_primary</item>
+
     </style>
 
     <style name="Theme.Microvolunteering" parent="Base.Theme.Microvolunteering" />

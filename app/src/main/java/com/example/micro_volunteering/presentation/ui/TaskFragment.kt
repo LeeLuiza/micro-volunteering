@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentTaskBinding
 import com.example.micro_volunteering.presentation.viewmodel.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,11 +63,12 @@ class TaskFragment : Fragment() {
                 binding.title.text = task.title
                 binding.description.text = task.description
                 binding.category.text = task.category
-                binding.countVol.text = task.volunteersNeeded.toString()
+                binding.countVol.text = getString(R.string.number_volunteers, task.volunteersNeeded.toString())
                 binding.address.text = task.address
                 binding.date.text = task.date
                 binding.organization.text = task.organizationName
                 binding.btnCorrect.isVisible = viewModel.isUserOrganization()
+                binding.btnRespond.isVisible = !viewModel.isUserOrganization()
             }
         }
     }
