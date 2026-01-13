@@ -34,7 +34,7 @@ class UserPreferences @Inject constructor(
         }
     }
 
-    fun deleteUserRole() {
+    fun deleteUserIdAndRole() {
         sharedPreferences.edit {
             remove(AuthConstants.KEY_USER_ID)
             remove(AuthConstants.USER_ROLE)

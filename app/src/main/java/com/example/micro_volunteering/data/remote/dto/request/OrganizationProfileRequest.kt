@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OrganizationProfileRequest(
-    val id: Int,
     val legalName: String,
     val inn: String,
     val legalAddress: String,

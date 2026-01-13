@@ -8,7 +8,7 @@ class UpdateTaskUseCase @Inject constructor(
     private val repository: VolunteeringRepository
 ) {
     suspend fun updateTask(
-        title: String, description: String, address: String, category: String, volunteersNeeded: Int
+        id: Int, title: String, description: String, address: String, category: String, volunteersNeeded: Int
     ) : Int? =
-        repository.updateTask(title, description, address, category, volunteersNeeded)
+        repository.updateTask(id, title, description, address, category, volunteersNeeded)
 }

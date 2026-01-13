@@ -1,5 +1,6 @@
 package com.example.micro_volunteering.presentation.ui
 
+import android.icu.text.IDNA
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -42,6 +43,10 @@ class UpdateUserInfoFragment : Fragment() {
             saveChange(user)
         }
 
+        binding.btnDelete.setOnClickListener {
+            viewModel.deleteAccount()
+        }
+
         when (user) {
             is UserProfile.Volunteer -> setupVolunteerUI(user)
             is UserProfile.Organization -> setupOrganizationUI(user)
@@ -57,9 +62,16 @@ class UpdateUserInfoFragment : Fragment() {
             }
         }
 
-        viewModel.navigate.observe(viewLifecycleOwner) { isSuccess ->
+        viewModel.updateSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 val action = UpdateUserInfoFragmentDirections.actionUpdateUserInfoFragmentToUserInfoFragment()
+                findNavController().navigate(action)
+            }
+        }
+
+        viewModel.deleteSuccess.observe(viewLifecycleOwner) { isSuccess ->
+            if (isSuccess) {
+                val action = UpdateUserInfoFragmentDirections.actionUpdateUserInfoFragmentToRoleSelectionFragment()
                 findNavController().navigate(action)
             }
         }

@@ -69,4 +69,6 @@
     <string name="email">Почта</string>
     <string name="edit">Редактировать</string>
     <string name="phone_organization">Телефон организации: %s</string>
+    <string name="delete_account">Удалить аккаунт</string>
+    <string name="logout">Выйти из аккаунта</string>
 </resources>

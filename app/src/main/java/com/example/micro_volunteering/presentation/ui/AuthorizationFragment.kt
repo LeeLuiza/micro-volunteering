@@ -51,6 +51,11 @@ class AuthorizationFragment : Fragment() {
                 binding.progressBar.isVisible = true
                 binding.content.isVisible = false
             }
+            else
+            {
+                binding.progressBar.isVisible = false
+                binding.content.isVisible = true
+            }
         }
 
         viewModel.errorText.observe(viewLifecycleOwner) { errorText ->

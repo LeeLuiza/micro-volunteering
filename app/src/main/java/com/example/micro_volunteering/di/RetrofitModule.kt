@@ -12,6 +12,7 @@ import kotlinx.serialization.json.Json
 import retrofit2.Retrofit
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -19,7 +20,11 @@ object RetrofitModule {
     @Provides
     fun provideOkHttp(tokenManager: TokenManager) : OkHttpClient {
 
+        val logging = HttpLoggingInterceptor()
+        logging.level = HttpLoggingInterceptor.Level.BODY
+
         return OkHttpClient.Builder()
+            .addInterceptor(logging)
             .addInterceptor(ErrorInterceptor(tokenManager))
             .addInterceptor(AuthInterceptor(tokenManager))
             .build()

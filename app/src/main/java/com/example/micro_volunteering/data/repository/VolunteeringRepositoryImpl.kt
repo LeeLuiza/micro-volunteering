@@ -5,6 +5,7 @@ import com.example.micro_volunteering.data.local.UserPreferences
 import com.example.micro_volunteering.data.mapper.TaskMapper
 import com.example.micro_volunteering.data.mapper.UserMapper
 import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
+import com.example.micro_volunteering.data.remote.dto.request.CreateTaskRequest
 import com.example.micro_volunteering.data.remote.dto.request.LoginRequest
 import com.example.micro_volunteering.data.remote.dto.request.TaskRequest
 import com.example.micro_volunteering.domain.model.Task
@@ -82,15 +83,8 @@ class VolunteeringRepositoryImpl @Inject constructor(
 
     override suspend fun getTasksOrganization(): List<Task> {
         return try {
-            val id = userPreferences.getUserId()?.toIntOrNull()
-
-            if (id != null) {
-                val response = api.getTasksOrganization(id)
-                response.map { it -> taskMapper.toDomain(it) }
-            }
-            else {
-                return emptyList<Task>()
-            }
+            val response = api.getTasksOrganization()
+            response.map { it -> taskMapper.toDomain(it) }
         }
         catch (e: Exception) {
             emptyList<Task>()
@@ -98,6 +92,7 @@ class VolunteeringRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateTask(
+        id: Int,
         title: String,
         description: String,
         address: String,
@@ -105,17 +100,10 @@ class VolunteeringRepositoryImpl @Inject constructor(
         volunteersNeeded: Int
     ): Int? {
         return try {
-            val idUser = userPreferences.getUserId()?.toIntOrNull()
-
-            if (idUser != null) {
-                val response = api.updateTask(
-                    TaskRequest(idUser, title, description, address, category, volunteersNeeded)
-                )
-                response
-            }
-            else {
-                return null
-            }
+            val response = api.updateTask(
+                TaskRequest(id, title, description, address, category, volunteersNeeded)
+            )
+            response
         }
         catch (e: Exception) {
             null
@@ -130,17 +118,10 @@ class VolunteeringRepositoryImpl @Inject constructor(
         volunteersNeeded: Int
     ): Int? {
         return try {
-            val idUser = userPreferences.getUserId()?.toIntOrNull()
-
-            if (idUser != null) {
-                val response = api.createTask(
-                    TaskRequest(idUser, title, description, address, category, volunteersNeeded)
-                )
-                response
-            }
-            else {
-                return null
-            }
+            val response = api.createTask(
+                CreateTaskRequest(title, description, address, category, volunteersNeeded)
+            )
+            response
         }
         catch (e: Exception) {
             null
@@ -149,15 +130,8 @@ class VolunteeringRepositoryImpl @Inject constructor(
 
     override suspend fun getVolunteerInfo(): UserProfile.Volunteer? {
         return try {
-            val id = userPreferences.getUserId()?.toIntOrNull()
-
-            if (id != null) {
-                val response = api.getVolunteerInfo(id)
-                userMapper.toDomainUserInfo(response)
-            }
-            else {
-                return null
-            }
+            val response = api.getVolunteerInfo()
+            userMapper.toDomainUserInfo(response)
         }
         catch (e: Exception) {
             null
@@ -166,15 +140,8 @@ class VolunteeringRepositoryImpl @Inject constructor(
 
     override suspend fun getOrganizationInfo(): UserProfile.Organization? {
         return try {
-            val id = userPreferences.getUserId()?.toIntOrNull()
-
-            if (id != null) {
-                val response = api.getOrganizationInfo(id)
-                userMapper.toDomainUserInfo(response)
-            }
-            else {
-                return null
-            }
+            val response = api.getOrganizationInfo()
+            userMapper.toDomainUserInfo(response)
         }
         catch (e: Exception) {
             null
@@ -183,15 +150,8 @@ class VolunteeringRepositoryImpl @Inject constructor(
 
     override suspend fun updateVolunteerInfo(userInfo: UpdateProfileParams.Volunteer): Boolean {
         return try {
-            val id = userPreferences.getUserId()?.toIntOrNull()
-
-            if (id != null) {
-                api.updateVolunteerInfo(userMapper.toDtoUpdateProfile(userInfo, id))
-                true
-            }
-            else {
-                false
-            }
+            api.updateVolunteerInfo(userMapper.toDtoUpdateProfile(userInfo))
+            true
         }
         catch (e: Exception) {
             false
@@ -200,15 +160,8 @@ class VolunteeringRepositoryImpl @Inject constructor(
 
     override suspend fun updateOrganizationInfo(userInfo: UpdateProfileParams.Organization): Boolean {
         return try {
-            val id = userPreferences.getUserId()?.toIntOrNull()
-
-            if (id != null) {
-                api.updateOrganizationInfo(userMapper.toDtoUpdateProfile(userInfo, id))
-                true
-            }
-            else {
-                false
-            }
+            api.updateOrganizationInfo(userMapper.toDtoUpdateProfile(userInfo))
+            true
         }
         catch (e: Exception) {
             false
@@ -217,5 +170,22 @@ class VolunteeringRepositoryImpl @Inject constructor(
 
     override fun getCurrentUserRole(): UserRole? {
         return userPreferences.getUserRole()
+    }
+
+    override suspend fun deleteUser(): Boolean {
+        return try {
+            api.deleteUser()
+            tokenManager.deleteToken()
+            userPreferences.deleteUserIdAndRole()
+            true
+        }
+        catch (e: Exception) {
+            false
+        }
+    }
+
+    override suspend fun logout() {
+        tokenManager.deleteToken()
+        userPreferences.deleteUserIdAndRole()
     }
 }

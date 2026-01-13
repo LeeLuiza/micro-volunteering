@@ -1,5 +1,6 @@
 package com.example.micro_volunteering.data.remote.api
 
+import com.example.micro_volunteering.data.remote.dto.request.CreateTaskRequest
 import com.example.micro_volunteering.data.remote.dto.request.LoginRequest
 import com.example.micro_volunteering.data.remote.dto.request.OrganizationProfileRequest
 import com.example.micro_volunteering.data.remote.dto.request.RegisterOrganizationRequest
@@ -11,6 +12,7 @@ import com.example.micro_volunteering.data.remote.dto.response.OrganizationProfi
 import com.example.micro_volunteering.data.remote.dto.response.TaskResponse
 import com.example.micro_volunteering.data.remote.dto.response.VolunteerProfileResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -34,8 +36,8 @@ interface VolunteeringApiService {
     @GET("/tasks")
     suspend fun getTasksVolunteer() : List<TaskResponse>
 
-    @GET("/organizations/{id}/tasks")
-    suspend fun getTasksOrganization(@Path("id") id: Int) : List<TaskResponse>
+    @GET("/organization/tasks")
+    suspend fun getTasksOrganization() : List<TaskResponse>
 
     @GET("/task/{id}")
     suspend fun getTask(@Path("id") id: Int) : TaskResponse
@@ -44,17 +46,20 @@ interface VolunteeringApiService {
     suspend fun updateTask(@Body request: TaskRequest) : Int
 
     @POST("/create-task")
-    suspend fun createTask(@Body request: TaskRequest) : Int
+    suspend fun createTask(@Body request: CreateTaskRequest) : Int
 
-    @GET("/volunteer/profile/{id}")
-    suspend fun getVolunteerInfo(@Path("id") id: Int) : VolunteerProfileResponse
+    @GET("/volunteer/profile")
+    suspend fun getVolunteerInfo() : VolunteerProfileResponse
 
-    @GET("/organization/profile/{id}")
-    suspend fun getOrganizationInfo(@Path("id") id: Int) : OrganizationProfileResponse
+    @GET("/organization/profile")
+    suspend fun getOrganizationInfo() : OrganizationProfileResponse
 
     @PUT("/volunteer/update-profile")
     suspend fun updateVolunteerInfo(@Body request: VolunteerProfileRequest) : VolunteerProfileResponse
 
     @PUT("/organization/update-profile")
     suspend fun updateOrganizationInfo(@Body request: OrganizationProfileRequest) : OrganizationProfileResponse
+
+    @DELETE("/delete-account")
+    suspend fun deleteUser() : Boolean
 }

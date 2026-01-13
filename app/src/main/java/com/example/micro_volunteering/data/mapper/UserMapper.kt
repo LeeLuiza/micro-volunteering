@@ -54,8 +54,7 @@ class UserMapper {
         password = user.password
     )
 
-    fun toDtoUpdateProfile(user: UpdateProfileParams.Volunteer, id: Int) = VolunteerProfileRequest(
-        id = id,
+    fun toDtoUpdateProfile(user: UpdateProfileParams.Volunteer) = VolunteerProfileRequest(
         name = user.name,
         phone = user.phone,
         age = user.age,
@@ -63,8 +62,7 @@ class UserMapper {
         email = user.email
     )
 
-    fun toDtoUpdateProfile(user: UpdateProfileParams.Organization, id: Int) = OrganizationProfileRequest(
-        id = id,
+    fun toDtoUpdateProfile(user: UpdateProfileParams.Organization) = OrganizationProfileRequest(
         legalName = user.legalName,
         inn = user.inn,
         legalAddress = user.legalAddress,

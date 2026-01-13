@@ -131,7 +131,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
             android:text="@string/email"/>
 
         <EditText
@@ -203,10 +202,18 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/delete_account"/>
+
+    <Button
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="16dp"
         android:text="@string/save"/>
 
 </LinearLayout>

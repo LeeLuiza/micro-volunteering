@@ -51,6 +51,14 @@ class UserInfoFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }
+
+        binding.btnLogoutOrg.setOnClickListener {
+            viewModel.logout()
+        }
+
+        binding.btnLogout.setOnClickListener {
+            viewModel.logout()
+        }
     }
 
     fun observeViewModel() {
@@ -97,6 +105,13 @@ class UserInfoFragment : Fragment() {
                         }
                     }
                 }
+            }
+        }
+
+        viewModel.logoutSuccess.observe(viewLifecycleOwner) { isSuccess ->
+            if (isSuccess) {
+                val action = UserInfoFragmentDirections.actionUserInfoFragmentToRoleSelectionFragment()
+                findNavController().navigate(action)
             }
         }
     }

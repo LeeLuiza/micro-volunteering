@@ -13,7 +13,7 @@ interface VolunteeringRepository {
     suspend fun getTask(id: Int) : Task?
     suspend fun getTasksOrganization() : List<Task>
     suspend fun updateTask(
-        title: String, description: String, address: String,
+        id: Int, title: String, description: String, address: String,
         category: String, volunteersNeeded: Int
     ) : Int?
     suspend fun createTask(
@@ -25,4 +25,6 @@ interface VolunteeringRepository {
     suspend fun updateVolunteerInfo(userInfo: UpdateProfileParams.Volunteer) : Boolean
     suspend fun updateOrganizationInfo(userInfo: UpdateProfileParams.Organization) : Boolean
     fun getCurrentUserRole(): UserRole?
+    suspend fun deleteUser() : Boolean
+    suspend fun logout()
 }

@@ -12,7 +12,9 @@ import com.example.micro_volunteering.data.repository.VolunteeringRepositoryImpl
 import com.example.micro_volunteering.domain.repository.VolunteeringRepository
 import com.example.micro_volunteering.domain.usecase.AuthorizationUserUseCase
 import com.example.micro_volunteering.domain.usecase.CreateTaskUseCase
+import com.example.micro_volunteering.domain.usecase.DeleteUserUseCase
 import com.example.micro_volunteering.domain.usecase.GetUserRoleUseCase
+import com.example.micro_volunteering.domain.usecase.LogoutUseCase
 import com.example.micro_volunteering.domain.usecase.RegistrationUserUseCase
 import com.example.micro_volunteering.domain.usecase.UpdateTaskUseCase
 import com.example.micro_volunteering.domain.usecase.UpdateUserInfoUseCase
@@ -70,6 +72,16 @@ object ApiModule {
     @Provides
     fun provideUpdateUserInfoUseCase(repository: VolunteeringRepository) : UpdateUserInfoUseCase {
         return UpdateUserInfoUseCase(repository)
+    }
+
+    @Provides
+    fun provideDeleteUserUseCase(repository: VolunteeringRepository) : DeleteUserUseCase {
+        return DeleteUserUseCase(repository)
+    }
+
+    @Provides
+    fun provideLogoutUseCase(repository: VolunteeringRepository) : LogoutUseCase {
+        return LogoutUseCase(repository)
     }
 
     @Provides

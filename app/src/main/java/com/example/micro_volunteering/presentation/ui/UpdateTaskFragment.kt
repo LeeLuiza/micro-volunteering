@@ -38,6 +38,7 @@ class UpdateTaskFragment : Fragment() {
 
         binding.btnSave.setOnClickListener {
             viewModel.updateTask(
+                args.task.id,
                 binding.titleEdit.text.toString(),
                 binding.descriptionEdit.text.toString(),
                 binding.addressEdit.text.toString(),

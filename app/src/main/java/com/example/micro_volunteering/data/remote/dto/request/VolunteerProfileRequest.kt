@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VolunteerProfileRequest (
-    val id: Int,
     val name: String,
     val phone: String,
     val email: String,
