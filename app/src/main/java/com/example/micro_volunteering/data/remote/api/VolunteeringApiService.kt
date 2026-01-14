@@ -62,4 +62,7 @@ interface VolunteeringApiService {
 
     @DELETE("/delete-account")
     suspend fun deleteUser() : Boolean
+
+    @DELETE("/delete-task/{id}")
+    suspend fun deleteTask(@Path("id") id: Int) : Boolean
 }

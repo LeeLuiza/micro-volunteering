@@ -46,6 +46,10 @@ class UpdateTaskFragment : Fragment() {
                 binding.volNeeded.text.toString().toIntOrNull() ?: 0
             )
         }
+
+        binding.btnDeleteTask.setOnClickListener {
+            viewModel.deleteTask(args.task.id)
+        }
     }
 
     fun observeViewModel() {
@@ -59,6 +63,13 @@ class UpdateTaskFragment : Fragment() {
         viewModel.taskId.observe(viewLifecycleOwner) { taskId ->
             if (taskId != null) {
                 val action = UpdateTaskFragmentDirections.actionUpdateTaskFragmentToTaskFragment(taskId)
+                findNavController().navigate(action)
+            }
+        }
+
+        viewModel.isSuccessDeleteTask.observe(viewLifecycleOwner) { isSuccess ->
+            if (isSuccess) {
+                val action = UpdateTaskFragmentDirections.actionUpdateTaskFragmentToTaskListFragment()
                 findNavController().navigate(action)
             }
         }

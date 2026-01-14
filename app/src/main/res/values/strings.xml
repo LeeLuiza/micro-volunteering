@@ -70,5 +70,11 @@
     <string name="edit">Редактировать</string>
     <string name="phone_organization">Телефон организации: %s</string>
     <string name="delete_account">Удалить аккаунт</string>
+    <string name="delete_task">Удалить задачу</string>
     <string name="logout">Выйти из аккаунта</string>
+    <string name="error_empty_title">Введите название задачи</string>
+    <string name="error_short_description">Описание слишком короткое</string>
+    <string name="error_empty_address">Укажите адрес</string>
+    <string name="error_empty_category">Укажите категорию</string>
+    <string name="error_invalid_volunteers">Укажите количество волонтеров (минимум 1)</string>
 </resources>

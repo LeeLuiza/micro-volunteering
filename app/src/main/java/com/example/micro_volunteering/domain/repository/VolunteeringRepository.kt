@@ -26,5 +26,6 @@ interface VolunteeringRepository {
     suspend fun updateOrganizationInfo(userInfo: UpdateProfileParams.Organization) : Boolean
     fun getCurrentUserRole(): UserRole?
     suspend fun deleteUser() : Boolean
+    suspend fun deleteTask(id: Int) : Boolean
     suspend fun logout()
 }

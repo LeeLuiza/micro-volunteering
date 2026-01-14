@@ -184,6 +184,16 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteTask(id: Int): Boolean {
+        return try {
+            api.deleteTask(id)
+            true
+        }
+        catch (e: Exception) {
+            false
+        }
+    }
+
     override suspend fun logout() {
         tokenManager.deleteToken()
         userPreferences.deleteUserIdAndRole()
