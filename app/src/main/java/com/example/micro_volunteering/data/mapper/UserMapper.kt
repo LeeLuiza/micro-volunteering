@@ -8,8 +8,18 @@ import com.example.micro_volunteering.data.remote.dto.response.OrganizationProfi
 import com.example.micro_volunteering.data.remote.dto.response.VolunteerProfileResponse
 import com.example.micro_volunteering.domain.model.UpdateProfileParams
 import com.example.micro_volunteering.domain.model.UserProfile
+import com.example.micro_volunteering.domain.model.UserProfileRegister
 
 class UserMapper {
+
+    fun toDomainUserInfoRegister(user: VolunteerProfileResponse) = UserProfileRegister.Volunteer(
+        name = user.name,
+        password = user.password,
+        phone = user.phone,
+        email = user.email,
+        age = user.age,
+        city = user.city
+    )
 
     fun toDomainUserInfo(user: VolunteerProfileResponse) = UserProfile.Volunteer(
         name = user.name,
@@ -17,7 +27,10 @@ class UserMapper {
         phone = user.phone,
         email = user.email,
         age = user.age,
-        city = user.city
+        city = user.city,
+        countTask = user.countTask,
+        rating = user.rating,
+        countFeedback = user.countFeedback
     )
 
     fun toDomainUserInfo(user: OrganizationProfileResponse) = UserProfile.Organization(
@@ -33,7 +46,7 @@ class UserMapper {
         password = user.password
     )
 
-    fun toDtoUserProfile(user: UserProfile.Volunteer) = RegisterVolunteerRequest(
+    fun toDtoUserProfile(user: UserProfileRegister.Volunteer) = RegisterVolunteerRequest(
         fullName = user.name,
         phone = user.phone,
         age = user.age.toString(),
@@ -42,7 +55,7 @@ class UserMapper {
         password = user.password
     )
 
-    fun toDtoUserProfile(user: UserProfile.Organization) = RegisterOrganizationRequest(
+    fun toDtoUserProfile(user: UserProfileRegister.Organization) = RegisterOrganizationRequest(
         legalName = user.legalName,
         inn = user.inn,
         legalAddress = user.legalName,

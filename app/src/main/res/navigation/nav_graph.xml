@@ -106,6 +106,9 @@
             android:id="@+id/action_userInfoFragment_to_updateUserInfoFragment"
             app:destination="@id/updateUserInfoFragment" />
         <action
+            android:id="@+id/action_userInfoFragment_to_feedbackListFragment"
+            app:destination="@id/feedbackListFragment" />
+        <action
             android:id="@+id/action_userInfoFragment_to_roleSelectionFragment"
             app:destination="@id/roleSelectionFragment"
             app:popUpTo="@id/roleSelectionFragment"
@@ -128,4 +131,9 @@
             android:name="user"
             app:argType="com.example.micro_volunteering.domain.model.UserProfile" />
     </fragment>
+    <fragment
+        android:id="@+id/feedbackListFragment"
+        android:name="com.example.micro_volunteering.presentation.ui.FeedbackListFragment"
+        android:label="fragment_feedback_list"
+        tools:layout="@layout/fragment_feedback_list" />
 </navigation>

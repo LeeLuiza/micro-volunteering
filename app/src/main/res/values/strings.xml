@@ -62,6 +62,7 @@
     <string name="respond_task">Откликнуться</string>
     <string name="create_task">Создание задачи</string>
     <string name="task">Задачи</string>
+    <string name="feedback">Отзывы</string>
     <string name="plus">+</string>
     <string name="save">Сохранить</string>
     <string name="edit_profile">Редактирование профиля</string>
@@ -78,4 +79,6 @@
     <string name="error_empty_address">Укажите адрес</string>
     <string name="error_empty_category">Укажите категорию</string>
     <string name="error_invalid_volunteers">Укажите количество волонтеров (минимум 1)</string>
+    <string name="count_task">Количество выполненных задач: %s</string>
+    <string name="reviews">(%s отзывов)</string>
 </resources>

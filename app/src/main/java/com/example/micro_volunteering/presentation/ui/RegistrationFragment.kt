@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.micro_volunteering.databinding.FragmentRegistrationBinding
-import com.example.micro_volunteering.domain.model.UserProfile
+import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.presentation.viewmodel.RegistrationViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -89,7 +89,7 @@ class RegistrationFragment : Fragment() {
 
     fun callViewModel() {
         val user = if (args.userType == UserRole.ORGANIZATION) {
-            UserProfile.Organization(
+            UserProfileRegister.Organization(
                 binding.orgLegalNameEdit.text.toString(),
                 binding.orgInnEdit.text.toString(),
                 binding.orgAddressEdit.text.toString(),
@@ -105,13 +105,13 @@ class RegistrationFragment : Fragment() {
             val ageString = binding.ageEdit.text.toString()
             val ageInt = ageString.toIntOrNull() ?: 0
 
-            UserProfile.Volunteer(
+            UserProfileRegister.Volunteer(
                 binding.fullNameEdit.text.toString(),
                 binding.passwordEdit.text.toString(),
                 binding.phoneEdit.text.toString(),
                 binding.mailEdit.text.toString(),
                 ageInt,
-                binding.cityEdit.text.toString(),
+                binding.cityEdit.text.toString()
             )
         }
         viewModel.registration(user)

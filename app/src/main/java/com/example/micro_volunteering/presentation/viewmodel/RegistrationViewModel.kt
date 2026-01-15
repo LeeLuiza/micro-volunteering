@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.R
-import com.example.micro_volunteering.domain.model.UserProfile
+import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.domain.usecase.RegistrationUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,14 +24,14 @@ class RegistrationViewModel @Inject constructor(
     private val _errorText = MutableLiveData<List<Int>>()
     val errorText: LiveData<List<Int>> = _errorText
 
-    fun registration(user: UserProfile) {
+    fun registration(user: UserProfileRegister) {
         when (user) {
-            is UserProfile.Organization -> registrationOrganization(user)
-            is UserProfile.Volunteer -> registrationVolunteer(user)
+            is UserProfileRegister.Organization -> registrationOrganization(user)
+            is UserProfileRegister.Volunteer -> registrationVolunteer(user)
         }
     }
 
-    fun registrationVolunteer(user: UserProfile.Volunteer) {
+    fun registrationVolunteer(user: UserProfileRegister.Volunteer) {
         val errors = mutableListOf<Int>()
 
         if (user.name.isBlank()){
@@ -72,7 +72,7 @@ class RegistrationViewModel @Inject constructor(
         }
     }
 
-    fun registrationOrganization(user: UserProfile.Organization) {
+    fun registrationOrganization(user: UserProfileRegister.Organization) {
         val errors = mutableListOf<Int>()
 
         if (user.legalName.isBlank()) {

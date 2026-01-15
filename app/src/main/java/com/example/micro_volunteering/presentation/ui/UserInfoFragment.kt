@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentUserInfoBinding
 import com.example.micro_volunteering.domain.model.UserProfile
+import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.presentation.viewmodel.UserInfoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -59,6 +60,11 @@ class UserInfoFragment : Fragment() {
         binding.btnLogout.setOnClickListener {
             viewModel.logout()
         }
+
+        binding.reviews.setOnClickListener {
+            val action = UserInfoFragmentDirections.actionUserInfoFragmentToFeedbackListFragment()
+            findNavController().navigate(action)
+        }
     }
 
     fun observeViewModel() {
@@ -85,6 +91,9 @@ class UserInfoFragment : Fragment() {
                         binding.city.text = getString(R.string.city_profile, profile.city)
                         binding.phone.text = getString(R.string.number_profile, profile.phone)
                         binding.age.text = getString(R.string.age_profile, profile.age.toString())
+                        binding.ratingBar.rating = profile.rating
+                        binding.countTask.text = getString(R.string.count_task, profile.countTask.toString())
+                        binding.reviews.text = getString(R.string.reviews, profile.countFeedback.toString())
                     }
                     is UserProfile.Organization -> {
                         binding.contentVolunteerInfo.isVisible = false

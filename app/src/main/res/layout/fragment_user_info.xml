@@ -62,6 +62,35 @@
             android:layout_marginHorizontal="16dp"
             android:textSize="18sp"/>
 
+        <TextView
+            android:id="@+id/count_task"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:textSize="18sp"/>
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:numStars="5"
+            android:isIndicator="true"
+            android:progressTint="#FFC107"
+            android:secondaryProgressTint="#FFC107"/>
+
+        <TextView
+            android:id="@+id/reviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:textColor="#808080"
+            android:textSize="14sp"
+            android:clickable="true"
+            android:focusable="true"/>
+
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"

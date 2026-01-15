@@ -1,6 +1,7 @@
 package com.example.micro_volunteering.data.remote.api
 
 import com.example.micro_volunteering.data.remote.dto.request.CreateTaskRequest
+import com.example.micro_volunteering.data.remote.dto.response.FeedbackResponse
 import com.example.micro_volunteering.data.remote.dto.request.LoginRequest
 import com.example.micro_volunteering.data.remote.dto.request.OrganizationProfileRequest
 import com.example.micro_volunteering.data.remote.dto.request.RegisterOrganizationRequest
@@ -59,6 +60,9 @@ interface VolunteeringApiService {
 
     @PUT("/organization/update-profile")
     suspend fun updateOrganizationInfo(@Body request: OrganizationProfileRequest) : OrganizationProfileResponse
+
+    @GET("/feedbacks")
+    suspend fun getFeedbacks() : List<FeedbackResponse>
 
     @DELETE("/delete-account")
     suspend fun deleteUser() : Boolean

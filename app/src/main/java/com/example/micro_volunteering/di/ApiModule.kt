@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.example.micro_volunteering.data.local.TokenManager
 import com.example.micro_volunteering.data.constants.AuthConstants.AUTH_PREFERENCES
 import com.example.micro_volunteering.data.local.UserPreferences
+import com.example.micro_volunteering.data.mapper.FeedbackMapper
 import com.example.micro_volunteering.data.mapper.TaskMapper
 import com.example.micro_volunteering.data.mapper.UserMapper
 import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
@@ -13,6 +14,7 @@ import com.example.micro_volunteering.domain.repository.VolunteeringRepository
 import com.example.micro_volunteering.domain.usecase.AuthorizationUserUseCase
 import com.example.micro_volunteering.domain.usecase.CreateTaskUseCase
 import com.example.micro_volunteering.domain.usecase.DeleteUserUseCase
+import com.example.micro_volunteering.domain.usecase.GetFeedbacksUseCase
 import com.example.micro_volunteering.domain.usecase.GetUserRoleUseCase
 import com.example.micro_volunteering.domain.usecase.LogoutUseCase
 import com.example.micro_volunteering.domain.usecase.RegistrationUserUseCase
@@ -35,8 +37,12 @@ object ApiModule {
     }
 
     @Provides
-    fun provideRepository(api: VolunteeringApiService, tokenManager: TokenManager, userPreferences: UserPreferences) : VolunteeringRepository {
-        return VolunteeringRepositoryImpl(api, tokenManager, userPreferences, UserMapper(), TaskMapper())
+    fun provideRepository(
+        api: VolunteeringApiService, tokenManager: TokenManager, userPreferences: UserPreferences
+    ) : VolunteeringRepository {
+        return VolunteeringRepositoryImpl(
+            api, tokenManager, userPreferences, UserMapper(), TaskMapper(), FeedbackMapper()
+        )
     }
 
     @Provides
@@ -82,6 +88,11 @@ object ApiModule {
     @Provides
     fun provideLogoutUseCase(repository: VolunteeringRepository) : LogoutUseCase {
         return LogoutUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetFeedbackUseCase(repository: VolunteeringRepository) : GetFeedbacksUseCase {
+        return GetFeedbacksUseCase(repository)
     }
 
     @Provides

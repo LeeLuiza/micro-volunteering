@@ -9,5 +9,8 @@ data class VolunteerProfileResponse (
     val phone: String,
     val email: String,
     val age: Int,
-    val city: String
+    val city: String,
+    val countTask: Int,
+    val rating: Float,
+    val countFeedback: Int
 )

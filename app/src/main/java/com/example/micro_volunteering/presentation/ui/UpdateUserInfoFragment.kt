@@ -1,6 +1,5 @@
 package com.example.micro_volunteering.presentation.ui
 
-import android.icu.text.IDNA
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.micro_volunteering.databinding.FragmentUpdateUserInfoBinding
 import com.example.micro_volunteering.domain.model.UpdateProfileParams
 import com.example.micro_volunteering.domain.model.UserProfile
+import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.presentation.viewmodel.UpdateUserInfoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue

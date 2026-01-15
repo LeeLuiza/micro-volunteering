@@ -2,15 +2,18 @@ package com.example.micro_volunteering.data.repository
 
 import com.example.micro_volunteering.data.local.TokenManager
 import com.example.micro_volunteering.data.local.UserPreferences
+import com.example.micro_volunteering.data.mapper.FeedbackMapper
 import com.example.micro_volunteering.data.mapper.TaskMapper
 import com.example.micro_volunteering.data.mapper.UserMapper
 import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
 import com.example.micro_volunteering.data.remote.dto.request.CreateTaskRequest
 import com.example.micro_volunteering.data.remote.dto.request.LoginRequest
 import com.example.micro_volunteering.data.remote.dto.request.TaskRequest
+import com.example.micro_volunteering.domain.model.Feedback
 import com.example.micro_volunteering.domain.model.Task
 import com.example.micro_volunteering.domain.model.UpdateProfileParams
 import com.example.micro_volunteering.domain.model.UserProfile
+import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.domain.repository.VolunteeringRepository
 import javax.inject.Inject
@@ -20,9 +23,10 @@ class VolunteeringRepositoryImpl @Inject constructor(
     private val tokenManager: TokenManager,
     private val userPreferences: UserPreferences,
     private val userMapper: UserMapper,
-    private val taskMapper: TaskMapper
+    private val taskMapper: TaskMapper,
+    private val feedbackMapper: FeedbackMapper
 ) : VolunteeringRepository {
-    override suspend fun registrationVolunteer(user: UserProfile.Volunteer) : Boolean {
+    override suspend fun registrationVolunteer(user: UserProfileRegister.Volunteer) : Boolean {
         return try {
             val response = api.registrationVolunteer(userMapper.toDtoUserProfile(user))
             tokenManager.saveTokens(response.accessToken, response.refreshToken)
@@ -35,7 +39,7 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun registrationOrganization(user: UserProfile.Organization) : Boolean {
+    override suspend fun registrationOrganization(user: UserProfileRegister.Organization) : Boolean {
         return try {
             val response = api.registrationOrganization(userMapper.toDtoUserProfile(user))
             tokenManager.saveTokens(response.accessToken, response.refreshToken)
@@ -165,6 +169,16 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
         catch (e: Exception) {
             false
+        }
+    }
+
+    override suspend fun getFeedbacks(): List<Feedback> {
+        return try {
+            val response = api.getFeedbacks()
+            response.map { feedbackMapper.toDomain(it) }
+        }
+        catch (e: Exception) {
+            emptyList<Feedback>()
         }
     }
 

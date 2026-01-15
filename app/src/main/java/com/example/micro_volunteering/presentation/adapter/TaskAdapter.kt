@@ -1,11 +1,9 @@
 package com.example.micro_volunteering.presentation.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.micro_volunteering.R
+import com.example.micro_volunteering.databinding.ItemTasksBinding
 import com.example.micro_volunteering.domain.model.Task
 
 class TaskAdapter(
@@ -16,9 +14,8 @@ class TaskAdapter(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_tasks, parent, false)
-        return ViewHolder(itemView)
+        val binding = ItemTasksBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(
@@ -30,19 +27,15 @@ class TaskAdapter(
 
     override fun getItemCount() = tasks.size
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val title: TextView = itemView.findViewById(R.id.title)
-        val description: TextView = itemView.findViewById(R.id.description)
-        val address: TextView = itemView.findViewById(R.id.address)
-        val organization: TextView = itemView.findViewById(R.id.organization)
+    class ViewHolder(private val binding: ItemTasksBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Task, onItemClick: (Int) -> Unit) {
-            title.text = item.title
-            description.text = item.description
-            address.text = item.address
-            organization.text = item.organizationName
+            binding.title.text = item.title
+            binding.description.text = item.description
+            binding.address.text = item.address
+            binding.organization.text = item.organizationName
 
-            itemView.setOnClickListener {
+            binding.root.setOnClickListener {
                 onItemClick(item.id)
             }
         }

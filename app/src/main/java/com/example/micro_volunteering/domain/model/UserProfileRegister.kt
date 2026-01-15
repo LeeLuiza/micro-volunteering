@@ -3,7 +3,8 @@ package com.example.micro_volunteering.domain.model
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-sealed class UserProfile : Parcelable {
+
+sealed class UserProfileRegister : Parcelable {
 
     @Parcelize
     data class Volunteer(
@@ -12,11 +13,8 @@ sealed class UserProfile : Parcelable {
         val phone: String,
         val email: String,
         val age: Int,
-        val city: String,
-        val countTask: Int,
-        val rating: Float,
-        val countFeedback: Int
-    ) : UserProfile()
+        val city: String
+    ) : UserProfileRegister()
 
     @Parcelize
     data class Organization(
@@ -30,5 +28,5 @@ sealed class UserProfile : Parcelable {
         val city: String,
         val isVerified: Boolean,
         val password: String
-    ) : UserProfile()
+    ) : UserProfileRegister()
 }
