@@ -73,6 +73,7 @@
     <string name="delete_task">Удалить задачу</string>
     <string name="logout">Выйти из аккаунта</string>
     <string name="error_empty_title">Введите название задачи</string>
+    <string name="error_empty_description">Введите описание задачи</string>
     <string name="error_short_description">Описание слишком короткое</string>
     <string name="error_empty_address">Укажите адрес</string>
     <string name="error_empty_category">Укажите категорию</string>

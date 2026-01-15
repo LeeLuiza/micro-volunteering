@@ -43,7 +43,7 @@ class UpdateTaskFragment : Fragment() {
                 binding.descriptionEdit.text.toString(),
                 binding.addressEdit.text.toString(),
                 binding.category.text.toString(),
-                binding.volNeeded.text.toString().toIntOrNull() ?: 0
+                binding.volNeeded.text.toString()
             )
         }
 
@@ -71,6 +71,16 @@ class UpdateTaskFragment : Fragment() {
             if (isSuccess) {
                 val action = UpdateTaskFragmentDirections.actionUpdateTaskFragmentToTaskListFragment()
                 findNavController().navigate(action)
+            }
+        }
+
+        viewModel.errorText.observe(viewLifecycleOwner) { errorText ->
+            if (errorText.isNotEmpty()) {
+                binding.errorText.text = errorText.joinToString("\n") { id -> "- ${getString(id)}" }
+                binding.errorText.isVisible = true
+            }
+            else {
+                binding.errorText.isVisible = false
             }
         }
     }

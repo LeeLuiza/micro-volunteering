@@ -64,8 +64,7 @@
             android:background="#1AFF0000"
             android:textColor="#D50000"
             android:textSize="14sp"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/login"
