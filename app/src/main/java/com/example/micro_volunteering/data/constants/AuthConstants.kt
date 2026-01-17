@@ -14,4 +14,9 @@ object AuthConstants {
     const val NO_AUTH_HEADER = "NO_AUTH"
 
     const val MESSAGE = "message"
+
+    const val IMAGE_JPEG = "image/jpeg"
+    const val IMAGE = "image"
+    const val UPLOAD_IMAGE = "upload_image"
+    const val FORMAT_IMAGE = ".jpg"
 }

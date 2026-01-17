@@ -23,6 +23,7 @@ class UserMapper {
 
     fun toDomainUserInfo(user: VolunteerProfileResponse) = UserProfile.Volunteer(
         name = user.name,
+        avatarUrl = user.avatarUrl,
         password = user.password,
         phone = user.phone,
         email = user.email,
@@ -35,6 +36,7 @@ class UserMapper {
 
     fun toDomainUserInfo(user: OrganizationProfileResponse) = UserProfile.Organization(
         legalName = user.legalName,
+        avatarUrl = user.avatarUrl,
         inn = user.inn,
         legalAddress = user.legalAddress,
         displayName = user.displayName,

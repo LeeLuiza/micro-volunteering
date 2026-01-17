@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class VolunteerProfileResponse (
     val name: String,
+    val avatarUrl: String?,
     val password: String,
     val phone: String,
     val email: String,

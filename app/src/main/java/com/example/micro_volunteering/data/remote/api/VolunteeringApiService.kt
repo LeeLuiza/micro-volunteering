@@ -12,12 +12,15 @@ import com.example.micro_volunteering.data.remote.dto.response.AuthResponse
 import com.example.micro_volunteering.data.remote.dto.response.OrganizationProfileResponse
 import com.example.micro_volunteering.data.remote.dto.response.TaskResponse
 import com.example.micro_volunteering.data.remote.dto.response.VolunteerProfileResponse
+import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface VolunteeringApiService {
@@ -69,4 +72,8 @@ interface VolunteeringApiService {
 
     @DELETE("/delete-task/{id}")
     suspend fun deleteTask(@Path("id") id: Int) : Boolean
+
+    @Multipart
+    @POST("upload/avatar")
+    suspend fun uploadPhoto(@Part image: MultipartBody.Part): Boolean
 }

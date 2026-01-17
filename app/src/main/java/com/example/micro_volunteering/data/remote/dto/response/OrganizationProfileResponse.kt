@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class OrganizationProfileResponse (
     val legalName: String,
+    val avatarUrl: String?,
     val inn: String,
     val legalAddress: String,
     val displayName: String,

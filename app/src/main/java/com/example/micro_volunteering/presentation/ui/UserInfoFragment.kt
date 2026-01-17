@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -11,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentUserInfoBinding
 import com.example.micro_volunteering.domain.model.UserProfile
-import com.example.micro_volunteering.domain.model.UserProfileRegister
+import coil.load
 import com.example.micro_volunteering.presentation.viewmodel.UserInfoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,6 +22,13 @@ class UserInfoFragment : Fragment() {
 
     private lateinit var binding: FragmentUserInfoBinding
     private val viewModel: UserInfoViewModel by viewModels()
+
+    private val pickMedia = registerForActivityResult(PickVisualMedia()) { uri ->
+        if (uri != null) {
+            binding.img.load(uri)
+            viewModel.uploadImage(uri)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,19 +53,6 @@ class UserInfoFragment : Fragment() {
             }
         }
 
-        binding.btnCorrectOrg.setOnClickListener {
-            val currentUser = viewModel.profile.value
-
-            if (currentUser != null) {
-                val action = UserInfoFragmentDirections.actionUserInfoFragmentToUpdateUserInfoFragment(currentUser)
-                findNavController().navigate(action)
-            }
-        }
-
-        binding.btnLogoutOrg.setOnClickListener {
-            viewModel.logout()
-        }
-
         binding.btnLogout.setOnClickListener {
             viewModel.logout()
         }
@@ -64,6 +60,10 @@ class UserInfoFragment : Fragment() {
         binding.reviews.setOnClickListener {
             val action = UserInfoFragmentDirections.actionUserInfoFragmentToFeedbackListFragment()
             findNavController().navigate(action)
+        }
+
+        binding.btnAddImg.setOnClickListener {
+            pickMedia.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
         }
     }
 
@@ -73,6 +73,7 @@ class UserInfoFragment : Fragment() {
                 binding.progressBar.isVisible = true
                 binding.contentVolunteerInfo.isVisible = false
                 binding.contentOrganizationInfo.isVisible = false
+                binding.btnCorrect.isVisible = false
             }
             else {
                 binding.progressBar.isVisible = false
@@ -87,6 +88,7 @@ class UserInfoFragment : Fragment() {
                         binding.contentOrganizationInfo.isVisible = false
 
                         binding.fullName.text = profile.name
+                        binding.img.load(profile.avatarUrl)
                         binding.mail.text = getString(R.string.mail, profile.email)
                         binding.city.text = getString(R.string.city_profile, profile.city)
                         binding.phone.text = getString(R.string.number_profile, profile.phone)
@@ -100,6 +102,7 @@ class UserInfoFragment : Fragment() {
                         binding.contentOrganizationInfo.isVisible = true
 
                         binding.legalName.text = profile.legalName
+                        binding.img.load(profile.avatarUrl)
                         binding.inn.text = getString(R.string.inn_profile, profile.inn)
                         binding.mailOrg.text = getString(R.string.mail, profile.email)
                         binding.cityOrg.text = getString(R.string.city_profile, profile.city)

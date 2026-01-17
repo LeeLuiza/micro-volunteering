@@ -1,5 +1,6 @@
 package com.example.micro_volunteering.data.repository
 
+import com.example.micro_volunteering.data.constants.AuthConstants
 import com.example.micro_volunteering.data.local.TokenManager
 import com.example.micro_volunteering.data.local.UserPreferences
 import com.example.micro_volunteering.data.mapper.FeedbackMapper
@@ -9,6 +10,7 @@ import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
 import com.example.micro_volunteering.data.remote.dto.request.CreateTaskRequest
 import com.example.micro_volunteering.data.remote.dto.request.LoginRequest
 import com.example.micro_volunteering.data.remote.dto.request.TaskRequest
+import com.example.micro_volunteering.data.utils.UriConverter
 import com.example.micro_volunteering.domain.model.Feedback
 import com.example.micro_volunteering.domain.model.Task
 import com.example.micro_volunteering.domain.model.UpdateProfileParams
@@ -24,7 +26,8 @@ class VolunteeringRepositoryImpl @Inject constructor(
     private val userPreferences: UserPreferences,
     private val userMapper: UserMapper,
     private val taskMapper: TaskMapper,
-    private val feedbackMapper: FeedbackMapper
+    private val feedbackMapper: FeedbackMapper,
+    private val uriConverter: UriConverter
 ) : VolunteeringRepository {
     override suspend fun registrationVolunteer(user: UserProfileRegister.Volunteer) : Boolean {
         return try {
@@ -211,5 +214,20 @@ class VolunteeringRepositoryImpl @Inject constructor(
     override suspend fun logout() {
         tokenManager.deleteToken()
         userPreferences.deleteUserIdAndRole()
+    }
+
+    override suspend fun uploadPhoto(uriString: String): Boolean {
+        val imagePart = uriConverter.prepareImageBody(uriString)
+
+        if (imagePart == null) {
+            return false
+        }
+
+        return try {
+            api.uploadPhoto(imagePart)
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 }

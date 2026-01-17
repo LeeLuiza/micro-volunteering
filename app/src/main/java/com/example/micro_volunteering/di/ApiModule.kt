@@ -10,6 +10,7 @@ import com.example.micro_volunteering.data.mapper.TaskMapper
 import com.example.micro_volunteering.data.mapper.UserMapper
 import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
 import com.example.micro_volunteering.data.repository.VolunteeringRepositoryImpl
+import com.example.micro_volunteering.data.utils.UriConverter
 import com.example.micro_volunteering.domain.repository.VolunteeringRepository
 import com.example.micro_volunteering.domain.usecase.AuthorizationUserUseCase
 import com.example.micro_volunteering.domain.usecase.CreateTaskUseCase
@@ -38,10 +39,10 @@ object ApiModule {
 
     @Provides
     fun provideRepository(
-        api: VolunteeringApiService, tokenManager: TokenManager, userPreferences: UserPreferences
+        api: VolunteeringApiService, tokenManager: TokenManager, userPreferences: UserPreferences, uriConverter: UriConverter
     ) : VolunteeringRepository {
         return VolunteeringRepositoryImpl(
-            api, tokenManager, userPreferences, UserMapper(), TaskMapper(), FeedbackMapper()
+            api, tokenManager, userPreferences, UserMapper(), TaskMapper(), FeedbackMapper(), uriConverter
         )
     }
 
@@ -93,6 +94,11 @@ object ApiModule {
     @Provides
     fun provideGetFeedbackUseCase(repository: VolunteeringRepository) : GetFeedbacksUseCase {
         return GetFeedbacksUseCase(repository)
+    }
+
+    @Provides
+    fun provideUriConverter(@ApplicationContext context: Context) : UriConverter {
+        return UriConverter(context)
     }
 
     @Provides

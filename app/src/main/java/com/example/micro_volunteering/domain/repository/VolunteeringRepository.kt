@@ -31,4 +31,5 @@ interface VolunteeringRepository {
     suspend fun deleteUser() : Boolean
     suspend fun deleteTask(id: Int) : Boolean
     suspend fun logout()
+    suspend fun uploadPhoto(uri: String) : Boolean
 }

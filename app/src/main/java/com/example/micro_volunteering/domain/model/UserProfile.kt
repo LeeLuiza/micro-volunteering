@@ -8,6 +8,7 @@ sealed class UserProfile : Parcelable {
     @Parcelize
     data class Volunteer(
         val name: String,
+        val avatarUrl: String?,
         val password: String,
         val phone: String,
         val email: String,
@@ -21,6 +22,7 @@ sealed class UserProfile : Parcelable {
     @Parcelize
     data class Organization(
         val legalName: String,
+        val avatarUrl: String?,
         val inn: String,
         val legalAddress: String,
         val displayName: String,
