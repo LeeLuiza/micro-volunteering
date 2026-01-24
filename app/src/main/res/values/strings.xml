@@ -21,6 +21,7 @@
     <string name="error_session_expired">Сессия истекла. Пожалуйста, войдите снова</string>
     <string name="tasks">Задачи</string>
     <string name="notification">Уведомления</string>
+    <string name="participants">Участники</string>
     <string name="account">Аккаунт</string>
     <string name="volunteer">Я Волонтер</string>
     <string name="organization">Мы Организация</string>
@@ -59,6 +60,8 @@
     <string name="city_profile">Город: %s</string>
     <string name="have_account">Уже есть аккаунт? Войти</string>
     <string name="edit_task">Редактировать задачу</string>
+    <string name="view_participants">Посмотреть участников</string>
+    <string name="complete">Завершить</string>
     <string name="respond_task">Откликнуться</string>
     <string name="create_task">Создание задачи</string>
     <string name="task">Задачи</string>
@@ -81,4 +84,13 @@
     <string name="error_invalid_volunteers">Укажите количество волонтеров (минимум 1)</string>
     <string name="count_task">Количество выполненных задач: %s</string>
     <string name="reviews">(%s отзывов)</string>
+    <string name="error_no_rating">Пожалуйста, поставьте оценку</string>
+    <string name="error_empty_feedback">Напишите текст отзыва</string>
+    <string name="error_short_feedback">Отзыв слишком короткий</string>
+    <string name="send">Отправить</string>
+    <string name="accept">Принять</string>
+    <string name="dismiss">Отклонить</string>
+    <string name="successfully_responded">Вы успешно откликнулись на задачу!</string>
+    <string name="accepted_user">Вы успешно приняли пользователя на задачу!</string>
+    <string name="dismiss_user">Вы успешно отклонили пользователя на задачу!</string>
 </resources>

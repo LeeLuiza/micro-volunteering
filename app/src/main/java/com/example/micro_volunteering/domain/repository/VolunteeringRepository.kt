@@ -1,11 +1,13 @@
 package com.example.micro_volunteering.domain.repository
 
 import com.example.micro_volunteering.domain.model.Feedback
+import com.example.micro_volunteering.domain.model.Notification
 import com.example.micro_volunteering.domain.model.Task
 import com.example.micro_volunteering.domain.model.UpdateProfileParams
 import com.example.micro_volunteering.domain.model.UserProfile
 import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.domain.model.UserRole
+import com.example.micro_volunteering.domain.model.VolunteerRespond
 
 interface VolunteeringRepository {
     suspend fun registrationVolunteer(user: UserProfileRegister.Volunteer) : Boolean
@@ -32,4 +34,11 @@ interface VolunteeringRepository {
     suspend fun deleteTask(id: Int) : Boolean
     suspend fun logout()
     suspend fun uploadPhoto(uri: String) : Boolean
+    suspend fun getNotification() : List<Notification>
+    suspend fun getVolunteerRespond(idTask: Int) : List<VolunteerRespond>
+    suspend fun leaveFeedback(idVolunteer: Int, idTask: Int, text: String, countStars: Float) : Boolean
+    suspend fun completeTask(id: Int) : Boolean
+    suspend fun respond(idTask: Int) : Boolean
+    suspend fun acceptVolunteer(idTask: Int, idVolunteer: Int) : Boolean
+    suspend fun dismissVolunteer(idTask: Int, idVolunteer: Int) : Boolean
 }

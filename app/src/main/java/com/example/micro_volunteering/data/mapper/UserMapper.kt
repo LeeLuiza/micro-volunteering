@@ -6,9 +6,11 @@ import com.example.micro_volunteering.data.remote.dto.request.RegisterVolunteerR
 import com.example.micro_volunteering.data.remote.dto.request.VolunteerProfileRequest
 import com.example.micro_volunteering.data.remote.dto.response.OrganizationProfileResponse
 import com.example.micro_volunteering.data.remote.dto.response.VolunteerProfileResponse
+import com.example.micro_volunteering.data.remote.dto.response.VolunteerRespondResponse
 import com.example.micro_volunteering.domain.model.UpdateProfileParams
 import com.example.micro_volunteering.domain.model.UserProfile
 import com.example.micro_volunteering.domain.model.UserProfileRegister
+import com.example.micro_volunteering.domain.model.VolunteerRespond
 
 class UserMapper {
 
@@ -86,5 +88,12 @@ class UserMapper {
         phoneOrg = user.phoneOrg,
         email = user.email,
         city = user.city
+    )
+
+    fun toDomainVolunteerRespond(user: VolunteerRespondResponse) = VolunteerRespond(
+        id = user.id,
+        name = user.name,
+        avatarUrl = user.avatarUrl,
+        isRated = user.isRated
     )
 }

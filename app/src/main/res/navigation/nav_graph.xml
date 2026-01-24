@@ -68,6 +68,9 @@
         <action
             android:id="@+id/action_taskFragment_to_updateTaskFragment"
             app:destination="@id/updateTaskFragment" />
+        <action
+            android:id="@+id/action_taskFragment_to_volunteerRespondFragment"
+            app:destination="@id/volunteerRespondFragment" />
     </fragment>
     <fragment
         android:id="@+id/createTaskFragment"
@@ -136,4 +139,45 @@
         android:name="com.example.micro_volunteering.presentation.ui.FeedbackListFragment"
         android:label="fragment_feedback_list"
         tools:layout="@layout/fragment_feedback_list" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.example.micro_volunteering.presentation.ui.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
+    <fragment
+        android:id="@+id/volunteerRespondFragment"
+        android:name="com.example.micro_volunteering.presentation.ui.VolunteerRespondFragment"
+        android:label="fragment_volunteer_respond"
+        tools:layout="@layout/fragment_volunteer_respond" >
+        <action
+            android:id="@+id/action_volunteerRespondFragment_to_leaveFeedbackFragment"
+            app:destination="@id/leaveFeedbackFragment" />
+        <argument
+            android:name="id"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/leaveFeedbackFragment"
+        android:name="com.example.micro_volunteering.presentation.ui.LeaveFeedbackFragment"
+        android:label="fragment_leave_feedback"
+        tools:layout="@layout/fragment_leave_feedback">
+
+        <argument
+            android:name="idVolunteer"
+            app:argType="integer" />
+        <argument
+            android:name="idTask"
+            app:argType="integer" />
+        <argument
+            android:name="name"
+            app:argType="string" />
+        <argument
+            android:name="rating"
+            app:argType="float"
+            android:defaultValue="0.0" />
+        <argument
+            android:name="url"
+            app:argType="string"
+            app:nullable="true"/>
+    </fragment>
 </navigation>

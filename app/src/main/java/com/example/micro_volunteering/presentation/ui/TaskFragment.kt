@@ -1,10 +1,12 @@
 package com.example.micro_volunteering.presentation.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -45,6 +47,19 @@ class TaskFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }
+
+        binding.btnComplete.setOnClickListener {
+            viewModel.completeTask(args.id)
+        }
+
+        binding.btnViewParticipants.setOnClickListener {
+            val action = TaskFragmentDirections.actionTaskFragmentToVolunteerRespondFragment(args.id)
+            findNavController().navigate(action)
+        }
+
+        binding.btnRespond.setOnClickListener {
+            viewModel.respond(args.id)
+        }
     }
 
     private fun observeViewModel() {
@@ -52,6 +67,16 @@ class TaskFragment : Fragment() {
             if (isLoading) {
                 binding.progressBar.isVisible = true
                 binding.content.isVisible = false
+            }
+            else {
+                binding.progressBar.isVisible = false
+                binding.content.isVisible = true
+            }
+        }
+
+        viewModel.isComplete.observe(viewLifecycleOwner) { isComplete ->
+            if (isComplete) {
+                findNavController().popBackStack()
             }
         }
 
@@ -68,7 +93,15 @@ class TaskFragment : Fragment() {
                 binding.date.text = task.date
                 binding.organization.text = task.organizationName
                 binding.btnCorrect.isVisible = viewModel.isUserOrganization()
+                binding.btnViewParticipants.isVisible = viewModel.isUserOrganization()
+                binding.btnComplete.isVisible = viewModel.isUserOrganization()
                 binding.btnRespond.isVisible = !viewModel.isUserOrganization()
+            }
+        }
+
+        viewModel.isRespond.observe(viewLifecycleOwner) { isRespond ->
+            if (isRespond) {
+                Toast.makeText(requireContext(), R.string.successfully_responded, Toast.LENGTH_SHORT).show()
             }
         }
     }

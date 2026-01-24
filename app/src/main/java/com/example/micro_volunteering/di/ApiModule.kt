@@ -6,6 +6,7 @@ import com.example.micro_volunteering.data.local.TokenManager
 import com.example.micro_volunteering.data.constants.AuthConstants.AUTH_PREFERENCES
 import com.example.micro_volunteering.data.local.UserPreferences
 import com.example.micro_volunteering.data.mapper.FeedbackMapper
+import com.example.micro_volunteering.data.mapper.NotificationMapper
 import com.example.micro_volunteering.data.mapper.TaskMapper
 import com.example.micro_volunteering.data.mapper.UserMapper
 import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
@@ -13,10 +14,14 @@ import com.example.micro_volunteering.data.repository.VolunteeringRepositoryImpl
 import com.example.micro_volunteering.data.utils.UriConverter
 import com.example.micro_volunteering.domain.repository.VolunteeringRepository
 import com.example.micro_volunteering.domain.usecase.AuthorizationUserUseCase
+import com.example.micro_volunteering.domain.usecase.CompleteTaskUseCase
 import com.example.micro_volunteering.domain.usecase.CreateTaskUseCase
 import com.example.micro_volunteering.domain.usecase.DeleteUserUseCase
 import com.example.micro_volunteering.domain.usecase.GetFeedbacksUseCase
+import com.example.micro_volunteering.domain.usecase.GetNotificationUseCase
 import com.example.micro_volunteering.domain.usecase.GetUserRoleUseCase
+import com.example.micro_volunteering.domain.usecase.GetVolunteerRespondUseCase
+import com.example.micro_volunteering.domain.usecase.LeaveFeedbackUseCase
 import com.example.micro_volunteering.domain.usecase.LogoutUseCase
 import com.example.micro_volunteering.domain.usecase.RegistrationUserUseCase
 import com.example.micro_volunteering.domain.usecase.UpdateTaskUseCase
@@ -42,7 +47,8 @@ object ApiModule {
         api: VolunteeringApiService, tokenManager: TokenManager, userPreferences: UserPreferences, uriConverter: UriConverter
     ) : VolunteeringRepository {
         return VolunteeringRepositoryImpl(
-            api, tokenManager, userPreferences, UserMapper(), TaskMapper(), FeedbackMapper(), uriConverter
+            api, tokenManager, userPreferences, UserMapper(), TaskMapper(), FeedbackMapper(),
+            NotificationMapper(), uriConverter
         )
     }
 
@@ -94,6 +100,26 @@ object ApiModule {
     @Provides
     fun provideGetFeedbackUseCase(repository: VolunteeringRepository) : GetFeedbacksUseCase {
         return GetFeedbacksUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetNotificationUseCase(repository: VolunteeringRepository) : GetNotificationUseCase {
+        return GetNotificationUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetVolunteerRespondUseCase(repository: VolunteeringRepository) : GetVolunteerRespondUseCase {
+        return GetVolunteerRespondUseCase(repository)
+    }
+
+    @Provides
+    fun provideLeaveFeedbackUseCase(repository: VolunteeringRepository) : LeaveFeedbackUseCase {
+        return LeaveFeedbackUseCase(repository)
+    }
+
+    @Provides
+    fun provideCompleteTaskUseCase(repository: VolunteeringRepository) : CompleteTaskUseCase {
+        return CompleteTaskUseCase(repository)
     }
 
     @Provides

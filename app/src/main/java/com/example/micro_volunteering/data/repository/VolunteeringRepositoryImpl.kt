@@ -1,22 +1,27 @@
 package com.example.micro_volunteering.data.repository
 
+import android.util.Log
 import com.example.micro_volunteering.data.constants.AuthConstants
 import com.example.micro_volunteering.data.local.TokenManager
 import com.example.micro_volunteering.data.local.UserPreferences
 import com.example.micro_volunteering.data.mapper.FeedbackMapper
+import com.example.micro_volunteering.data.mapper.NotificationMapper
 import com.example.micro_volunteering.data.mapper.TaskMapper
 import com.example.micro_volunteering.data.mapper.UserMapper
 import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
 import com.example.micro_volunteering.data.remote.dto.request.CreateTaskRequest
 import com.example.micro_volunteering.data.remote.dto.request.LoginRequest
 import com.example.micro_volunteering.data.remote.dto.request.TaskRequest
+import com.example.micro_volunteering.data.remote.dto.request.VolunteerRespondRequest
 import com.example.micro_volunteering.data.utils.UriConverter
 import com.example.micro_volunteering.domain.model.Feedback
+import com.example.micro_volunteering.domain.model.Notification
 import com.example.micro_volunteering.domain.model.Task
 import com.example.micro_volunteering.domain.model.UpdateProfileParams
 import com.example.micro_volunteering.domain.model.UserProfile
 import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.domain.model.UserRole
+import com.example.micro_volunteering.domain.model.VolunteerRespond
 import com.example.micro_volunteering.domain.repository.VolunteeringRepository
 import javax.inject.Inject
 
@@ -27,6 +32,7 @@ class VolunteeringRepositoryImpl @Inject constructor(
     private val userMapper: UserMapper,
     private val taskMapper: TaskMapper,
     private val feedbackMapper: FeedbackMapper,
+    private val notificationMapper: NotificationMapper,
     private val uriConverter: UriConverter
 ) : VolunteeringRepository {
     override suspend fun registrationVolunteer(user: UserProfileRegister.Volunteer) : Boolean {
@@ -225,6 +231,78 @@ class VolunteeringRepositoryImpl @Inject constructor(
 
         return try {
             api.uploadPhoto(imagePart)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    override suspend fun getNotification(): List<Notification> {
+        return try {
+            api.getNotification().map { it -> notificationMapper.toDomain(it) }
+        } catch (e: Exception) {
+            emptyList<Notification>()
+        }
+    }
+
+    override suspend fun getVolunteerRespond(idTask: Int): List<VolunteerRespond> {
+        return try {
+            api.getVolunteerRespond(idTask).map { it -> userMapper.toDomainVolunteerRespond(it) }
+        } catch (e: Exception) {
+            emptyList<VolunteerRespond>()
+        }
+    }
+
+    override suspend fun leaveFeedback(
+        idVolunteer: Int,
+        idTask: Int,
+        text: String,
+        countStars: Float
+    ): Boolean {
+        return try {
+            api.leaveFeedback(idVolunteer, VolunteerRespondRequest(idTask, text, countStars))
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    override suspend fun completeTask(id: Int): Boolean {
+        return try {
+            api.completeTask(id)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    override suspend fun respond(idTask: Int): Boolean {
+        return try {
+            api.respond(idTask)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    override suspend fun acceptVolunteer(
+        idTask: Int,
+        idVolunteer: Int
+    ): Boolean {
+        return try {
+            api.acceptVolunteer(idTask, idVolunteer)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    override suspend fun dismissVolunteer(
+        idTask: Int,
+        idVolunteer: Int
+    ): Boolean {
+        return try {
+            api.dismissVolunteer(idTask, idVolunteer)
             true
         } catch (e: Exception) {
             false
