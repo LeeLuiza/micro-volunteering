@@ -7,6 +7,7 @@ import com.example.micro_volunteering.data.remote.dto.request.OrganizationProfil
 import com.example.micro_volunteering.data.remote.dto.request.RegisterOrganizationRequest
 import com.example.micro_volunteering.data.remote.dto.request.RegisterVolunteerRequest
 import com.example.micro_volunteering.data.remote.dto.request.TaskRequest
+import com.example.micro_volunteering.data.remote.dto.request.TokenRequest
 import com.example.micro_volunteering.data.remote.dto.request.VolunteerProfileRequest
 import com.example.micro_volunteering.data.remote.dto.request.VolunteerRespondRequest
 import com.example.micro_volunteering.data.remote.dto.response.AuthResponse
@@ -101,4 +102,7 @@ interface VolunteeringApiService {
 
     @POST("task/{id}/dismiss")
     suspend fun dismissVolunteer(@Path("id") idTask: Int, @Query("volunteerId") idVolunteer: Int) : Boolean
+
+    @POST("token")
+    suspend fun updateFcmToken(@Body request: TokenRequest) : Boolean
 }

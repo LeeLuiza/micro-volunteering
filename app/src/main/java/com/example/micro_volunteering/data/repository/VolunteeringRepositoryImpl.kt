@@ -1,7 +1,5 @@
 package com.example.micro_volunteering.data.repository
 
-import android.util.Log
-import com.example.micro_volunteering.data.constants.AuthConstants
 import com.example.micro_volunteering.data.local.TokenManager
 import com.example.micro_volunteering.data.local.UserPreferences
 import com.example.micro_volunteering.data.mapper.FeedbackMapper
@@ -12,6 +10,7 @@ import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
 import com.example.micro_volunteering.data.remote.dto.request.CreateTaskRequest
 import com.example.micro_volunteering.data.remote.dto.request.LoginRequest
 import com.example.micro_volunteering.data.remote.dto.request.TaskRequest
+import com.example.micro_volunteering.data.remote.dto.request.TokenRequest
 import com.example.micro_volunteering.data.remote.dto.request.VolunteerRespondRequest
 import com.example.micro_volunteering.data.utils.UriConverter
 import com.example.micro_volunteering.domain.model.Feedback
@@ -23,6 +22,8 @@ import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.domain.model.VolunteerRespond
 import com.example.micro_volunteering.domain.repository.VolunteeringRepository
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class VolunteeringRepositoryImpl @Inject constructor(
@@ -307,5 +308,30 @@ class VolunteeringRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             false
         }
+    }
+
+    override suspend fun updateFcmToken(token: String): Boolean {
+        return try {
+            api.updateFcmToken(TokenRequest(token))
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    override suspend fun createFcmToken(): Boolean {
+        return try {
+            val token = FirebaseMessaging.getInstance().token.await()
+            api.updateFcmToken(TokenRequest(token))
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    override suspend fun isNotificationPermissionRequested(): Boolean {
+        return userPreferences.isNotificationPermissionRequested()
+    }
+
+    override suspend fun setNotificationPermissionRequested() {
+        userPreferences.setNotificationPermissionRequested()
     }
 }

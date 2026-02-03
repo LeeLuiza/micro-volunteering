@@ -90,6 +90,7 @@
     <string name="send">Отправить</string>
     <string name="accept">Принять</string>
     <string name="dismiss">Отклонить</string>
+    <string name="could_not_open_notification">Не удалось открыть экран уведомлений</string>
     <string name="successfully_responded">Вы успешно откликнулись на задачу!</string>
     <string name="accepted_user">Вы успешно приняли пользователя на задачу!</string>
     <string name="dismiss_user">Вы успешно отклонили пользователя на задачу!</string>

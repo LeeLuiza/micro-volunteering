@@ -1,7 +1,9 @@
 package com.example.micro_volunteering.presentation.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +14,7 @@ import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.ActivityMainBinding
 import com.example.micro_volunteering.domain.event.NetworkErrorManager
 import com.example.micro_volunteering.domain.model.AppError
+import com.example.micro_volunteering.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -20,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,10 +31,31 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setUpNavigation()
+        viewModel.handleNotificationIntent(intent)
+        observeViewModel()
 
         lifecycleScope.launch {
             NetworkErrorManager.errorFlow.collect { error ->
                 handleError(error)
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        viewModel.handleNotificationIntent(intent)
+    }
+
+    fun observeViewModel() {
+        viewModel.navigationEvent.observe(this) { fragmentId ->
+            if (fragmentId != null) {
+                try {
+                    navController.navigate(fragmentId)
+                } catch (e: Exception) {
+                    Toast.makeText(this, R.string.could_not_open_notification, Toast.LENGTH_SHORT).show()
+                }
+                viewModel.onNavigationHandled()
             }
         }
     }

@@ -1,9 +1,9 @@
 package com.example.micro_volunteering.data.remote.interceptors
 
 import com.example.micro_volunteering.data.local.TokenManager
-import com.example.micro_volunteering.data.constants.AuthConstants.HEADER_AUTHORIZATION
-import com.example.micro_volunteering.data.constants.AuthConstants.HEADER_BEARER_PREFIX
-import com.example.micro_volunteering.data.constants.AuthConstants.NO_AUTH_HEADER
+import com.example.micro_volunteering.data.constants.AppConstants.HEADER_AUTHORIZATION
+import com.example.micro_volunteering.data.constants.AppConstants.HEADER_BEARER_PREFIX
+import com.example.micro_volunteering.data.constants.AppConstants.NO_AUTH_HEADER
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response

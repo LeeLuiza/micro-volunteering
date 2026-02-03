@@ -3,7 +3,7 @@ package com.example.micro_volunteering.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.micro_volunteering.data.local.TokenManager
-import com.example.micro_volunteering.data.constants.AuthConstants.AUTH_PREFERENCES
+import com.example.micro_volunteering.data.constants.AppConstants.AUTH_PREFERENCES
 import com.example.micro_volunteering.data.local.UserPreferences
 import com.example.micro_volunteering.data.mapper.FeedbackMapper
 import com.example.micro_volunteering.data.mapper.NotificationMapper
@@ -23,8 +23,11 @@ import com.example.micro_volunteering.domain.usecase.GetUserRoleUseCase
 import com.example.micro_volunteering.domain.usecase.GetVolunteerRespondUseCase
 import com.example.micro_volunteering.domain.usecase.LeaveFeedbackUseCase
 import com.example.micro_volunteering.domain.usecase.LogoutUseCase
+import com.example.micro_volunteering.domain.usecase.NotificationPermissionRequestedUseCase
 import com.example.micro_volunteering.domain.usecase.RegistrationUserUseCase
+import com.example.micro_volunteering.domain.usecase.SetNotificationPermissionRequestedUseCase
 import com.example.micro_volunteering.domain.usecase.UpdateTaskUseCase
+import com.example.micro_volunteering.domain.usecase.UpdateTokenUseCase
 import com.example.micro_volunteering.domain.usecase.UpdateUserInfoUseCase
 import com.example.micro_volunteering.domain.usecase.UserInfoUseCase
 import dagger.Module
@@ -120,6 +123,21 @@ object ApiModule {
     @Provides
     fun provideCompleteTaskUseCase(repository: VolunteeringRepository) : CompleteTaskUseCase {
         return CompleteTaskUseCase(repository)
+    }
+
+    @Provides
+    fun provideUpdateTokenUseCase(repository: VolunteeringRepository) : UpdateTokenUseCase {
+        return UpdateTokenUseCase(repository)
+    }
+
+    @Provides
+    fun provideNotificationPermissionRequestedUseCase(repository: VolunteeringRepository) : NotificationPermissionRequestedUseCase {
+        return NotificationPermissionRequestedUseCase(repository)
+    }
+
+    @Provides
+    fun provideSetNotificationPermissionRequestedUseCaseUseCase(repository: VolunteeringRepository) : SetNotificationPermissionRequestedUseCase {
+        return SetNotificationPermissionRequestedUseCase(repository)
     }
 
     @Provides

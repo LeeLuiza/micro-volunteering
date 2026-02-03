@@ -2,7 +2,7 @@ package com.example.micro_volunteering.data.local
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import com.example.micro_volunteering.data.constants.AuthConstants
+import com.example.micro_volunteering.data.constants.AppConstants
 import javax.inject.Inject
 
 class TokenManager @Inject constructor(
@@ -10,19 +10,19 @@ class TokenManager @Inject constructor(
 ) {
     fun saveTokens(accessToken: String, refreshToken: String) {
         sharedPreferences.edit {
-            putString(AuthConstants.KEY_ACCESS_TOKEN, accessToken)
-                .putString(AuthConstants.KEY_REFRESH_TOKEN, refreshToken)
+            putString(AppConstants.KEY_ACCESS_TOKEN, accessToken)
+                .putString(AppConstants.KEY_REFRESH_TOKEN, refreshToken)
         }
     }
 
     fun getAccessToken(): String? {
-        return sharedPreferences.getString(AuthConstants.KEY_ACCESS_TOKEN, null)
+        return sharedPreferences.getString(AppConstants.KEY_ACCESS_TOKEN, null)
     }
 
     fun deleteToken() {
         sharedPreferences.edit {
-            remove(AuthConstants.KEY_ACCESS_TOKEN)
-            remove(AuthConstants.KEY_REFRESH_TOKEN)
+            remove(AppConstants.KEY_ACCESS_TOKEN)
+            remove(AppConstants.KEY_REFRESH_TOKEN)
         }
     }
 }

@@ -1,18 +1,20 @@
 package com.example.micro_volunteering.presentation.ui
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentTaskListBinding
-import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.presentation.adapter.TaskAdapter
 import com.example.micro_volunteering.presentation.viewmodel.TaskListViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +26,12 @@ class TaskListFragment : Fragment() {
     private lateinit var binding: FragmentTaskListBinding
     private val viewModel: TaskListViewModel by viewModels()
     private lateinit var adapter: TaskAdapter
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        viewModel.setNotificationPermissionRequested()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +47,7 @@ class TaskListFragment : Fragment() {
         setupRecyclerView()
         observeViewModel()
         viewModel.loadTasks()
+        viewModel.checkPermissionStatus()
 
         binding.btnNewTask.setOnClickListener {
             val action = TaskListFragmentDirections.actionTaskListFragmentToCreateTaskFragment()
@@ -74,6 +83,27 @@ class TaskListFragment : Fragment() {
                 binding.recyclerViewTasks.isVisible = true
                 adapter.updateTasks(tasks)
                 binding.btnNewTask.isVisible = viewModel.isUserOrganization()
+            }
+        }
+
+        viewModel.isNotificationPermissionRequested.observe(viewLifecycleOwner) { isNotification ->
+            if (isNotification) {
+                notificationPermissionRequested()
+            }
+        }
+    }
+
+    private fun notificationPermissionRequested() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val hasPermission = ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (!hasPermission) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                viewModel.setNotificationPermissionRequested()
             }
         }
     }

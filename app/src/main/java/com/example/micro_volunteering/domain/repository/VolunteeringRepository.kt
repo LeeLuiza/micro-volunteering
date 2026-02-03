@@ -41,4 +41,8 @@ interface VolunteeringRepository {
     suspend fun respond(idTask: Int) : Boolean
     suspend fun acceptVolunteer(idTask: Int, idVolunteer: Int) : Boolean
     suspend fun dismissVolunteer(idTask: Int, idVolunteer: Int) : Boolean
+    suspend fun updateFcmToken(token: String) : Boolean
+    suspend fun createFcmToken() : Boolean
+    suspend fun isNotificationPermissionRequested() : Boolean
+    suspend fun setNotificationPermissionRequested()
 }

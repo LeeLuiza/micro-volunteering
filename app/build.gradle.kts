@@ -6,6 +6,7 @@ plugins {
     id("kotlin-kapt")
     id ("kotlin-parcelize")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -67,5 +68,9 @@ dependencies {
 
     implementation(libs.coil)
 
-    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    implementation(libs.logging.interceptor)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+    implementation(libs.kotlinx.coroutines.play.services)
 }

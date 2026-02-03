@@ -9,7 +9,7 @@ import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
 import androidx.core.net.toUri
-import com.example.micro_volunteering.data.constants.AuthConstants
+import com.example.micro_volunteering.data.constants.AppConstants
 
 class UriConverter @Inject constructor(
     @ApplicationContext private val context: Context
@@ -19,7 +19,7 @@ class UriConverter @Inject constructor(
             val uri = uriString.toUri()
 
             val filesDir = context.cacheDir
-            val tempFile = File.createTempFile(AuthConstants.UPLOAD_IMAGE, AuthConstants.FORMAT_IMAGE, filesDir)
+            val tempFile = File.createTempFile(AppConstants.UPLOAD_IMAGE, AppConstants.FORMAT_IMAGE, filesDir)
 
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 FileOutputStream(tempFile).use { outputStream ->
@@ -27,8 +27,8 @@ class UriConverter @Inject constructor(
                 }
             }
 
-            val requestFile = tempFile.asRequestBody(AuthConstants.IMAGE_JPEG.toMediaTypeOrNull())
-            return MultipartBody.Part.createFormData(AuthConstants.IMAGE, tempFile.name, requestFile)
+            val requestFile = tempFile.asRequestBody(AppConstants.IMAGE_JPEG.toMediaTypeOrNull())
+            return MultipartBody.Part.createFormData(AppConstants.IMAGE, tempFile.name, requestFile)
 
         } catch (e: Exception) {
             e.printStackTrace()

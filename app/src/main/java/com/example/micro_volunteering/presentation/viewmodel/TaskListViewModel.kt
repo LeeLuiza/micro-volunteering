@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.domain.model.Task
 import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.domain.usecase.GetUserRoleUseCase
+import com.example.micro_volunteering.domain.usecase.NotificationPermissionRequestedUseCase
+import com.example.micro_volunteering.domain.usecase.SetNotificationPermissionRequestedUseCase
 import com.example.micro_volunteering.domain.usecase.TaskListOrganizationUseCase
 import com.example.micro_volunteering.domain.usecase.TaskListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,13 +19,18 @@ import javax.inject.Inject
 class TaskListViewModel @Inject constructor(
     private val taskListUseCase: TaskListUseCase,
     private val taskListOrganizationUseCase: TaskListOrganizationUseCase,
-    private val userRoleUseCase: GetUserRoleUseCase
+    private val userRoleUseCase: GetUserRoleUseCase,
+    private val notificationPermissionRequestedUseCase: NotificationPermissionRequestedUseCase,
+    private val setNotificationPermissionRequestedUseCase: SetNotificationPermissionRequestedUseCase
 ) : ViewModel() {
     private val _tasks = MutableLiveData<List<Task>>()
     val tasks: LiveData<List<Task>> = _tasks
 
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _isNotificationPermissionRequested = MutableLiveData<Boolean>(false)
+    val isNotificationPermissionRequested: LiveData<Boolean> = _isNotificationPermissionRequested
 
     fun loadTasks() {
         if (isUserOrganization()) {
@@ -53,7 +60,20 @@ class TaskListViewModel @Inject constructor(
         }
     }
 
+    fun checkPermissionStatus() {
+        viewModelScope.launch {
+            val result = notificationPermissionRequestedUseCase.isNotificationPermissionRequested()
+            _isNotificationPermissionRequested.value = !result
+        }
+    }
+
     fun isUserOrganization(): Boolean {
         return userRoleUseCase.getUserRole() == UserRole.ORGANIZATION
+    }
+
+    fun setNotificationPermissionRequested() {
+        viewModelScope.launch {
+            setNotificationPermissionRequestedUseCase.setNotificationPermissionRequested()
+        }
     }
 }

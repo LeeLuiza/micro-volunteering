@@ -1,6 +1,6 @@
 package com.example.micro_volunteering.data.remote.interceptors
 
-import com.example.micro_volunteering.data.constants.AuthConstants.MESSAGE
+import com.example.micro_volunteering.data.constants.AppConstants.MESSAGE
 import com.example.micro_volunteering.data.local.TokenManager
 import com.example.micro_volunteering.domain.event.NetworkErrorManager
 import com.example.micro_volunteering.domain.model.AppError

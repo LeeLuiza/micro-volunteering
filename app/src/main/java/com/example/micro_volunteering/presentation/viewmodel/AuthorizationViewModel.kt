@@ -6,13 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.domain.usecase.AuthorizationUserUseCase
+import com.example.micro_volunteering.domain.usecase.UpdateTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthorizationViewModel @Inject constructor(
-    private val useCase: AuthorizationUserUseCase
+    private val useCase: AuthorizationUserUseCase,
+    private val tokenUseCase: UpdateTokenUseCase
 ) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> = _isLoading
@@ -34,6 +36,11 @@ class AuthorizationViewModel @Inject constructor(
 
         viewModelScope.launch {
             val isSuccess = useCase.authorizationUser(login, password)
+
+            if (isSuccess) {
+                tokenUseCase.updateToken()
+            }
+
             _isLoading.value = false
 
             _navigate.value = isSuccess

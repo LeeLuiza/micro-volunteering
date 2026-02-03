@@ -2,7 +2,7 @@ package com.example.micro_volunteering.data.local
 
 import android.content.SharedPreferences
 import javax.inject.Inject
-import com.example.micro_volunteering.data.constants.AuthConstants
+import com.example.micro_volunteering.data.constants.AppConstants
 import androidx.core.content.edit
 import com.example.micro_volunteering.domain.model.UserRole
 
@@ -11,22 +11,18 @@ class UserPreferences @Inject constructor(
 ) {
     fun saveUserId(userId: String) {
         sharedPreferences.edit {
-            putString(AuthConstants.KEY_USER_ID, userId)
+            putString(AppConstants.KEY_USER_ID, userId)
         }
     }
 
     fun saveUserRole(role: UserRole) {
         sharedPreferences.edit {
-            putString(AuthConstants.USER_ROLE, role.name)
+            putString(AppConstants.USER_ROLE, role.name)
         }
     }
 
-    fun getUserId(): String? {
-        return sharedPreferences.getString(AuthConstants.KEY_USER_ID, null)
-    }
-
     fun getUserRole(): UserRole? {
-        val roleString = sharedPreferences.getString(AuthConstants.USER_ROLE, null) ?: return null
+        val roleString = sharedPreferences.getString(AppConstants.USER_ROLE, null) ?: return null
         return try {
             UserRole.valueOf(roleString)
         } catch (e: Exception) {
@@ -36,8 +32,18 @@ class UserPreferences @Inject constructor(
 
     fun deleteUserIdAndRole() {
         sharedPreferences.edit {
-            remove(AuthConstants.KEY_USER_ID)
-            remove(AuthConstants.USER_ROLE)
+            remove(AppConstants.KEY_USER_ID)
+            remove(AppConstants.USER_ROLE)
+        }
+    }
+
+    fun isNotificationPermissionRequested(): Boolean {
+        return sharedPreferences.getBoolean(AppConstants.KEY_NOTIFICATION_REQUESTED, false)
+    }
+
+    fun setNotificationPermissionRequested() {
+        sharedPreferences.edit {
+            putBoolean(AppConstants.KEY_NOTIFICATION_REQUESTED, true)
         }
     }
 }
