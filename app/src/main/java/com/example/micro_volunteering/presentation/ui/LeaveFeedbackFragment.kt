@@ -38,11 +38,14 @@ class LeaveFeedbackFragment : Fragment() {
         binding.name.text = args.name
         binding.img.load(args.url)
 
+        observeViewModel()
+        setupListeners()
+    }
+
+    private fun setupListeners() {
         binding.btnSave.setOnClickListener {
             viewModel.leaveFeedback(args.idVolunteer, args.idTask, binding.editFeedback.text.toString(), binding.ratingBar.rating)
         }
-
-        observeViewModel()
     }
 
     private fun observeViewModel() {

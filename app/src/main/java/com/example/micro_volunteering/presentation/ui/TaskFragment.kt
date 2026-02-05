@@ -36,8 +36,14 @@ class TaskFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val idTask = args.id
+
         observeViewModel()
-        loadTasks()
+        loadTasks(idTask)
+        setupListeners(idTask)
+    }
+
+    private fun setupListeners(idTask: Int) {
 
         binding.btnCorrect.setOnClickListener {
             val currentTask = viewModel.tasks.value
@@ -49,16 +55,16 @@ class TaskFragment : Fragment() {
         }
 
         binding.btnComplete.setOnClickListener {
-            viewModel.completeTask(args.id)
+            viewModel.completeTask(idTask)
         }
 
         binding.btnViewParticipants.setOnClickListener {
-            val action = TaskFragmentDirections.actionTaskFragmentToVolunteerRespondFragment(args.id)
+            val action = TaskFragmentDirections.actionTaskFragmentToVolunteerRespondFragment(idTask)
             findNavController().navigate(action)
         }
 
         binding.btnRespond.setOnClickListener {
-            viewModel.respond(args.id)
+            viewModel.respond(idTask)
         }
     }
 
@@ -106,7 +112,7 @@ class TaskFragment : Fragment() {
         }
     }
 
-    private fun loadTasks() {
-        viewModel.loadTasks(args.id)
+    private fun loadTasks(idTask: Int) {
+        viewModel.loadTasks(idTask)
     }
 }

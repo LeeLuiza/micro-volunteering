@@ -33,12 +33,17 @@ class UpdateTaskFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val idTask = args.task.id
+
         observeViewModel()
         setData()
+        setupListeners(idTask)
+    }
 
+    private fun setupListeners(idTask: Int) {
         binding.btnSave.setOnClickListener {
             viewModel.updateTask(
-                args.task.id,
+                idTask,
                 binding.titleEdit.text.toString(),
                 binding.descriptionEdit.text.toString(),
                 binding.addressEdit.text.toString(),
@@ -48,11 +53,11 @@ class UpdateTaskFragment : Fragment() {
         }
 
         binding.btnDeleteTask.setOnClickListener {
-            viewModel.deleteTask(args.task.id)
+            viewModel.deleteTask(idTask)
         }
     }
 
-    fun observeViewModel() {
+    private fun observeViewModel() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
                 binding.progressBar.isVisible = true

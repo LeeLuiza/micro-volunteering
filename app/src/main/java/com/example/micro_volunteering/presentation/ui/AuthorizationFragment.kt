@@ -30,6 +30,13 @@ class AuthorizationFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        observeViewModel()
+        setupListeners()
+    }
+
+    private fun setupListeners() {
         binding.login.setOnClickListener {
             viewModel.authorizationUser(
                 binding.fullNameEdit.text.toString(),
@@ -41,8 +48,6 @@ class AuthorizationFragment : Fragment() {
             val action = AuthorizationFragmentDirections.actionAuthorizationFragmentToRegistrationFragment(args.userType)
             findNavController().navigate(action)
         }
-
-        observeViewModel()
     }
 
     private fun observeViewModel() {

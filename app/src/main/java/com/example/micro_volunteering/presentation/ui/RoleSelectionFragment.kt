@@ -25,6 +25,10 @@ class RoleSelectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupListeners()
+    }
+
+    private fun setupListeners() {
         binding.btnVolunteer.setOnClickListener {
             navigateToAuth(UserRole.VOLUNTEER)
         }

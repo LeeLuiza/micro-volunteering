@@ -30,7 +30,10 @@ class CreateTaskFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         observeViewModel()
+        setupListeners()
+    }
 
+    private fun setupListeners() {
         binding.btnSave.setOnClickListener {
             viewModel.createTask(
                 binding.titleEdit.text.toString(),
@@ -42,7 +45,7 @@ class CreateTaskFragment : Fragment() {
         }
     }
 
-    fun observeViewModel() {
+    private fun observeViewModel() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
                 binding.progressBar.isVisible = true

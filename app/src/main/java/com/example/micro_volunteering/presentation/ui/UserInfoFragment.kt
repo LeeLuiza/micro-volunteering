@@ -43,7 +43,10 @@ class UserInfoFragment : Fragment() {
 
         observeViewModel()
         viewModel.loadUserInfo()
+        setupListeners()
+    }
 
+    private fun setupListeners() {
         binding.btnCorrect.setOnClickListener {
             val currentUser = viewModel.profile.value
 
@@ -67,7 +70,7 @@ class UserInfoFragment : Fragment() {
         }
     }
 
-    fun observeViewModel() {
+    private fun observeViewModel() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
                 binding.progressBar.isVisible = true

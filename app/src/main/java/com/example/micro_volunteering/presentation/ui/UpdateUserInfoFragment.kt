@@ -38,14 +38,7 @@ class UpdateUserInfoFragment : Fragment() {
         val user = args.user
 
         observeViewModel()
-
-        binding.btnSave.setOnClickListener {
-            saveChange(user)
-        }
-
-        binding.btnDelete.setOnClickListener {
-            viewModel.deleteAccount()
-        }
+        setupListeners(user)
 
         when (user) {
             is UserProfile.Volunteer -> setupVolunteerUI(user)
@@ -53,7 +46,17 @@ class UpdateUserInfoFragment : Fragment() {
         }
     }
 
-    fun observeViewModel() {
+    private fun setupListeners(user: UserProfile) {
+        binding.btnSave.setOnClickListener {
+            saveChange(user)
+        }
+
+        binding.btnDelete.setOnClickListener {
+            viewModel.deleteAccount()
+        }
+    }
+
+    private fun observeViewModel() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
                 binding.editInfoOrganization.isVisible = false

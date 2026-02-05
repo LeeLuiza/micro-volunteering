@@ -50,7 +50,6 @@ class UserInfoViewModel @Inject constructor(
     }
 
     fun uploadImage(uri: Uri) {
-
         viewModelScope.launch {
             uploadAvatarUseCase.uploadAvatar(uri.toString())
         }

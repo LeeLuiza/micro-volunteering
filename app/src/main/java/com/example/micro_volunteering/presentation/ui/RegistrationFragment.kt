@@ -32,6 +32,14 @@ class RegistrationFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        displayData()
+        observeViewModel()
+        setupListeners()
+    }
+
+    private fun setupListeners() {
         binding.registerButton.setOnClickListener {
             callViewModel()
         }
@@ -40,9 +48,6 @@ class RegistrationFragment : Fragment() {
             val action = RegistrationFragmentDirections.actionRegistrationFragmentToAuthorizationFragment(args.userType)
             findNavController().navigate(action)
         }
-
-        displayData()
-        observeViewModel()
     }
 
     private fun displayData() {

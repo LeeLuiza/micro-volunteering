@@ -49,7 +49,10 @@ class TaskListFragment : Fragment() {
         observeViewModel()
         viewModel.loadTasks()
         viewModel.checkPermissionStatus()
+        setupListeners()
+    }
 
+    private fun setupListeners() {
         binding.btnNewTask.setOnClickListener {
             val action = TaskListFragmentDirections.actionTaskListFragmentToCreateTaskFragment()
             findNavController().navigate(action)
