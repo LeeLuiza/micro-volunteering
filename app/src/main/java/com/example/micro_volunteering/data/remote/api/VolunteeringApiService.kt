@@ -46,7 +46,7 @@ interface VolunteeringApiService {
     suspend fun getTasksVolunteer() : List<TaskResponse>
 
     @GET("/organization/tasks")
-    suspend fun getTasksOrganization() : List<TaskResponse>
+    suspend fun getTasksOrganization(@Query("status") status: String) : List<TaskResponse>
 
     @GET("/task/{id}")
     suspend fun getTask(@Path("id") id: Int) : TaskResponse

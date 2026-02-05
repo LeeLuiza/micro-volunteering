@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.micro_volunteering.databinding.FragmentTaskListBinding
+import com.example.micro_volunteering.domain.model.TaskStatus
 import com.example.micro_volunteering.presentation.adapter.TaskAdapter
 import com.example.micro_volunteering.presentation.viewmodel.TaskListViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,6 +54,14 @@ class TaskListFragment : Fragment() {
             val action = TaskListFragmentDirections.actionTaskListFragmentToCreateTaskFragment()
             findNavController().navigate(action)
         }
+
+        binding.btnActiveTasks.setOnClickListener {
+            viewModel.changeTab(TaskStatus.ACTIVE)
+        }
+
+        binding.btnCompletedTasks.setOnClickListener {
+            viewModel.changeTab(TaskStatus.COMPLETE)
+        }
     }
 
     private fun setupRecyclerView() {
@@ -83,6 +92,7 @@ class TaskListFragment : Fragment() {
                 binding.recyclerViewTasks.isVisible = true
                 adapter.updateTasks(tasks)
                 binding.btnNewTask.isVisible = viewModel.isUserOrganization()
+                binding.tabContainer.isVisible = viewModel.isUserOrganization()
             }
         }
 
@@ -90,6 +100,10 @@ class TaskListFragment : Fragment() {
             if (isNotification) {
                 notificationPermissionRequested()
             }
+        }
+
+        viewModel.selectedTab.observe(viewLifecycleOwner) { status ->
+            updateTab(status)
         }
     }
 
@@ -105,6 +119,15 @@ class TaskListFragment : Fragment() {
             } else {
                 viewModel.setNotificationPermissionRequested()
             }
+        }
+    }
+
+    private fun updateTab(status: TaskStatus) {
+        if (status == TaskStatus.ACTIVE) {
+            binding.btnActiveTasks.isSelected = true
+        }
+        else {
+            binding.btnCompletedTasks.isSelected = false
         }
     }
 }

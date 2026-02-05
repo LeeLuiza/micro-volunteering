@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.domain.model.Task
+import com.example.micro_volunteering.domain.model.TaskStatus
 import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.domain.usecase.GetUserRoleUseCase
 import com.example.micro_volunteering.domain.usecase.NotificationPermissionRequestedUseCase
@@ -32,11 +33,22 @@ class TaskListViewModel @Inject constructor(
     private val _isNotificationPermissionRequested = MutableLiveData<Boolean>(false)
     val isNotificationPermissionRequested: LiveData<Boolean> = _isNotificationPermissionRequested
 
+    private val _selectedTab = MutableLiveData<TaskStatus>(TaskStatus.ACTIVE)
+    val selectedTab: LiveData<TaskStatus> = _selectedTab
+
     fun loadTasks() {
         if (isUserOrganization()) {
-            loadTasksOrganization()
+            val status = _selectedTab.value ?: TaskStatus.ACTIVE
+            loadTasksOrganization(status)
         } else {
             loadTasksVolunteer()
+        }
+    }
+
+    fun changeTab(status: TaskStatus) {
+        if (_selectedTab.value != status) {
+            _selectedTab.value = status
+            loadTasksOrganization(status)
         }
     }
 
@@ -50,11 +62,11 @@ class TaskListViewModel @Inject constructor(
         }
     }
 
-    fun loadTasksOrganization() {
+    fun loadTasksOrganization(status: TaskStatus) {
         _isLoading.value = true
 
         viewModelScope.launch {
-            val result = taskListOrganizationUseCase.getTasksOrganization()
+            val result = taskListOrganizationUseCase.getTasksOrganization(status)
             _tasks.value = result
             _isLoading.value = false
         }

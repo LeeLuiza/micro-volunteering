@@ -26,6 +26,38 @@
             android:textSize="18sp"
             android:textStyle="bold"/>
 
+        <LinearLayout
+            android:id="@+id/tab_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/item_background"
+            android:layout_marginTop="16dp" >
+
+            <TextView
+                android:id="@+id/btn_active_tasks"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="12dp"
+                android:text="@string/active_task"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:background="@color/selector_tab_container"/>
+
+            <TextView
+                android:id="@+id/btn_completed_tasks"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="12dp"
+                android:text="@string/complete_task"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:background="@color/selector_tab_container"/>
+
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_tasks"
             android:layout_width="match_parent"

@@ -94,4 +94,6 @@
     <string name="successfully_responded">Вы успешно откликнулись на задачу!</string>
     <string name="accepted_user">Вы успешно приняли пользователя на задачу!</string>
     <string name="dismiss_user">Вы успешно отклонили пользователя на задачу!</string>
+    <string name="active_task">Активные задачи</string>
+    <string name="complete_task">Завершенные задачи</string>
 </resources>

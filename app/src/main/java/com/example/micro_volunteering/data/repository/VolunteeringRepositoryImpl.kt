@@ -16,6 +16,7 @@ import com.example.micro_volunteering.data.utils.UriConverter
 import com.example.micro_volunteering.domain.model.Feedback
 import com.example.micro_volunteering.domain.model.Notification
 import com.example.micro_volunteering.domain.model.Task
+import com.example.micro_volunteering.domain.model.TaskStatus
 import com.example.micro_volunteering.domain.model.UpdateProfileParams
 import com.example.micro_volunteering.domain.model.UserProfile
 import com.example.micro_volunteering.domain.model.UserProfileRegister
@@ -95,9 +96,9 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTasksOrganization(): List<Task> {
+    override suspend fun getTasksOrganization(status: TaskStatus): List<Task> {
         return try {
-            val response = api.getTasksOrganization()
+            val response = api.getTasksOrganization(status.status)
             response.map { it -> taskMapper.toDomain(it) }
         }
         catch (e: Exception) {
