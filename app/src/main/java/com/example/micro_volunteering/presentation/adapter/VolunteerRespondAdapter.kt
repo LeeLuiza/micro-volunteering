@@ -3,10 +3,12 @@ package com.example.micro_volunteering.presentation.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.micro_volunteering.databinding.ItemVolunteerRespondBinding
 import com.example.micro_volunteering.domain.model.VolunteerRespond
+import com.example.micro_volunteering.presentation.diffcallback.VolunteerRespondDiffCallback
 
 class VolunteerRespondAdapter(
     private var volunteerResponds: List<VolunteerRespond>,
@@ -45,7 +47,9 @@ class VolunteerRespondAdapter(
     }
 
     fun update(newVolunteerResponds: List<VolunteerRespond>) {
+        val diffCallback = VolunteerRespondDiffCallback(volunteerResponds, newVolunteerResponds)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         volunteerResponds = newVolunteerResponds
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 }

@@ -126,11 +126,7 @@ class TaskListFragment : Fragment() {
     }
 
     private fun updateTab(status: TaskStatus) {
-        if (status == TaskStatus.ACTIVE) {
-            binding.btnActiveTasks.isSelected = true
-        }
-        else {
-            binding.btnCompletedTasks.isSelected = false
-        }
+        binding.btnActiveTasks.isSelected = (status == TaskStatus.ACTIVE)
+        binding.btnCompletedTasks.isSelected = (status == TaskStatus.COMPLETE)
     }
 }

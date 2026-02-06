@@ -26,12 +26,25 @@
             android:textSize="18sp"
             android:textStyle="bold"/>
 
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@color/item_background"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:padding="12dp"/>
+
         <LinearLayout
             android:id="@+id/tab_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@color/item_background"
+            android:visibility="gone"
             android:layout_marginTop="16dp" >
 
             <TextView

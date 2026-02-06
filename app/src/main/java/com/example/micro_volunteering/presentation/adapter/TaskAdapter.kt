@@ -2,9 +2,11 @@ package com.example.micro_volunteering.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.micro_volunteering.databinding.ItemTasksBinding
 import com.example.micro_volunteering.domain.model.Task
+import com.example.micro_volunteering.presentation.diffcallback.TaskDiffCallback
 
 class TaskAdapter(
     private var tasks: List<Task>,
@@ -42,7 +44,9 @@ class TaskAdapter(
     }
 
     fun updateTasks(newTasks: List<Task>) {
+        val diffCallback = TaskDiffCallback(tasks, newTasks)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         tasks = newTasks
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 }

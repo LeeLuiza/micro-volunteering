@@ -2,9 +2,11 @@ package com.example.micro_volunteering.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.micro_volunteering.databinding.ItemFeedbackBinding
 import com.example.micro_volunteering.domain.model.Feedback
+import com.example.micro_volunteering.presentation.diffcallback.FeedbackDiffCallback
 
 class FeedbackAdapter (
     private var feedbacks: List<Feedback>
@@ -31,7 +33,9 @@ class FeedbackAdapter (
     }
 
     fun updateFeedbacks(newFeedbacks: List<Feedback>) {
+        val diffCallback = FeedbackDiffCallback(feedbacks, newFeedbacks)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         feedbacks = newFeedbacks
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 }
