@@ -1,6 +1,7 @@
 package com.example.micro_volunteering.data.mapper
 
 import com.example.micro_volunteering.data.remote.dto.response.TaskResponse
+import com.example.micro_volunteering.domain.model.CategoryTask
 import com.example.micro_volunteering.domain.model.Task
 
 class TaskMapper {
@@ -11,7 +12,7 @@ class TaskMapper {
         description = task.description,
         address = task.address,
         organizationName = task.organizationName,
-        category = task.category,
+        category = CategoryTask.fromString(task.category),
         volunteersNeeded = task.volunteersNeeded,
         date = task.date
     )

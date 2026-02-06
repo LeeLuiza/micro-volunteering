@@ -12,7 +12,6 @@
         android:layout_gravity="center"
         android:visibility="gone"/>
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -88,13 +87,12 @@
                 android:layout_marginHorizontal="16dp"
                 android:text="@string/category"/>
 
-            <EditText
-                android:id="@+id/category"
+            <Spinner
+                android:id="@+id/spinner_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginHorizontal="16dp"
-                android:hint="@string/category"/>
+                android:layout_margin="16dp"
+                android:padding="12dp" />
 
             <TextView
                 android:layout_width="wrap_content"

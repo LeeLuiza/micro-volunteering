@@ -1,10 +1,10 @@
 package com.example.micro_volunteering.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.micro_volunteering.domain.model.CategoryTask
 import com.example.micro_volunteering.domain.model.Task
 import com.example.micro_volunteering.domain.model.TaskStatus
 import com.example.micro_volunteering.domain.model.UserRole
@@ -86,10 +86,20 @@ class TaskListViewModel @Inject constructor(
     fun searchTasks(input: String?) {
         if (input.isNullOrBlank()) {
             _tasks.value = allTasks
-        } else {
+        }
+        else {
             _tasks.value = allTasks.filter { task ->
                 task.title.contains(input, ignoreCase = true) || task.description.contains(input, ignoreCase = true)
             }
+        }
+    }
+
+    fun filterTasks(category: CategoryTask?) {
+        if (category == null) {
+            _tasks.value = allTasks
+        }
+        else {
+            _tasks.value = allTasks.filter { it.category == category }
         }
     }
 

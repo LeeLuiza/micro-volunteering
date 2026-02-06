@@ -96,4 +96,12 @@
     <string name="dismiss_user">Вы успешно отклонили пользователя на задачу!</string>
     <string name="active_task">Активные задачи</string>
     <string name="complete_task">Завершенные задачи</string>
+    <string name="ecology">Экология</string>
+    <string name="animal">Животные</string>
+    <string name="social_assist">Социальная помощь</string>
+    <string name="car">Автоволонтерство</string>
+    <string name="mental">Интеллектуальная помощь</string>
+    <string name="event">Мероприятия</string>
+    <string name="other">Другое</string>
+    <string name="all_categories">Все категории</string>
 </resources>

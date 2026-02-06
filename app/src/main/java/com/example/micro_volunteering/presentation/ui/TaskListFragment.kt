@@ -4,10 +4,11 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.SearchView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -16,7 +17,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentTaskListBinding
+import com.example.micro_volunteering.domain.model.CategoryTask
 import com.example.micro_volunteering.domain.model.TaskStatus
 import com.example.micro_volunteering.presentation.adapter.TaskAdapter
 import com.example.micro_volunteering.presentation.viewmodel.TaskListViewModel
@@ -52,6 +55,7 @@ class TaskListFragment : Fragment() {
         viewModel.loadTasks()
         viewModel.checkPermissionStatus()
         setupListeners()
+        setupCategorySpinner()
     }
 
     private fun setupListeners() {
@@ -79,6 +83,25 @@ class TaskListFragment : Fragment() {
             }
 
         })
+
+        binding.spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                var selectedCategory: CategoryTask? = null
+                if (position != 0) {
+                    selectedCategory = CategoryTask.entries[position - 1]
+                }
+                viewModel.filterTasks(selectedCategory)
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                viewModel.filterTasks(null)
+            }
+        }
     }
 
     private fun setupRecyclerView() {
@@ -107,10 +130,10 @@ class TaskListFragment : Fragment() {
             if (tasks.isNotEmpty()) {
                 binding.progressBar.isVisible = false
                 binding.recyclerViewTasks.isVisible = true
-                adapter.updateTasks(tasks)
                 binding.btnNewTask.isVisible = viewModel.isUserOrganization()
                 binding.tabContainer.isVisible = viewModel.isUserOrganization()
             }
+            adapter.updateTasks(tasks)
         }
 
         viewModel.isNotificationPermissionRequested.observe(viewLifecycleOwner) { isNotification ->
@@ -142,5 +165,33 @@ class TaskListFragment : Fragment() {
     private fun updateTab(status: TaskStatus) {
         binding.btnActiveTasks.isSelected = (status == TaskStatus.ACTIVE)
         binding.btnCompletedTasks.isSelected = (status == TaskStatus.COMPLETE)
+    }
+
+    private fun setupCategorySpinner() {
+        val categories = CategoryTask.entries.map { category ->
+            val resId = when (category) {
+                CategoryTask.ECOLOGY -> R.string.ecology
+                CategoryTask.ANIMAL -> R.string.animal
+                CategoryTask.SOCIAL_ASSIST -> R.string.social_assist
+                CategoryTask.CAR -> R.string.car
+                CategoryTask.MENTAL -> R.string.mental
+                CategoryTask.EVENT -> R.string.event
+                CategoryTask.OTHER -> R.string.other
+            }
+            getString(resId)
+        }
+
+        val allCategories = mutableListOf<String>().apply {
+            add(getString(R.string.all_categories))
+            addAll(categories)
+        }
+
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            allCategories
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerCategory.adapter = adapter
     }
 }

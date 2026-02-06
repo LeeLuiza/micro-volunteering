@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.R
+import com.example.micro_volunteering.domain.model.CategoryTask
 import com.example.micro_volunteering.domain.usecase.DeleteTaskUseCase
 import com.example.micro_volunteering.domain.usecase.UpdateTaskUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,7 +32,7 @@ class UpdateTaskViewModel @Inject constructor(
     val errorText: LiveData<List<Int>> = _errorText
 
     fun updateTask(
-        id: Int, title: String, description: String, address: String, category: String, volunteersNeeded: String
+        id: Int, title: String, description: String, address: String, selectedPositionCategory: Int, volunteersNeeded: String
     ) {
         val errors = mutableListOf<Int>()
 
@@ -49,7 +50,7 @@ class UpdateTaskViewModel @Inject constructor(
             errors.add(R.string.error_empty_address)
         }
 
-        if (category.isBlank()) {
+        if (selectedPositionCategory == -1) {
             errors.add(R.string.error_empty_category)
         }
 
@@ -67,7 +68,9 @@ class UpdateTaskViewModel @Inject constructor(
         _isLoading.value = true
 
         viewModelScope.launch {
-            val result = useCase.updateTask(id, title, description, address, category, volunteersInt!!)
+            val result = useCase.updateTask(
+                id, title, description, address, CategoryTask.entries[selectedPositionCategory].category, volunteersInt!!
+            )
             _taskId.value = result
             _isLoading.value = false
         }

@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentUpdateTaskBinding
+import com.example.micro_volunteering.domain.model.CategoryTask
 import com.example.micro_volunteering.presentation.viewmodel.UpdateTaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
@@ -38,6 +41,7 @@ class UpdateTaskFragment : Fragment() {
         observeViewModel()
         setData()
         setupListeners(idTask)
+        setupCategorySpinner()
     }
 
     private fun setupListeners(idTask: Int) {
@@ -47,7 +51,7 @@ class UpdateTaskFragment : Fragment() {
                 binding.titleEdit.text.toString(),
                 binding.descriptionEdit.text.toString(),
                 binding.addressEdit.text.toString(),
-                binding.category.text.toString(),
+                binding.spinnerCategory.selectedItemPosition,
                 binding.volNeeded.text.toString()
             )
         }
@@ -91,10 +95,35 @@ class UpdateTaskFragment : Fragment() {
     }
 
     fun setData() {
+        val position = CategoryTask.entries.indexOf(args.task.category)
+
         binding.titleEdit.setText(args.task.title)
         binding.descriptionEdit.setText(args.task.description)
         binding.addressEdit.setText(args.task.address)
-        binding.category.setText(args.task.category)
+        binding.spinnerCategory.setSelection(position)
         binding.volNeeded.setText(args.task.volunteersNeeded.toString())
+    }
+
+    private fun setupCategorySpinner() {
+        val categories = CategoryTask.entries.map { category ->
+            val resId = when (category) {
+                CategoryTask.ECOLOGY -> R.string.ecology
+                CategoryTask.ANIMAL -> R.string.animal
+                CategoryTask.SOCIAL_ASSIST -> R.string.social_assist
+                CategoryTask.CAR -> R.string.car
+                CategoryTask.MENTAL -> R.string.mental
+                CategoryTask.EVENT -> R.string.event
+                CategoryTask.OTHER -> R.string.other
+            }
+            getString(resId)
+        }
+
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            categories
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerCategory.adapter = adapter
     }
 }

@@ -11,6 +11,6 @@ data class Task(
     val address: String,
     val organizationName: String,
     val date: String,
-    val category: String,
+    val category: CategoryTask,
     val volunteersNeeded: Int
 ) : Parcelable

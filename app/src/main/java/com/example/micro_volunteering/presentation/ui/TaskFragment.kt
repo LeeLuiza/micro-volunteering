@@ -1,7 +1,6 @@
 package com.example.micro_volunteering.presentation.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentTaskBinding
+import com.example.micro_volunteering.domain.model.CategoryTask
 import com.example.micro_volunteering.presentation.viewmodel.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
@@ -93,7 +93,7 @@ class TaskFragment : Fragment() {
 
                 binding.title.text = task.title
                 binding.description.text = task.description
-                binding.category.text = task.category
+                binding.category.text = getCategoryName(task.category)
                 binding.countVol.text = getString(R.string.number_volunteers, task.volunteersNeeded.toString())
                 binding.address.text = task.address
                 binding.date.text = task.date
@@ -110,6 +110,19 @@ class TaskFragment : Fragment() {
                 Toast.makeText(requireContext(), R.string.successfully_responded, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun getCategoryName(category: CategoryTask): String {
+        val resId = when (category) {
+            CategoryTask.ECOLOGY -> R.string.ecology
+            CategoryTask.ANIMAL -> R.string.animal
+            CategoryTask.SOCIAL_ASSIST -> R.string.social_assist
+            CategoryTask.CAR -> R.string.car
+            CategoryTask.MENTAL -> R.string.mental
+            CategoryTask.EVENT -> R.string.event
+            CategoryTask.OTHER -> R.string.other
+        }
+        return getString(resId)
     }
 
     private fun loadTasks(idTask: Int) {
