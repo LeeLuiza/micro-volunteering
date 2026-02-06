@@ -1,5 +1,6 @@
 package com.example.micro_volunteering.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,6 +25,7 @@ class TaskListViewModel @Inject constructor(
     private val notificationPermissionRequestedUseCase: NotificationPermissionRequestedUseCase,
     private val setNotificationPermissionRequestedUseCase: SetNotificationPermissionRequestedUseCase
 ) : ViewModel() {
+    private var allTasks: List<Task> = emptyList()
     private val _tasks = MutableLiveData<List<Task>>()
     val tasks: LiveData<List<Task>> = _tasks
 
@@ -58,6 +60,7 @@ class TaskListViewModel @Inject constructor(
         viewModelScope.launch {
             val result = taskListUseCase.getTasks()
             _tasks.value = result
+            allTasks = result
             _isLoading.value = false
         }
     }
@@ -68,6 +71,7 @@ class TaskListViewModel @Inject constructor(
         viewModelScope.launch {
             val result = taskListOrganizationUseCase.getTasksOrganization(status)
             _tasks.value = result
+            allTasks = result
             _isLoading.value = false
         }
     }
@@ -76,6 +80,16 @@ class TaskListViewModel @Inject constructor(
         viewModelScope.launch {
             val result = notificationPermissionRequestedUseCase.isNotificationPermissionRequested()
             _isNotificationPermissionRequested.value = !result
+        }
+    }
+
+    fun searchTasks(input: String?) {
+        if (input.isNullOrBlank()) {
+            _tasks.value = allTasks
+        } else {
+            _tasks.value = allTasks.filter { task ->
+                task.title.contains(input, ignoreCase = true) || task.description.contains(input, ignoreCase = true)
+            }
         }
     }
 

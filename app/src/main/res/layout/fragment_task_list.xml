@@ -27,10 +27,13 @@
             android:textStyle="bold"/>
 
         <SearchView
+            android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:background="@color/item_background"/>
+            android:clickable="true"
+            android:background="@color/item_background"
+            android:focusable="true" />
 
         <Spinner
             android:layout_width="match_parent"
