@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.domain.model.UserProfile
 import com.example.micro_volunteering.domain.usecase.LogoutUseCase
 import com.example.micro_volunteering.domain.usecase.UploadAvatarUseCase
+import com.example.micro_volunteering.domain.usecase.UploadDocumentUseCase
 import com.example.micro_volunteering.domain.usecase.UserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class UserInfoViewModel @Inject constructor(
     private val useCase: UserInfoUseCase,
     private val logoutUseCase: LogoutUseCase,
-    private val uploadAvatarUseCase: UploadAvatarUseCase
+    private val uploadAvatarUseCase: UploadAvatarUseCase,
+    private val uploadDocumentUseCase: UploadDocumentUseCase
 ) : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
@@ -52,6 +54,12 @@ class UserInfoViewModel @Inject constructor(
     fun uploadImage(uri: Uri) {
         viewModelScope.launch {
             uploadAvatarUseCase.uploadAvatar(uri.toString())
+        }
+    }
+
+    fun uploadDocument(uri: Uri) {
+        viewModelScope.launch {
+            uploadDocumentUseCase.uploadDocument(uri.toString())
         }
     }
 }

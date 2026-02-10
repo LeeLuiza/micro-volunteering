@@ -18,6 +18,9 @@ class UserInfoUseCase @Inject constructor(
             UserRole.ORGANIZATION -> {
                 repository.getOrganizationInfo()
             }
+            UserRole.ADMIN -> {
+                null
+            }
         }
     }
 }

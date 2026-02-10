@@ -46,4 +46,14 @@ class UserPreferences @Inject constructor(
             putBoolean(AppConstants.KEY_NOTIFICATION_REQUESTED, true)
         }
     }
+
+    fun saveIsVerified(isVerified: Boolean) {
+        sharedPreferences.edit {
+            putBoolean(AppConstants.IS_VERIFIED, isVerified)
+        }
+    }
+
+    fun isVerified(): Boolean {
+        return sharedPreferences.getBoolean(AppConstants.IS_VERIFIED, false)
+    }
 }

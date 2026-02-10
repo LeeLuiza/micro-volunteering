@@ -5,23 +5,16 @@ import com.example.micro_volunteering.data.remote.dto.request.RegisterOrganizati
 import com.example.micro_volunteering.data.remote.dto.request.RegisterVolunteerRequest
 import com.example.micro_volunteering.data.remote.dto.request.VolunteerProfileRequest
 import com.example.micro_volunteering.data.remote.dto.response.OrganizationProfileResponse
+import com.example.micro_volunteering.data.remote.dto.response.OrganizationUnverifiedResponse
 import com.example.micro_volunteering.data.remote.dto.response.VolunteerProfileResponse
 import com.example.micro_volunteering.data.remote.dto.response.VolunteerRespondResponse
+import com.example.micro_volunteering.domain.model.OrganizationUnverified
 import com.example.micro_volunteering.domain.model.UpdateProfileParams
 import com.example.micro_volunteering.domain.model.UserProfile
 import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.domain.model.VolunteerRespond
 
 class UserMapper {
-
-    fun toDomainUserInfoRegister(user: VolunteerProfileResponse) = UserProfileRegister.Volunteer(
-        name = user.name,
-        password = user.password,
-        phone = user.phone,
-        email = user.email,
-        age = user.age,
-        city = user.city
-    )
 
     fun toDomainUserInfo(user: VolunteerProfileResponse) = UserProfile.Volunteer(
         name = user.name,
@@ -47,7 +40,8 @@ class UserMapper {
         email = user.email,
         city = user.city,
         isVerified = user.isVerified,
-        password = user.password
+        password = user.password,
+        documentUrl = user.documentUrl
     )
 
     fun toDtoUserProfile(user: UserProfileRegister.Volunteer) = RegisterVolunteerRequest(
@@ -96,4 +90,11 @@ class UserMapper {
         avatarUrl = user.avatarUrl,
         isRated = user.isRated
     )
+
+   fun toDomainOrganizationUnverified(user: OrganizationUnverifiedResponse) = OrganizationUnverified(
+       id = user.id,
+       legalName = user.legalName,
+       city = user.city,
+       inn = user.inn
+   )
 }

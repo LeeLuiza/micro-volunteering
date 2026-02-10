@@ -76,7 +76,9 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.authorizationFragment,
                 R.id.registrationFragment,
-                R.id.roleSelectionFragment -> {
+                R.id.roleSelectionFragment,
+                R.id.adminPanelFragment,
+                R.id.unverifiedOrganizationFragment -> {
                     binding.bottomNavGraph.isVisible = false
                 }
                 else -> {

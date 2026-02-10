@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_authorizationFragment_to_registrationFragment"
             app:destination="@id/registrationFragment" />
+        <action
+            android:id="@+id/action_authorizationFragment_to_adminPanelFragment"
+            app:destination="@id/adminPanelFragment" />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
@@ -179,5 +182,29 @@
             android:name="url"
             app:argType="string"
             app:nullable="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/adminPanelFragment"
+        android:name="com.example.micro_volunteering.presentation.ui.AdminPanelFragment"
+        android:label="fragment_admin"
+        tools:layout="@layout/fragment_admin" >
+        <action
+            android:id="@+id/action_adminPanelFragment_to_unverifiedOrganizationFragment"
+            app:destination="@id/unverifiedOrganizationFragment" />
+        <action
+            android:id="@+id/action_adminPanelFragment_to_roleSelectionFragment"
+            app:destination="@id/roleSelectionFragment"
+            app:popUpTo="@id/roleSelectionFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/unverifiedOrganizationFragment"
+        android:name="com.example.micro_volunteering.presentation.ui.UnverifiedOrganizationFragment"
+        android:label="fragment_unverified_organization"
+        tools:layout="@layout/fragment_unverified_organization">
+
+        <argument
+            android:name="id"
+            app:argType="integer" />
     </fragment>
 </navigation>

@@ -1,11 +1,11 @@
 package com.example.micro_volunteering.data.remote.dto.response
 
-import com.example.micro_volunteering.domain.model.UserRole
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserResponse (
+data class OrganizationUnverifiedResponse (
     val id: Int,
-    val role: UserRole,
-    val isVerified: Boolean
+    val legalName: String,
+    val city: String,
+    val inn: String
 )

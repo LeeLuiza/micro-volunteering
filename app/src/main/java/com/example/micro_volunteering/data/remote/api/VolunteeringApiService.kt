@@ -13,6 +13,7 @@ import com.example.micro_volunteering.data.remote.dto.request.VolunteerRespondRe
 import com.example.micro_volunteering.data.remote.dto.response.AuthResponse
 import com.example.micro_volunteering.data.remote.dto.response.NotificationResponse
 import com.example.micro_volunteering.data.remote.dto.response.OrganizationProfileResponse
+import com.example.micro_volunteering.data.remote.dto.response.OrganizationUnverifiedResponse
 import com.example.micro_volunteering.data.remote.dto.response.TaskResponse
 import com.example.micro_volunteering.data.remote.dto.response.VolunteerProfileResponse
 import com.example.micro_volunteering.data.remote.dto.response.VolunteerRespondResponse
@@ -82,6 +83,10 @@ interface VolunteeringApiService {
     @POST("/upload/avatar")
     suspend fun uploadPhoto(@Part image: MultipartBody.Part): Boolean
 
+    @Multipart
+    @POST("/upload/organization/document")
+    suspend fun uploadDocument(@Part image: MultipartBody.Part) : Boolean
+
     @GET("/notification")
     suspend fun getNotification() : List<NotificationResponse>
 
@@ -105,4 +110,16 @@ interface VolunteeringApiService {
 
     @POST("token")
     suspend fun updateFcmToken(@Body request: TokenRequest) : Boolean
+
+    @GET("/admin/organizations")
+    suspend fun getUnverifiedOrganizations() : List<OrganizationUnverifiedResponse>
+
+    @GET("/admin/organizations/{id}")
+    suspend fun getUnverifiedOrganization(@Path("id") id: Int) : OrganizationProfileResponse
+
+    @POST("/admin/organization/{id}/verify")
+    suspend fun verifyOrganization(@Path("id") id: Int) : Boolean
+
+    @POST("admin/organization/{id}/reject")
+    suspend fun dismissOrganization(@Path("id") id: Int): Boolean
 }

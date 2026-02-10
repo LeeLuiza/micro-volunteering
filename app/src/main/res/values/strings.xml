@@ -25,7 +25,9 @@
     <string name="account">Аккаунт</string>
     <string name="volunteer">Я Волонтер</string>
     <string name="organization">Мы Организация</string>
-    <string name="verified">"Верифицировано"</string>
+    <string name="account_verified">"Аккаунт верифицирован"</string>
+    <string name="account_not_verified">"Аккаунт не верифицирован. Загрузите свидетельство о регистрации (ОГРН)"</string>
+    <string name="upload_document">"Загрузить документы для верификации"</string>
     <string name="authorization">Авторизация</string>
     <string name="enter_email">Введите почту</string>
     <string name="password">Пароль</string>
@@ -65,6 +67,7 @@
     <string name="respond_task">Откликнуться</string>
     <string name="create_task">Создание задачи</string>
     <string name="task">Задачи</string>
+    <string name="organization_not_verified">Организации без верификации</string>
     <string name="feedback">Отзывы</string>
     <string name="plus">+</string>
     <string name="save">Сохранить</string>
@@ -104,4 +107,7 @@
     <string name="event">Мероприятия</string>
     <string name="other">Другое</string>
     <string name="all_categories">Все категории</string>
+    <string name="text_verified">Ваш аккаунт не верифицирован. Загрузите документы в Профиле</string>
+    <string name="verified">Верифицировать</string>
+    <string name="not_verified">Отклонить</string>
 </resources>

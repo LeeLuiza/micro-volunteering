@@ -30,6 +30,7 @@ sealed class UserProfile : Parcelable {
         val phoneOrg: String,
         val email: String,
         val city: String,
+        val documentUrl: String?,
         val isVerified: Boolean,
         val password: String
     ) : UserProfile()

@@ -17,6 +17,7 @@ import com.example.micro_volunteering.domain.usecase.AuthorizationUserUseCase
 import com.example.micro_volunteering.domain.usecase.CompleteTaskUseCase
 import com.example.micro_volunteering.domain.usecase.CreateTaskUseCase
 import com.example.micro_volunteering.domain.usecase.DeleteUserUseCase
+import com.example.micro_volunteering.domain.usecase.DismissOrganizationUseCase
 import com.example.micro_volunteering.domain.usecase.GetFeedbacksUseCase
 import com.example.micro_volunteering.domain.usecase.GetNotificationUseCase
 import com.example.micro_volunteering.domain.usecase.GetUserRoleUseCase
@@ -26,10 +27,15 @@ import com.example.micro_volunteering.domain.usecase.LogoutUseCase
 import com.example.micro_volunteering.domain.usecase.NotificationPermissionRequestedUseCase
 import com.example.micro_volunteering.domain.usecase.RegistrationUserUseCase
 import com.example.micro_volunteering.domain.usecase.SetNotificationPermissionRequestedUseCase
+import com.example.micro_volunteering.domain.usecase.UnverifiedOrganizationListUseCase
+import com.example.micro_volunteering.domain.usecase.UnverifiedOrganizationUseCase
 import com.example.micro_volunteering.domain.usecase.UpdateTaskUseCase
 import com.example.micro_volunteering.domain.usecase.UpdateTokenUseCase
 import com.example.micro_volunteering.domain.usecase.UpdateUserInfoUseCase
+import com.example.micro_volunteering.domain.usecase.UploadDocumentUseCase
 import com.example.micro_volunteering.domain.usecase.UserInfoUseCase
+import com.example.micro_volunteering.domain.usecase.VerifiedUseCase
+import com.example.micro_volunteering.domain.usecase.VerifyOrganizationUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -138,6 +144,36 @@ object ApiModule {
     @Provides
     fun provideSetNotificationPermissionRequestedUseCaseUseCase(repository: VolunteeringRepository) : SetNotificationPermissionRequestedUseCase {
         return SetNotificationPermissionRequestedUseCase(repository)
+    }
+
+    @Provides
+    fun provideUploadDocumentUseCase(repository: VolunteeringRepository) : UploadDocumentUseCase {
+        return UploadDocumentUseCase(repository)
+    }
+
+    @Provides
+    fun provideUnverifiedOrganizationListUseCase(repository: VolunteeringRepository) : UnverifiedOrganizationListUseCase {
+        return UnverifiedOrganizationListUseCase(repository)
+    }
+
+    @Provides
+    fun provideUnverifiedOrganizationUseCase(repository: VolunteeringRepository) : UnverifiedOrganizationUseCase {
+        return UnverifiedOrganizationUseCase(repository)
+    }
+
+    @Provides
+    fun provideDismissOrganizationUseCase(repository: VolunteeringRepository) : DismissOrganizationUseCase {
+        return DismissOrganizationUseCase(repository)
+    }
+
+    @Provides
+    fun provideVerifyOrganizationUseCase(repository: VolunteeringRepository) : VerifyOrganizationUseCase {
+        return VerifyOrganizationUseCase(repository)
+    }
+
+    @Provides
+    fun provideVerifyUseCase(repository: VolunteeringRepository) : VerifiedUseCase {
+        return VerifiedUseCase(repository)
     }
 
     @Provides

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.R
+import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.domain.usecase.AuthorizationUserUseCase
 import com.example.micro_volunteering.domain.usecase.UpdateTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +20,8 @@ class AuthorizationViewModel @Inject constructor(
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private val _navigate = MutableLiveData<Boolean>()
-    val navigate: LiveData<Boolean> = _navigate
+    private val _navigationRole = MutableLiveData<UserRole?>()
+    val navigationRole: LiveData<UserRole?> = _navigationRole
 
     private val _errorText = MutableLiveData<List<Int>>()
     val errorText: LiveData<List<Int>> = _errorText
@@ -35,15 +36,15 @@ class AuthorizationViewModel @Inject constructor(
         _isLoading.value = true
 
         viewModelScope.launch {
-            val isSuccess = useCase.authorizationUser(login, password)
+            val userRole = useCase.authorizationUser(login, password)
 
-            if (isSuccess) {
+            if (userRole != null) {
                 tokenUseCase.updateToken()
+
+                _navigationRole.value = userRole
             }
 
             _isLoading.value = false
-
-            _navigate.value = isSuccess
         }
     }
 
@@ -71,6 +72,6 @@ class AuthorizationViewModel @Inject constructor(
     }
 
     fun onNavigationDone() {
-        _navigate.value = false
+        _navigationRole.value = null
     }
 }

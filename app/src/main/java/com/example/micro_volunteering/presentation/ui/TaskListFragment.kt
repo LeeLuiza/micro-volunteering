@@ -127,12 +127,21 @@ class TaskListFragment : Fragment() {
         }
 
         viewModel.tasks.observe(viewLifecycleOwner) { tasks ->
+            val isVerified = viewModel.isVerified()
+            val isOrganization = viewModel.isUserOrganization()
             if (tasks.isNotEmpty()) {
                 binding.progressBar.isVisible = false
                 binding.recyclerViewTasks.isVisible = true
-                binding.btnNewTask.isVisible = viewModel.isUserOrganization()
-                binding.tabContainer.isVisible = viewModel.isUserOrganization()
+                binding.tabContainer.isVisible = isOrganization
             }
+
+            if (isVerified) {
+                binding.btnNewTask.isVisible = isOrganization
+            }
+            else {
+                binding.textVerified.text = getString(R.string.text_verified)
+            }
+
             adapter.updateTasks(tasks)
         }
 

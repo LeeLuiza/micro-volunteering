@@ -12,6 +12,7 @@ import com.example.micro_volunteering.databinding.FragmentAuthorizationBinding
 import com.example.micro_volunteering.presentation.viewmodel.AuthorizationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigation.fragment.navArgs
+import com.example.micro_volunteering.domain.model.UserRole
 
 @AndroidEntryPoint
 class AuthorizationFragment : Fragment() {
@@ -73,9 +74,16 @@ class AuthorizationFragment : Fragment() {
             }
         }
 
-        viewModel.navigate.observe(viewLifecycleOwner) { isNavigate ->
-            if (isNavigate) {
-                val action = AuthorizationFragmentDirections.actionAuthorizationFragmentToTaskListFragment()
+        viewModel.navigationRole.observe(viewLifecycleOwner) { role ->
+            if (role != null) {
+                val action = when (role) {
+                    UserRole.ADMIN ->
+                        AuthorizationFragmentDirections.actionAuthorizationFragmentToAdminPanelFragment()
+
+                    UserRole.VOLUNTEER, UserRole.ORGANIZATION ->
+                        AuthorizationFragmentDirections.actionAuthorizationFragmentToTaskListFragment()
+                }
+
                 findNavController().navigate(action)
                 viewModel.onNavigationDone()
             }

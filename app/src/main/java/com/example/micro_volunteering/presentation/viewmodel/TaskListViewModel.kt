@@ -13,6 +13,7 @@ import com.example.micro_volunteering.domain.usecase.NotificationPermissionReque
 import com.example.micro_volunteering.domain.usecase.SetNotificationPermissionRequestedUseCase
 import com.example.micro_volunteering.domain.usecase.TaskListOrganizationUseCase
 import com.example.micro_volunteering.domain.usecase.TaskListUseCase
+import com.example.micro_volunteering.domain.usecase.VerifiedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +24,8 @@ class TaskListViewModel @Inject constructor(
     private val taskListOrganizationUseCase: TaskListOrganizationUseCase,
     private val userRoleUseCase: GetUserRoleUseCase,
     private val notificationPermissionRequestedUseCase: NotificationPermissionRequestedUseCase,
-    private val setNotificationPermissionRequestedUseCase: SetNotificationPermissionRequestedUseCase
+    private val setNotificationPermissionRequestedUseCase: SetNotificationPermissionRequestedUseCase,
+    private val verifiedUseCase: VerifiedUseCase
 ) : ViewModel() {
     private var allTasks: List<Task> = emptyList()
     private val _tasks = MutableLiveData<List<Task>>()
@@ -111,5 +113,9 @@ class TaskListViewModel @Inject constructor(
         viewModelScope.launch {
             setNotificationPermissionRequestedUseCase.setNotificationPermissionRequested()
         }
+    }
+
+    fun isVerified(): Boolean {
+        return verifiedUseCase.isVerified()
     }
 }

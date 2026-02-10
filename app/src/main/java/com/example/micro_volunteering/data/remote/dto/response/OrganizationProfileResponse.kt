@@ -14,5 +14,6 @@ data class OrganizationProfileResponse (
     val email: String,
     val city: String,
     val isVerified: Boolean,
+    val documentUrl: String?,
     val password: String
 )

@@ -8,6 +8,7 @@ object AppConstants {
     const val KEY_USER_ID = "user_id"
     const val USER_ROLE = "user_role"
     const val KEY_NOTIFICATION_REQUESTED = "KEY_NOTIFICATION_REQUESTED"
+    const val IS_VERIFIED = "IS_VERIFIED"
 
     const val HEADER_AUTHORIZATION = "Authorization"
     const val HEADER_BEARER_PREFIX = "Bearer "

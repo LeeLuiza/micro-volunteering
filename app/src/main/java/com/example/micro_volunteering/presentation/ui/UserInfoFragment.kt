@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -27,6 +28,13 @@ class UserInfoFragment : Fragment() {
         if (uri != null) {
             binding.img.load(uri)
             viewModel.uploadImage(uri)
+        }
+    }
+
+    private val pickDocument = registerForActivityResult(PickVisualMedia()) { uri ->
+        if (uri != null) {
+            binding.imgDocument.load(uri)
+            viewModel.uploadDocument(uri)
         }
     }
 
@@ -67,6 +75,10 @@ class UserInfoFragment : Fragment() {
 
         binding.btnAddImg.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
+        }
+
+        binding.btnUploadDocument.setOnClickListener {
+            pickDocument.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
         }
     }
 
@@ -113,10 +125,17 @@ class UserInfoFragment : Fragment() {
                         binding.displayName.text = getString(R.string.name_profile, profile.displayName)
                         binding.managerPhone.text = getString(R.string.manager_phone_profile, profile.managerPhone)
                         binding.phoneOrg.text = getString(R.string.phone_organization, profile.phoneOrg)
-                        binding.isVerified.isVisible = profile.isVerified
+                        binding.imgDocument.load(profile.documentUrl)
 
                         if (profile.isVerified) {
-                            binding.isVerified.setText(R.string.verified)
+                            binding.isVerified.text = getString(R.string.account_verified)
+                            binding.isVerified.setTextColor(ContextCompat.getColor(requireContext(), R.color.brand_primary))
+                            binding.btnUploadDocument.isVisible = false
+                        }
+                        else {
+                            binding.isVerified.text = getString(R.string.account_not_verified)
+                            binding.isVerified.setTextColor(ContextCompat.getColor(requireContext(), R.color.error))
+                            binding.btnUploadDocument.isVisible = true
                         }
                     }
                 }

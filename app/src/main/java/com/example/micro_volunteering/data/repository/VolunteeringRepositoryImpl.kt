@@ -15,6 +15,7 @@ import com.example.micro_volunteering.data.remote.dto.request.VolunteerRespondRe
 import com.example.micro_volunteering.data.utils.UriConverter
 import com.example.micro_volunteering.domain.model.Feedback
 import com.example.micro_volunteering.domain.model.Notification
+import com.example.micro_volunteering.domain.model.OrganizationUnverified
 import com.example.micro_volunteering.domain.model.Task
 import com.example.micro_volunteering.domain.model.TaskStatus
 import com.example.micro_volunteering.domain.model.UpdateProfileParams
@@ -43,6 +44,7 @@ class VolunteeringRepositoryImpl @Inject constructor(
             tokenManager.saveTokens(response.accessToken, response.refreshToken)
             userPreferences.saveUserId(response.user.id.toString())
             userPreferences.saveUserRole(response.user.role)
+            userPreferences.saveIsVerified(response.user.isVerified)
             true
         }
         catch (e: Exception) {
@@ -56,6 +58,7 @@ class VolunteeringRepositoryImpl @Inject constructor(
             tokenManager.saveTokens(response.accessToken, response.refreshToken)
             userPreferences.saveUserId(response.user.id.toString())
             userPreferences.saveUserRole(response.user.role)
+            userPreferences.saveIsVerified(response.user.isVerified)
             true
         }
         catch (e: Exception) {
@@ -63,16 +66,18 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun authorizationUser(login: String, password: String) : Boolean {
+    override suspend fun authorizationUser(login: String, password: String) : UserRole? {
         return try {
             val response = api.authorization(LoginRequest(login, password))
+            val userRole = response.user.role
             tokenManager.saveTokens(response.accessToken, response.refreshToken)
             userPreferences.saveUserId(response.user.id.toString())
-            userPreferences.saveUserRole(response.user.role)
-            true
+            userPreferences.saveUserRole(userRole)
+            userPreferences.saveIsVerified(response.user.isVerified)
+            userRole
         }
         catch (e: Exception){
-            false
+            null
         }
     }
 
@@ -239,6 +244,21 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun uploadDocument(uriString: String): Boolean {
+        val imagePart = uriConverter.prepareImageBody(uriString)
+
+        if (imagePart == null) {
+            return false
+        }
+
+        return try {
+            api.uploadDocument(imagePart)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     override suspend fun getNotification(): List<Notification> {
         return try {
             api.getNotification().map { it -> notificationMapper.toDomain(it) }
@@ -334,5 +354,47 @@ class VolunteeringRepositoryImpl @Inject constructor(
 
     override suspend fun setNotificationPermissionRequested() {
         userPreferences.setNotificationPermissionRequested()
+    }
+
+    override suspend fun getUnverifiedOrganizationList(): List<OrganizationUnverified> {
+        return try {
+            val response = api.getUnverifiedOrganizations()
+            response.map { it -> userMapper.toDomainOrganizationUnverified(it)}
+        }
+        catch (e: Exception) {
+            emptyList<OrganizationUnverified>()
+        }
+    }
+
+    override suspend fun getUnverifiedOrganization(id: Int): UserProfile.Organization? {
+        return try {
+            val response = api.getUnverifiedOrganization(id)
+            userMapper.toDomainUserInfo(response)
+        }
+        catch (e: Exception) {
+            null
+        }
+    }
+
+    override suspend fun verifyOrganization(id: Int): Boolean {
+        return try {
+            api.verifyOrganization(id)
+        }
+        catch (e: Exception) {
+            false
+        }
+    }
+
+    override suspend fun dismissOrganization(id: Int): Boolean {
+        return try {
+            api.dismissOrganization(id)
+        }
+        catch (e: Exception) {
+            false
+        }
+    }
+
+    override fun isVerified(): Boolean {
+        return userPreferences.isVerified()
     }
 }
