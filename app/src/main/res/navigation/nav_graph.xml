@@ -58,6 +58,12 @@
         <action
             android:id="@+id/action_roleSelectionFragment_to_registrationFragment"
             app:destination="@id/registrationFragment" />
+        <action
+            android:id="@+id/action_roleSelectionFragment_to_taskListFragment"
+            app:destination="@id/taskListFragment" />
+        <action
+            android:id="@+id/action_roleSelectionFragment_to_adminPanelFragment"
+            app:destination="@id/adminPanelFragment" />
     </fragment>
     <fragment
         android:id="@+id/taskFragment"

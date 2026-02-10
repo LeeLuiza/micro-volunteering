@@ -11,6 +11,7 @@
         android:id="@+id/btn_volunteer"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:visibility="gone"
         android:text="@string/volunteer"
         android:layout_marginHorizontal="64dp"
         android:textSize="16sp"/>
@@ -22,6 +23,7 @@
         android:layout_marginTop="24dp"
         android:backgroundTint="#4CAF50"
         android:layout_marginHorizontal="64dp"
+        android:visibility="gone"
         android:text="@string/organization"
         android:textSize="16sp"/>
 

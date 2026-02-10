@@ -54,4 +54,5 @@ interface VolunteeringRepository {
     suspend fun verifyOrganization(id: Int) : Boolean
     suspend fun dismissOrganization(id: Int): Boolean
     fun isVerified(): Boolean
+    fun isUserLogged(): Boolean
 }

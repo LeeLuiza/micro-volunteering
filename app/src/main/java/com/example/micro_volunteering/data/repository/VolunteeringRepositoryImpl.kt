@@ -397,4 +397,11 @@ class VolunteeringRepositoryImpl @Inject constructor(
     override fun isVerified(): Boolean {
         return userPreferences.isVerified()
     }
+
+    override fun isUserLogged(): Boolean {
+        val token = tokenManager.getAccessToken()
+        val role = userPreferences.getUserRole()
+
+        return (token != null && role != null)
+    }
 }

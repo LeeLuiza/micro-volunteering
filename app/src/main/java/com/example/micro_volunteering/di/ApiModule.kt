@@ -34,6 +34,7 @@ import com.example.micro_volunteering.domain.usecase.UpdateTokenUseCase
 import com.example.micro_volunteering.domain.usecase.UpdateUserInfoUseCase
 import com.example.micro_volunteering.domain.usecase.UploadDocumentUseCase
 import com.example.micro_volunteering.domain.usecase.UserInfoUseCase
+import com.example.micro_volunteering.domain.usecase.UserLoggedUseCase
 import com.example.micro_volunteering.domain.usecase.VerifiedUseCase
 import com.example.micro_volunteering.domain.usecase.VerifyOrganizationUseCase
 import dagger.Module
@@ -174,6 +175,11 @@ object ApiModule {
     @Provides
     fun provideVerifyUseCase(repository: VolunteeringRepository) : VerifiedUseCase {
         return VerifiedUseCase(repository)
+    }
+
+    @Provides
+    fun provideUserLoggedUseCase(repository: VolunteeringRepository) : UserLoggedUseCase {
+        return UserLoggedUseCase(repository)
     }
 
     @Provides

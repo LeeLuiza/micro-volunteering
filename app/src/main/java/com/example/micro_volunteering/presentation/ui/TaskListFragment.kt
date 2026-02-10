@@ -136,9 +136,11 @@ class TaskListFragment : Fragment() {
             }
 
             if (isVerified) {
+                binding.textVerified.isVisible = false
                 binding.btnNewTask.isVisible = isOrganization
             }
             else {
+                binding.textVerified.isVisible = true
                 binding.textVerified.text = getString(R.string.text_verified)
             }
 
