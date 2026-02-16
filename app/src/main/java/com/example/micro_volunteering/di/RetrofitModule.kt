@@ -1,6 +1,7 @@
 package com.example.micro_volunteering.di
 
 import com.example.micro_volunteering.data.local.TokenManager
+import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
 import com.example.micro_volunteering.data.remote.interceptors.AuthInterceptor
 import com.example.micro_volunteering.data.remote.interceptors.ErrorInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -13,12 +14,13 @@ import retrofit2.Retrofit
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import javax.inject.Provider
 
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
     @Provides
-    fun provideOkHttp(tokenManager: TokenManager) : OkHttpClient {
+    fun provideOkHttp(tokenManager: TokenManager, apiProvider: Provider<VolunteeringApiService>) : OkHttpClient {
 
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
@@ -26,7 +28,7 @@ object RetrofitModule {
         return OkHttpClient.Builder()
             .addInterceptor(logging)
             .addInterceptor(ErrorInterceptor(tokenManager))
-            .addInterceptor(AuthInterceptor(tokenManager))
+            .addInterceptor(AuthInterceptor(tokenManager, apiProvider))
             .build()
     }
 

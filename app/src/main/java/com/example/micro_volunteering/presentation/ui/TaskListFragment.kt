@@ -132,8 +132,8 @@ class TaskListFragment : Fragment() {
             if (tasks.isNotEmpty()) {
                 binding.progressBar.isVisible = false
                 binding.recyclerViewTasks.isVisible = true
-                binding.tabContainer.isVisible = isOrganization
             }
+            binding.tabContainer.isVisible = isOrganization
 
             if (isVerified) {
                 binding.textVerified.isVisible = false

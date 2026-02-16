@@ -4,6 +4,7 @@ import com.example.micro_volunteering.data.remote.dto.request.CreateTaskRequest
 import com.example.micro_volunteering.data.remote.dto.response.FeedbackResponse
 import com.example.micro_volunteering.data.remote.dto.request.LoginRequest
 import com.example.micro_volunteering.data.remote.dto.request.OrganizationProfileRequest
+import com.example.micro_volunteering.data.remote.dto.request.RefreshTokenRequest
 import com.example.micro_volunteering.data.remote.dto.request.RegisterOrganizationRequest
 import com.example.micro_volunteering.data.remote.dto.request.RegisterVolunteerRequest
 import com.example.micro_volunteering.data.remote.dto.request.TaskRequest
@@ -17,6 +18,7 @@ import com.example.micro_volunteering.data.remote.dto.response.OrganizationUnver
 import com.example.micro_volunteering.data.remote.dto.response.TaskResponse
 import com.example.micro_volunteering.data.remote.dto.response.VolunteerProfileResponse
 import com.example.micro_volunteering.data.remote.dto.response.VolunteerRespondResponse
+import retrofit2.Call
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -42,6 +44,10 @@ interface VolunteeringApiService {
     @POST("/authorization")
     @Headers("NO_AUTH: true")
     suspend fun authorization(@Body request: LoginRequest) : AuthResponse
+
+    @POST("/refresh-token")
+    @Headers("NO_AUTH: true")
+    fun refreshToken(@Body() request: RefreshTokenRequest) : Call<AuthResponse>
 
     @GET("/tasks")
     suspend fun getTasksVolunteer() : List<TaskResponse>

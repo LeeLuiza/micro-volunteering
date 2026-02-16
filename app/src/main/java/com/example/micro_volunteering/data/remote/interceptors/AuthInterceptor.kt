@@ -4,13 +4,17 @@ import com.example.micro_volunteering.data.local.TokenManager
 import com.example.micro_volunteering.data.constants.AppConstants.HEADER_AUTHORIZATION
 import com.example.micro_volunteering.data.constants.AppConstants.HEADER_BEARER_PREFIX
 import com.example.micro_volunteering.data.constants.AppConstants.NO_AUTH_HEADER
+import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
+import com.example.micro_volunteering.data.remote.dto.request.RefreshTokenRequest
 import okhttp3.Interceptor
+import javax.inject.Provider
 import okhttp3.Request
 import okhttp3.Response
 import java.net.HttpURLConnection
 
 class AuthInterceptor(
-    private val tokenManager: TokenManager
+    private val tokenManager: TokenManager,
+    private val apiService: Provider<VolunteeringApiService>
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request().newBuilder().build()
@@ -51,6 +55,30 @@ class AuthInterceptor(
     }
 
     private fun refreshAndRetry(chain: Interceptor.Chain, request: Request) : Response {
-        return TODO("Provide the return value")
+        val refreshToken = tokenManager.getRefreshToken()
+
+        if (refreshToken == null) {
+            tokenManager.deleteToken()
+            return chain.proceed(request)
+        }
+
+        try {
+            val call = apiService.get().refreshToken(RefreshTokenRequest(refreshToken))
+            val refreshResponse = call.execute()
+
+            if (refreshResponse.isSuccessful && refreshResponse.body() != null) {
+                val newTokens = refreshResponse.body()!!
+                tokenManager.saveTokens(newTokens.accessToken, newTokens.refreshToken)
+
+                return addTokenToRequest(chain, request, newTokens.accessToken)
+            } else {
+                tokenManager.deleteToken()
+                return chain.proceed(request)
+            }
+        }
+        catch (e: Exception) {
+            tokenManager.deleteToken()
+            return chain.proceed(request)
+        }
     }
 }

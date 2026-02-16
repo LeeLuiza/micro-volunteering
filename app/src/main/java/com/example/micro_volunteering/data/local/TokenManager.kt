@@ -19,6 +19,10 @@ class TokenManager @Inject constructor(
         return sharedPreferences.getString(AppConstants.KEY_ACCESS_TOKEN, null)
     }
 
+    fun getRefreshToken(): String? {
+        return sharedPreferences.getString(AppConstants.KEY_REFRESH_TOKEN, null)
+    }
+
     fun deleteToken() {
         sharedPreferences.edit {
             remove(AppConstants.KEY_ACCESS_TOKEN)
