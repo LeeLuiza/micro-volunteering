@@ -1,5 +1,6 @@
 package com.example.micro_volunteering.presentation.ui
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -57,7 +58,7 @@ class UpdateTaskFragment : Fragment() {
         }
 
         binding.btnDeleteTask.setOnClickListener {
-            viewModel.deleteTask(idTask)
+            showDeleteDialog(idTask)
         }
     }
 
@@ -125,5 +126,19 @@ class UpdateTaskFragment : Fragment() {
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerCategory.adapter = adapter
+    }
+
+    private fun showDeleteDialog(idTask: Int) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.delete_account_title)
+            .setMessage(R.string.delete_account_message)
+            .setPositiveButton(R.string.yes) { dialog, _ ->
+                viewModel.deleteTask(idTask)
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.no) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }

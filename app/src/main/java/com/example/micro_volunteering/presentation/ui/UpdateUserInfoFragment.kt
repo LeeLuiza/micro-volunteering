@@ -1,5 +1,6 @@
 package com.example.micro_volunteering.presentation.ui
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentUpdateUserInfoBinding
 import com.example.micro_volunteering.domain.model.UpdateProfileParams
 import com.example.micro_volunteering.domain.model.UserProfile
-import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.presentation.viewmodel.UpdateUserInfoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
@@ -52,7 +53,7 @@ class UpdateUserInfoFragment : Fragment() {
         }
 
         binding.btnDelete.setOnClickListener {
-            viewModel.deleteAccount()
+            showDeleteDialog()
         }
     }
 
@@ -127,5 +128,19 @@ class UpdateUserInfoFragment : Fragment() {
         }
 
         viewModel.updateUserInfo(user)
+    }
+
+    private fun showDeleteDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.delete_account_title)
+            .setMessage(R.string.delete_account_message)
+            .setPositiveButton(R.string.yes) { dialog, _ ->
+                viewModel.deleteAccount()
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.no) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }

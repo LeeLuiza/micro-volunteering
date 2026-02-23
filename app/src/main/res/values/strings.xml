@@ -110,4 +110,8 @@
     <string name="text_verified">Ваш аккаунт не верифицирован. Загрузите документы в Профиле</string>
     <string name="verified">Верифицировать</string>
     <string name="not_verified">Отклонить</string>
+    <string name="delete_account_message">Вы уверены, что хотите удалить аккаунт?</string>
+    <string name="delete_account_title">Удаление аккаунта</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 </resources>

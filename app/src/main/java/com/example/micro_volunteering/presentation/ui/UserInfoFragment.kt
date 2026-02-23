@@ -88,7 +88,6 @@ class UserInfoFragment : Fragment() {
                 binding.progressBar.isVisible = true
                 binding.contentVolunteerInfo.isVisible = false
                 binding.contentOrganizationInfo.isVisible = false
-                binding.btnCorrect.isVisible = false
             }
             else {
                 binding.progressBar.isVisible = false
