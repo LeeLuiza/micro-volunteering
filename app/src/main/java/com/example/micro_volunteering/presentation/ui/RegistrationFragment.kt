@@ -1,6 +1,7 @@
 package com.example.micro_volunteering.presentation.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,7 +86,13 @@ class RegistrationFragment : Fragment() {
 
         viewModel.navigate.observe(viewLifecycleOwner) { isNavigate ->
             if (isNavigate) {
-                val action = RegistrationFragmentDirections.actionRegistrationFragmentToTaskListFragment()
+                val email = if (args.userType == UserRole.ORGANIZATION) {
+                    binding.orgEmailEdit.text.toString()
+                } else {
+                    binding.mailEdit.text.toString()
+                }
+
+                val action = RegistrationFragmentDirections.actionRegistrationFragmentToVerifyEmailFragment(email)
                 findNavController().navigate(action)
                 viewModel.onNavigationDone()
             }

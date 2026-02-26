@@ -37,6 +37,7 @@ import com.example.micro_volunteering.domain.usecase.UserInfoUseCase
 import com.example.micro_volunteering.domain.usecase.UserLoggedUseCase
 import com.example.micro_volunteering.domain.usecase.VerifiedUseCase
 import com.example.micro_volunteering.domain.usecase.VerifyOrganizationUseCase
+import com.example.micro_volunteering.domain.usecase.VerifyEmailUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -70,6 +71,11 @@ object ApiModule {
     @Provides
     fun provideRegistrationUserUseCase(repository: VolunteeringRepository) : RegistrationUserUseCase {
         return RegistrationUserUseCase(repository)
+    }
+
+    @Provides
+    fun provideVerifyEmailUseCase(repository: VolunteeringRepository) : VerifyEmailUseCase {
+        return VerifyEmailUseCase(repository)
     }
 
     @Provides

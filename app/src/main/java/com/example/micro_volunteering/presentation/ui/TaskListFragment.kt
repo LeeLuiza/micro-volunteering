@@ -140,7 +140,7 @@ class TaskListFragment : Fragment() {
                 binding.btnNewTask.isVisible = isOrganization
             }
             else {
-                binding.textVerified.isVisible = true
+                binding.textVerified.isVisible = isOrganization
                 binding.textVerified.text = getString(R.string.text_verified)
             }
 

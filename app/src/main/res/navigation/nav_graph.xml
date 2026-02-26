@@ -32,11 +32,11 @@
             android:name="userType"
             app:argType="com.example.micro_volunteering.domain.model.UserRole" />
         <action
-            android:id="@+id/action_registrationFragment_to_taskListFragment"
-            app:destination="@id/taskListFragment" />
-        <action
             android:id="@+id/action_registrationFragment_to_authorizationFragment"
             app:destination="@id/authorizationFragment" />
+        <action
+            android:id="@+id/action_registrationFragment_to_verifyEmailFragment"
+            app:destination="@id/verifyEmailFragment" />
     </fragment>
     <fragment
         android:id="@+id/taskListFragment"
@@ -212,5 +212,18 @@
         <argument
             android:name="id"
             app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/verifyEmailFragment"
+        android:name="com.example.micro_volunteering.presentation.ui.VerifyEmailFragment"
+        android:label="fragment_verify_email"
+        tools:layout="@layout/fragment_verify_email" >
+
+        <argument
+            android:name="email"
+            app:argType="string"/>
+        <action
+            android:id="@+id/action_verifyEmailFragment_to_taskListFragment"
+            app:destination="@id/taskListFragment" />
     </fragment>
 </navigation>

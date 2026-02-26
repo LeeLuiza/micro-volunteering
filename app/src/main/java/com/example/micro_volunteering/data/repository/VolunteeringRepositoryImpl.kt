@@ -1,5 +1,6 @@
 package com.example.micro_volunteering.data.repository
 
+import android.util.Log
 import com.example.micro_volunteering.data.local.TokenManager
 import com.example.micro_volunteering.data.local.UserPreferences
 import com.example.micro_volunteering.data.mapper.FeedbackMapper
@@ -11,6 +12,7 @@ import com.example.micro_volunteering.data.remote.dto.request.CreateTaskRequest
 import com.example.micro_volunteering.data.remote.dto.request.LoginRequest
 import com.example.micro_volunteering.data.remote.dto.request.TaskRequest
 import com.example.micro_volunteering.data.remote.dto.request.TokenRequest
+import com.example.micro_volunteering.data.remote.dto.request.VerifyEmailRequest
 import com.example.micro_volunteering.data.remote.dto.request.VolunteerRespondRequest
 import com.example.micro_volunteering.data.utils.UriConverter
 import com.example.micro_volunteering.domain.model.Feedback
@@ -40,12 +42,7 @@ class VolunteeringRepositoryImpl @Inject constructor(
 ) : VolunteeringRepository {
     override suspend fun registrationVolunteer(user: UserProfileRegister.Volunteer) : Boolean {
         return try {
-            val response = api.registrationVolunteer(userMapper.toDtoUserProfile(user))
-            tokenManager.saveTokens(response.accessToken, response.refreshToken)
-            userPreferences.saveUserId(response.user.id.toString())
-            userPreferences.saveUserRole(response.user.role)
-            userPreferences.saveIsVerified(response.user.isVerified)
-            true
+            api.registrationVolunteer(userMapper.toDtoUserProfile(user))
         }
         catch (e: Exception) {
             false
@@ -54,12 +51,7 @@ class VolunteeringRepositoryImpl @Inject constructor(
 
     override suspend fun registrationOrganization(user: UserProfileRegister.Organization) : Boolean {
         return try {
-            val response = api.registrationOrganization(userMapper.toDtoUserProfile(user))
-            tokenManager.saveTokens(response.accessToken, response.refreshToken)
-            userPreferences.saveUserId(response.user.id.toString())
-            userPreferences.saveUserRole(response.user.role)
-            userPreferences.saveIsVerified(response.user.isVerified)
-            true
+            api.registrationOrganization(userMapper.toDtoUserProfile(user))
         }
         catch (e: Exception) {
             false
@@ -78,6 +70,23 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
         catch (e: Exception){
             null
+        }
+    }
+
+    override suspend fun verifyEmail(
+        email: String,
+        code: String
+    ): Boolean {
+        return try {
+            val response = api.verifyEmail(VerifyEmailRequest(email, code))
+            tokenManager.saveTokens(response.accessToken, response.refreshToken)
+            userPreferences.saveUserId(response.user.id.toString())
+            userPreferences.saveUserRole(response.user.role)
+            userPreferences.saveIsVerified(response.user.isVerified)
+            true
+        }
+        catch (e: Exception) {
+            false
         }
     }
 

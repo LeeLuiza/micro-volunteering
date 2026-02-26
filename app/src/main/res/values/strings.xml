@@ -114,4 +114,6 @@
     <string name="delete_account_title">Удаление аккаунта</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="input_code">Введите код, который был отправлен вам на почту</string>
+    <string name="error_input_code">Введите код полностью</string>
 </resources>

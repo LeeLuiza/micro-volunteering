@@ -10,12 +10,12 @@ import com.example.micro_volunteering.domain.model.UserProfile
 import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.domain.model.VolunteerRespond
-import retrofit2.http.Path
 
 interface VolunteeringRepository {
     suspend fun registrationVolunteer(user: UserProfileRegister.Volunteer) : Boolean
     suspend fun registrationOrganization(user: UserProfileRegister.Organization) : Boolean
     suspend fun authorizationUser(login: String, password: String) : UserRole?
+    suspend fun verifyEmail(email: String, code: String) : Boolean
     suspend fun getTasks() : List<Task>
     suspend fun getTask(id: Int) : Task?
     suspend fun getTasksOrganization(status: TaskStatus) : List<Task>

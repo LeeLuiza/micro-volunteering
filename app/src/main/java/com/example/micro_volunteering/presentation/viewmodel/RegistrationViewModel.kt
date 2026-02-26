@@ -7,15 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.domain.usecase.RegistrationUserUseCase
-import com.example.micro_volunteering.domain.usecase.UpdateTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
-    private val useCase: RegistrationUserUseCase,
-    private val tokenUseCase: UpdateTokenUseCase
+    private val useCase: RegistrationUserUseCase
 ) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> = _isLoading
@@ -68,13 +66,7 @@ class RegistrationViewModel @Inject constructor(
         _isLoading.value = true
         viewModelScope.launch {
             val isSuccess  = useCase.registrationUser(user)
-
-            if (isSuccess) {
-                tokenUseCase.updateToken()
-            }
-
             _isLoading.value = false
-
             _navigate.value = isSuccess
         }
     }
@@ -121,11 +113,6 @@ class RegistrationViewModel @Inject constructor(
         _isLoading.value = true
         viewModelScope.launch {
             val isSuccess  = useCase.registrationUser(user)
-
-            if (isSuccess) {
-                tokenUseCase.updateToken()
-            }
-
             _isLoading.value = false
 
             if (isSuccess) {

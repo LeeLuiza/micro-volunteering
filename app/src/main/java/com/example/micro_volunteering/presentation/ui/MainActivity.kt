@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.authorizationFragment,
                 R.id.registrationFragment,
                 R.id.roleSelectionFragment,
+                R.id.verifyEmailFragment,
                 R.id.adminPanelFragment,
                 R.id.unverifiedOrganizationFragment -> {
                     binding.bottomNavGraph.isVisible = false

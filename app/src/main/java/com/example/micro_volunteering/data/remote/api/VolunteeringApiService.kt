@@ -9,6 +9,7 @@ import com.example.micro_volunteering.data.remote.dto.request.RegisterOrganizati
 import com.example.micro_volunteering.data.remote.dto.request.RegisterVolunteerRequest
 import com.example.micro_volunteering.data.remote.dto.request.TaskRequest
 import com.example.micro_volunteering.data.remote.dto.request.TokenRequest
+import com.example.micro_volunteering.data.remote.dto.request.VerifyEmailRequest
 import com.example.micro_volunteering.data.remote.dto.request.VolunteerProfileRequest
 import com.example.micro_volunteering.data.remote.dto.request.VolunteerRespondRequest
 import com.example.micro_volunteering.data.remote.dto.response.AuthResponse
@@ -35,11 +36,11 @@ interface VolunteeringApiService {
 
     @POST("/registration/volunteer")
     @Headers("NO_AUTH: true")
-    suspend fun registrationVolunteer(@Body request: RegisterVolunteerRequest) : AuthResponse
+    suspend fun registrationVolunteer(@Body request: RegisterVolunteerRequest) : Boolean
 
     @POST("/registration/organization")
     @Headers("NO_AUTH: true")
-    suspend fun registrationOrganization(@Body request: RegisterOrganizationRequest) : AuthResponse
+    suspend fun registrationOrganization(@Body request: RegisterOrganizationRequest) : Boolean
 
     @POST("/authorization")
     @Headers("NO_AUTH: true")
@@ -48,6 +49,10 @@ interface VolunteeringApiService {
     @POST("/refresh-token")
     @Headers("NO_AUTH: true")
     fun refreshToken(@Body() request: RefreshTokenRequest) : Call<AuthResponse>
+
+    @POST("/verify-email")
+    @Headers("NO_AUTH: true")
+    suspend fun verifyEmail(@Body() request: VerifyEmailRequest) : AuthResponse
 
     @GET("/tasks")
     suspend fun getTasksVolunteer() : List<TaskResponse>
