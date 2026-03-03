@@ -1,6 +1,7 @@
 package com.example.micro_volunteering.data.remote.api
 
 import com.example.micro_volunteering.data.remote.dto.request.CreateTaskRequest
+import com.example.micro_volunteering.data.remote.dto.request.EmailRequest
 import com.example.micro_volunteering.data.remote.dto.response.FeedbackResponse
 import com.example.micro_volunteering.data.remote.dto.request.LoginRequest
 import com.example.micro_volunteering.data.remote.dto.request.OrganizationProfileRequest
@@ -49,6 +50,10 @@ interface VolunteeringApiService {
     @POST("/refresh-token")
     @Headers("NO_AUTH: true")
     fun refreshToken(@Body() request: RefreshTokenRequest) : Call<AuthResponse>
+
+    @POST("/repeat-code")
+    @Headers("NO_AUTH: true")
+    suspend fun repeatCode(@Body() request: EmailRequest) : Boolean
 
     @POST("/verify-email")
     @Headers("NO_AUTH: true")

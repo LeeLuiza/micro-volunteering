@@ -116,4 +116,7 @@
     <string name="no">Нет</string>
     <string name="input_code">Введите код, который был отправлен вам на почту</string>
     <string name="error_input_code">Введите код полностью</string>
+    <string name="repeat_code">Отправить код повторно</string>
+    <string name="resend_timer">Отправить повторно через %d </string>
+    <string name="resend_button">Отправить код повторно</string>
 </resources>

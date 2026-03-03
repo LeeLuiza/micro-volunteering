@@ -1,6 +1,5 @@
 package com.example.micro_volunteering.data.repository
 
-import android.util.Log
 import com.example.micro_volunteering.data.local.TokenManager
 import com.example.micro_volunteering.data.local.UserPreferences
 import com.example.micro_volunteering.data.mapper.FeedbackMapper
@@ -9,6 +8,7 @@ import com.example.micro_volunteering.data.mapper.TaskMapper
 import com.example.micro_volunteering.data.mapper.UserMapper
 import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
 import com.example.micro_volunteering.data.remote.dto.request.CreateTaskRequest
+import com.example.micro_volunteering.data.remote.dto.request.EmailRequest
 import com.example.micro_volunteering.data.remote.dto.request.LoginRequest
 import com.example.micro_volunteering.data.remote.dto.request.TaskRequest
 import com.example.micro_volunteering.data.remote.dto.request.TokenRequest
@@ -84,6 +84,15 @@ class VolunteeringRepositoryImpl @Inject constructor(
             userPreferences.saveUserRole(response.user.role)
             userPreferences.saveIsVerified(response.user.isVerified)
             true
+        }
+        catch (e: Exception) {
+            false
+        }
+    }
+
+    override suspend fun repeatCode(email: String): Boolean {
+        return try {
+            api.repeatCode(EmailRequest(email))
         }
         catch (e: Exception) {
             false

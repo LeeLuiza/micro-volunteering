@@ -1,5 +1,6 @@
 package com.example.micro_volunteering.presentation.ui
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -70,6 +72,10 @@ class VerifyEmailFragment : Fragment() {
                 Toast.makeText(requireContext(), R.string.error_input_code, Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.btnRepeat.setOnClickListener {
+            viewModel.repeatCode(email)
+        }
     }
 
     private fun observeViewModel() {
@@ -90,6 +96,24 @@ class VerifyEmailFragment : Fragment() {
             if (isSuccess) {
                 val action = VerifyEmailFragmentDirections.actionVerifyEmailFragmentToTaskListFragment()
                 findNavController().navigate(action)
+            }
+        }
+
+        viewModel.timerText.observe(viewLifecycleOwner) { textId ->
+            binding.btnRepeat.text = getString(textId)
+        }
+
+        viewModel.timerSeconds.observe(viewLifecycleOwner) { seconds ->
+            binding.btnRepeat.text = getString(R.string.resend_timer, seconds)
+        }
+
+        viewModel.isResendEnabled.observe(viewLifecycleOwner) { isEnabled ->
+            binding.btnRepeat.isEnabled = isEnabled
+
+            if (isEnabled) {
+                binding.btnRepeat.setTextColor(ContextCompat.getColor(requireContext(), R.color.brand_primary))
+            } else {
+                binding.btnRepeat.setTextColor(ContextCompat.getColor(requireContext(), R.color.item_background_click))
             }
         }
     }

@@ -69,6 +69,14 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/btn_repeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="64dp"
+        android:layout_gravity="center"
+        android:text="@string/repeat_code"/>
+
     <Button
         android:id="@+id/enter"
         android:layout_width="wrap_content"

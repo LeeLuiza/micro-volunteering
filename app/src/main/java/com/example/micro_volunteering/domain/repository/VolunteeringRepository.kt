@@ -16,6 +16,7 @@ interface VolunteeringRepository {
     suspend fun registrationOrganization(user: UserProfileRegister.Organization) : Boolean
     suspend fun authorizationUser(login: String, password: String) : UserRole?
     suspend fun verifyEmail(email: String, code: String) : Boolean
+    suspend fun repeatCode(email: String) : Boolean
     suspend fun getTasks() : List<Task>
     suspend fun getTask(id: Int) : Task?
     suspend fun getTasksOrganization(status: TaskStatus) : List<Task>

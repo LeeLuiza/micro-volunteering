@@ -26,6 +26,7 @@ import com.example.micro_volunteering.domain.usecase.LeaveFeedbackUseCase
 import com.example.micro_volunteering.domain.usecase.LogoutUseCase
 import com.example.micro_volunteering.domain.usecase.NotificationPermissionRequestedUseCase
 import com.example.micro_volunteering.domain.usecase.RegistrationUserUseCase
+import com.example.micro_volunteering.domain.usecase.RepeatCodeUseCase
 import com.example.micro_volunteering.domain.usecase.SetNotificationPermissionRequestedUseCase
 import com.example.micro_volunteering.domain.usecase.UnverifiedOrganizationListUseCase
 import com.example.micro_volunteering.domain.usecase.UnverifiedOrganizationUseCase
@@ -71,6 +72,11 @@ object ApiModule {
     @Provides
     fun provideRegistrationUserUseCase(repository: VolunteeringRepository) : RegistrationUserUseCase {
         return RegistrationUserUseCase(repository)
+    }
+
+    @Provides
+    fun provideRepeatCodeUseCase(repository: VolunteeringRepository) : RepeatCodeUseCase {
+        return RepeatCodeUseCase(repository)
     }
 
     @Provides
