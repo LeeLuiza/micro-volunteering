@@ -86,4 +86,12 @@ class NotificationViewModel @Inject constructor(
     fun isUserOrganization(): Boolean {
         return userRoleUseCase.getUserRole() == UserRole.ORGANIZATION
     }
+
+    fun onAcceptMessageShown() {
+        _isAccept.value = false
+    }
+
+    fun onDismissMessageShown() {
+        _isDismiss.value = false
+    }
 }

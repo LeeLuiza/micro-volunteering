@@ -62,12 +62,14 @@ class NotificationFragment : Fragment() {
         viewModel.isAccept.observe(viewLifecycleOwner) { isAccept ->
             if (isAccept){
                 Toast.makeText(requireContext(), R.string.accepted_user, Toast.LENGTH_SHORT).show()
+                viewModel.onAcceptMessageShown()
             }
         }
 
         viewModel.isDismiss.observe(viewLifecycleOwner) { isDismiss ->
             if (isDismiss){
                 Toast.makeText(requireContext(), R.string.dismiss_user, Toast.LENGTH_SHORT).show()
+                viewModel.onDismissMessageShown() //можнно заменить на SingleLiveEvent
             }
         }
     }

@@ -243,8 +243,22 @@ class VolunteeringRepositoryImpl @Inject constructor(
     }
 
     override suspend fun logout() {
-        tokenManager.deleteToken()
-        userPreferences.deleteUserIdAndRole()
+        try {
+            try {
+                FirebaseMessaging.getInstance().deleteToken().await()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            tokenManager.deleteToken()
+            userPreferences.deleteUserIdAndRole()
+            userPreferences.saveIsVerified(false)
+
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
     }
 
     override suspend fun uploadPhoto(uriString: String): Boolean {

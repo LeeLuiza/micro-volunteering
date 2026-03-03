@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.data.constants.AppConstants
@@ -28,8 +29,8 @@ class MicroVolunteerFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        val title = message.notification?.title ?: AppConstants.NOTIFICATION_TITTLE
-        val body = message.notification?.body ?: AppConstants.NOTIFICATION_BODY
+        val title = message.data["title"] ?: AppConstants.NOTIFICATION_TITTLE
+        val body = message.data["body"] ?: AppConstants.NOTIFICATION_BODY
         sendNotification(title, body)
     }
 
@@ -46,13 +47,17 @@ class MicroVolunteerFirebaseMessagingService : FirebaseMessagingService() {
             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        val customLayout = RemoteViews(packageName, R.layout.notification)
+        customLayout.setTextViewText(R.id.title, title)
+        customLayout.setTextViewText(R.id.text, messageBody)
+
         val channelId = AppConstants.CHANNEL_ID
 
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(title)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setContentText(messageBody)
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .setCustomContentView(customLayout)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
 
