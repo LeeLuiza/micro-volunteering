@@ -23,8 +23,8 @@
         android:layout_marginHorizontal="16dp"
         android:numStars="5"
         android:isIndicator="true"
-        android:progressTint="#FFC107"
-        android:secondaryProgressTint="#FFC107"/>
+        android:progressTint="@color/star_yellow"
+        android:secondaryProgressTint="@color/star_yellow"/>
 
     <TextView
         android:id="@+id/comment"

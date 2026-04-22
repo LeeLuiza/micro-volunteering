@@ -61,8 +61,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginHorizontal="64dp"
             android:padding="12dp"
-            android:background="#1AFF0000"
-            android:textColor="#D50000"
+            android:background="@color/error_background_red"
+            android:textColor="@color/error_text_red"
             android:textSize="14sp"
             android:visibility="gone"/>
 

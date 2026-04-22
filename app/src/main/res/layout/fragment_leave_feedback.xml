@@ -39,8 +39,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:numStars="5"
-            android:progressTint="#FFC107"
-            android:secondaryProgressTint="#FFC107"
+            android:progressTint="@color/star_yellow"
+            android:secondaryProgressTint="@color/star_yellow"
             android:layout_gravity="center"/>
 
         <EditText
@@ -57,8 +57,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginHorizontal="16dp"
             android:padding="12dp"
-            android:background="#1AFF0000"
-            android:textColor="#D50000"
+            android:background="@color/error_background_red"
+            android:textColor="@color/error_text_red"
             android:textSize="14sp"
             android:visibility="gone"
             tools:visibility="visible"/>

@@ -9,11 +9,11 @@ import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentUpdateTaskBinding
 import com.example.micro_volunteering.domain.model.CategoryTask
+import com.example.micro_volunteering.presentation.extensions.navigate
 import com.example.micro_volunteering.presentation.viewmodel.UpdateTaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
@@ -73,14 +73,14 @@ class UpdateTaskFragment : Fragment() {
         viewModel.taskId.observe(viewLifecycleOwner) { taskId ->
             if (taskId != null) {
                 val action = UpdateTaskFragmentDirections.actionUpdateTaskFragmentToTaskFragment(taskId)
-                findNavController().navigate(action)
+                navigate(action)
             }
         }
 
         viewModel.isSuccessDeleteTask.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 val action = UpdateTaskFragmentDirections.actionUpdateTaskFragmentToTaskListFragment()
-                findNavController().navigate(action)
+                navigate(action)
             }
         }
 

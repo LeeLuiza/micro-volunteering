@@ -8,10 +8,10 @@ import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentCreateTaskBinding
 import com.example.micro_volunteering.domain.model.CategoryTask
+import com.example.micro_volunteering.presentation.extensions.navigate
 import com.example.micro_volunteering.presentation.viewmodel.CreateTaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -60,7 +60,7 @@ class CreateTaskFragment : Fragment() {
         viewModel.taskId.observe(viewLifecycleOwner) { taskId ->
             if (taskId != null) {
                 val action = CreateTaskFragmentDirections.actionCreateTaskFragmentToTaskFragment(taskId)
-                findNavController().navigate(action)
+                navigate(action)
             }
         }
 

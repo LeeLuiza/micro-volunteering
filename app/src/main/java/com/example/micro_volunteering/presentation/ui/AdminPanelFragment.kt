@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.micro_volunteering.databinding.FragmentAdminBinding
 import com.example.micro_volunteering.presentation.adapter.OrganizationAdapter
+import com.example.micro_volunteering.presentation.extensions.navigate
 import com.example.micro_volunteering.presentation.viewmodel.AdminPanelViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -69,18 +68,16 @@ class AdminPanelFragment : Fragment() {
         viewModel.logoutSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 val action = AdminPanelFragmentDirections.actionAdminPanelFragmentToRoleSelectionFragment()
-                findNavController().navigate(action)
+                navigate(action)
             }
         }
     }
 
     private fun setupRecyclerView() {
-        adapter = OrganizationAdapter(emptyList()) { id ->
+        adapter = OrganizationAdapter { id ->
             val action = AdminPanelFragmentDirections.actionAdminPanelFragmentToUnverifiedOrganizationFragment(id)
-            findNavController().navigate(action)
+            navigate(action)
         }
-
-        binding.recyclerViewOrganization.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewOrganization.adapter = adapter
     }
 }

@@ -10,11 +10,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentUserInfoBinding
 import com.example.micro_volunteering.domain.model.UserProfile
 import coil.load
+import com.example.micro_volunteering.presentation.extensions.navigate
 import com.example.micro_volunteering.presentation.viewmodel.UserInfoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -60,7 +60,7 @@ class UserInfoFragment : Fragment() {
 
             if (currentUser != null) {
                 val action = UserInfoFragmentDirections.actionUserInfoFragmentToUpdateUserInfoFragment(currentUser)
-                findNavController().navigate(action)
+                navigate(action)
             }
         }
 
@@ -70,7 +70,7 @@ class UserInfoFragment : Fragment() {
 
         binding.reviews.setOnClickListener {
             val action = UserInfoFragmentDirections.actionUserInfoFragmentToFeedbackListFragment()
-            findNavController().navigate(action)
+            navigate(action)
         }
 
         binding.btnAddImg.setOnClickListener {
@@ -144,7 +144,7 @@ class UserInfoFragment : Fragment() {
         viewModel.logoutSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 val action = UserInfoFragmentDirections.actionUserInfoFragmentToRoleSelectionFragment()
-                findNavController().navigate(action)
+                navigate(action)
             }
         }
     }

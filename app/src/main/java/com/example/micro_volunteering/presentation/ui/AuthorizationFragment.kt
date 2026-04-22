@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.example.micro_volunteering.databinding.FragmentAuthorizationBinding
 import com.example.micro_volunteering.presentation.viewmodel.AuthorizationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigation.fragment.navArgs
 import com.example.micro_volunteering.domain.model.UserRole
+import com.example.micro_volunteering.presentation.extensions.navigate
 
 @AndroidEntryPoint
 class AuthorizationFragment : Fragment() {
@@ -47,7 +47,7 @@ class AuthorizationFragment : Fragment() {
 
         binding.registerButton.setOnClickListener {
             val action = AuthorizationFragmentDirections.actionAuthorizationFragmentToRegistrationFragment(args.userType)
-            findNavController().navigate(action)
+            navigate(action)
         }
     }
 
@@ -84,7 +84,7 @@ class AuthorizationFragment : Fragment() {
                         AuthorizationFragmentDirections.actionAuthorizationFragmentToTaskListFragment()
                 }
 
-                findNavController().navigate(action)
+                navigate(action)
                 viewModel.onNavigationDone()
             }
         }

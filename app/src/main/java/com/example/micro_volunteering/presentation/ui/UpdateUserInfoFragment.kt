@@ -8,12 +8,12 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentUpdateUserInfoBinding
 import com.example.micro_volunteering.domain.model.UpdateProfileParams
 import com.example.micro_volunteering.domain.model.UserProfile
+import com.example.micro_volunteering.presentation.extensions.navigate
 import com.example.micro_volunteering.presentation.viewmodel.UpdateUserInfoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
@@ -69,14 +69,14 @@ class UpdateUserInfoFragment : Fragment() {
         viewModel.updateSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 val action = UpdateUserInfoFragmentDirections.actionUpdateUserInfoFragmentToUserInfoFragment()
-                findNavController().navigate(action)
+                navigate(action)
             }
         }
 
         viewModel.deleteSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 val action = UpdateUserInfoFragmentDirections.actionUpdateUserInfoFragmentToRoleSelectionFragment()
-                findNavController().navigate(action)
+                navigate(action)
             }
         }
     }

@@ -22,6 +22,8 @@ class FeedbackDiffCallback(
         oldItemPosition: Int,
         newItemPosition: Int
     ): Boolean {
-        return oldList[oldItemPosition] == newList[newItemPosition]
+        val old = oldList[oldItemPosition]
+        val new = newList[newItemPosition]
+        return old.nameUser == new.nameUser && old.text == new.text && old.countStars == new.countStars
     }
 }

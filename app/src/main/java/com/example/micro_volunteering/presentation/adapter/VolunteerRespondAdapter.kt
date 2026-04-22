@@ -11,9 +11,11 @@ import com.example.micro_volunteering.domain.model.VolunteerRespond
 import com.example.micro_volunteering.presentation.diffcallback.VolunteerRespondDiffCallback
 
 class VolunteerRespondAdapter(
-    private var volunteerResponds: List<VolunteerRespond>,
     private val onItemClick: (Int, Float, String, String?) -> Unit
 ) : RecyclerView.Adapter<VolunteerRespondAdapter.ViewHolder>() {
+
+    private var volunteerResponds = listOf<VolunteerRespond>()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int

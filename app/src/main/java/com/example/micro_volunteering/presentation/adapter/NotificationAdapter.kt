@@ -11,12 +11,13 @@ import com.example.micro_volunteering.domain.model.Notification
 import com.example.micro_volunteering.presentation.diffcallback.NotificationDiffCallback
 
 class NotificationAdapter(
-    private var notifications: List<Notification>,
     private val isOrganization: Boolean,
     private val onItemClick: (Int) -> Unit,
     private val onAcceptClick: (Int, Int) -> Unit,
     private val onDismissClick: (Int, Int) -> Unit
 ) : RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
+
+    private var notifications = listOf<Notification>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

@@ -15,13 +15,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentTaskListBinding
 import com.example.micro_volunteering.domain.model.CategoryTask
 import com.example.micro_volunteering.domain.model.TaskStatus
 import com.example.micro_volunteering.presentation.adapter.TaskAdapter
+import com.example.micro_volunteering.presentation.extensions.navigate
 import com.example.micro_volunteering.presentation.viewmodel.TaskListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
@@ -61,7 +60,7 @@ class TaskListFragment : Fragment() {
     private fun setupListeners() {
         binding.btnNewTask.setOnClickListener {
             val action = TaskListFragmentDirections.actionTaskListFragmentToCreateTaskFragment()
-            findNavController().navigate(action)
+            navigate(action)
         }
 
         binding.btnActiveTasks.setOnClickListener {
@@ -105,12 +104,10 @@ class TaskListFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = TaskAdapter(emptyList()) { id ->
+        adapter = TaskAdapter { id ->
             val action = TaskListFragmentDirections.actionTaskListFragmentToTaskFragment(id)
-            findNavController().navigate(action)
+            navigate(action)
         }
-
-        binding.recyclerViewTasks.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewTasks.adapter = adapter
     }
 

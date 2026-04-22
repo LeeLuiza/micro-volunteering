@@ -97,15 +97,15 @@
                     android:layout_marginHorizontal="16dp"
                     android:numStars="5"
                     android:isIndicator="true"
-                    android:progressTint="#FFC107"
-                    android:secondaryProgressTint="#FFC107"/>
+                    android:progressTint="@color/star_yellow"
+                    android:secondaryProgressTint="@color/star_yellow"/>
 
                 <TextView
                     android:id="@+id/reviews"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
-                    android:textColor="#808080"
+                    android:textColor="@color/text_gray"
                     android:textSize="14sp"
                     android:clickable="true"
                     android:focusable="true"/>

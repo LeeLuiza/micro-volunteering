@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.micro_volunteering.databinding.FragmentVolunteerRespondBinding
 import com.example.micro_volunteering.presentation.adapter.VolunteerRespondAdapter
+import com.example.micro_volunteering.presentation.extensions.navigate
 import com.example.micro_volunteering.presentation.viewmodel.VolunteerRespondViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
@@ -63,14 +62,12 @@ class VolunteerRespondFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        adapter = VolunteerRespondAdapter(emptyList()) { idVolunteer, rating, name, url ->
+        adapter = VolunteerRespondAdapter { idVolunteer, rating, name, url ->
             val action = VolunteerRespondFragmentDirections.actionVolunteerRespondFragmentToLeaveFeedbackFragment(
                 idVolunteer, args.id, name, url, rating
             )
-            findNavController().navigate(action)
+            navigate(action)
         }
-
-        binding.recyclerViewVolunteer.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewVolunteer.adapter = adapter
     }
 }

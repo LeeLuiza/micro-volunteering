@@ -15,13 +15,19 @@ class NotificationDiffCallback(
         oldItemPosition: Int,
         newItemPosition: Int
     ): Boolean {
-        return oldList[oldItemPosition] === newList[newItemPosition]
+        return oldList[oldItemPosition].idTask == newList[newItemPosition].idTask &&
+                oldList[oldItemPosition].idUser == newList[newItemPosition].idUser
     }
 
     override fun areContentsTheSame(
         oldItemPosition: Int,
         newItemPosition: Int
     ): Boolean {
-        return oldList[oldItemPosition] == newList[newItemPosition]
+        val old = oldList[oldItemPosition]
+        val new = newList[newItemPosition]
+        return old.avatarUrl == new.avatarUrl &&
+                old.taskName == new.taskName &&
+                old.createdAt == new.createdAt &&
+                old.message == new.message
     }
 }

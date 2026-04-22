@@ -22,6 +22,10 @@ class OrganizationDiffCallback(
         oldItemPosition: Int,
         newItemPosition: Int
     ): Boolean {
-        return oldList[oldItemPosition] == newList[newItemPosition]
+        val old = oldList[oldItemPosition]
+        val new = newList[newItemPosition]
+        return old.legalName == new.legalName &&
+                old.city == new.city &&
+                old.inn == new.inn
     }
 }

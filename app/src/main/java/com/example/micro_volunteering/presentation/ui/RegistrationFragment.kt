@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.micro_volunteering.databinding.FragmentRegistrationBinding
 import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.domain.model.UserRole
+import com.example.micro_volunteering.presentation.extensions.navigate
 import com.example.micro_volunteering.presentation.viewmodel.RegistrationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,7 +46,7 @@ class RegistrationFragment : Fragment() {
 
         binding.authorizationButton.setOnClickListener {
             val action = RegistrationFragmentDirections.actionRegistrationFragmentToAuthorizationFragment(args.userType)
-            findNavController().navigate(action)
+            navigate(action)
         }
     }
 
@@ -92,7 +92,7 @@ class RegistrationFragment : Fragment() {
                 }
 
                 val action = RegistrationFragmentDirections.actionRegistrationFragmentToVerifyEmailFragment(email)
-                findNavController().navigate(action)
+                navigate(action)
                 viewModel.onNavigationDone()
             }
         }

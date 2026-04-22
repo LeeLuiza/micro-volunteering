@@ -1,6 +1,5 @@
 package com.example.micro_volunteering.presentation.ui
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,10 +11,10 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentVerifyEmailBinding
+import com.example.micro_volunteering.presentation.extensions.navigate
 import com.example.micro_volunteering.presentation.viewmodel.VerifyEmailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -95,7 +94,7 @@ class VerifyEmailFragment : Fragment() {
         viewModel.isSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
                 val action = VerifyEmailFragmentDirections.actionVerifyEmailFragmentToTaskListFragment()
-                findNavController().navigate(action)
+                navigate(action)
             }
         }
 

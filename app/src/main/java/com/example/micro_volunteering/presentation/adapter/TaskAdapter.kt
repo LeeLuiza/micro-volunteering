@@ -9,9 +9,11 @@ import com.example.micro_volunteering.domain.model.Task
 import com.example.micro_volunteering.presentation.diffcallback.TaskDiffCallback
 
 class TaskAdapter(
-    private var tasks: List<Task>,
     private val onItemClick: (Int) -> Unit
 ) : RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
+
+    private var tasks = listOf<Task>()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int

@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentNotificationBinding
 import com.example.micro_volunteering.presentation.adapter.NotificationAdapter
@@ -78,7 +77,6 @@ class NotificationFragment : Fragment() {
         val isOrganization = viewModel.isUserOrganization()
 
         adapter = NotificationAdapter(
-            notifications = emptyList(),
             isOrganization = isOrganization,
             onItemClick = { userId ->
 
@@ -91,7 +89,6 @@ class NotificationFragment : Fragment() {
             }
         )
 
-        binding.recyclerViewNotification.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewNotification.adapter = adapter
     }
 }

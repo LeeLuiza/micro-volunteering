@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "172065029479",
+    "project_id": "micro-volunteering",
+    "storage_bucket": "micro-volunteering.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172065029479:android:6d5318b650abc2ca1543c2",
+        "android_client_info": {
+          "package_name": "com.example.micro_volunteering"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArdYkw60kaR2I_r-Hn1xZcR42Hf_9uQ4A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

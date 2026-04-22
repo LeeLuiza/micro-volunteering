@@ -8,9 +8,9 @@ import com.example.micro_volunteering.databinding.ItemFeedbackBinding
 import com.example.micro_volunteering.domain.model.Feedback
 import com.example.micro_volunteering.presentation.diffcallback.FeedbackDiffCallback
 
-class FeedbackAdapter (
-    private var feedbacks: List<Feedback>
-) : RecyclerView.Adapter<FeedbackAdapter.ViewHolder>() {
+class FeedbackAdapter () : RecyclerView.Adapter<FeedbackAdapter.ViewHolder>() {
+
+    private var feedbacks = listOf<Feedback>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemFeedbackBinding.inflate(LayoutInflater.from(parent.context), parent, false)

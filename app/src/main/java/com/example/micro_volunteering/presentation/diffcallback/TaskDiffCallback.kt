@@ -22,6 +22,11 @@ class TaskDiffCallback(
         oldItemPosition: Int,
         newItemPosition: Int
     ): Boolean {
-        return oldTaskList[oldItemPosition] == newTaskList[newItemPosition]
+        val old = oldTaskList[oldItemPosition]
+        val new = newTaskList[newItemPosition]
+        return old.title == new.title &&
+                old.description == new.description &&
+                old.address == new.address &&
+                old.organizationName == new.organizationName
     }
 }

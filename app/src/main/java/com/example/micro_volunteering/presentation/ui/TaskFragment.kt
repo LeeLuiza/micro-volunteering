@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentTaskBinding
 import com.example.micro_volunteering.domain.model.CategoryTask
+import com.example.micro_volunteering.presentation.extensions.navigate
 import com.example.micro_volunteering.presentation.viewmodel.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
@@ -50,7 +51,7 @@ class TaskFragment : Fragment() {
 
             if (currentTask != null) {
                 val action = TaskFragmentDirections.actionTaskFragmentToUpdateTaskFragment(currentTask)
-                findNavController().navigate(action)
+                navigate(action)
             }
         }
 
@@ -60,7 +61,7 @@ class TaskFragment : Fragment() {
 
         binding.btnViewParticipants.setOnClickListener {
             val action = TaskFragmentDirections.actionTaskFragmentToVolunteerRespondFragment(idTask)
-            findNavController().navigate(action)
+            navigate(action)
         }
 
         binding.btnRespond.setOnClickListener {

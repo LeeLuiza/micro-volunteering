@@ -9,9 +9,11 @@ import com.example.micro_volunteering.domain.model.OrganizationUnverified
 import com.example.micro_volunteering.presentation.diffcallback.OrganizationDiffCallback
 
 class OrganizationAdapter (
-    private var organizations: List<OrganizationUnverified>,
     private val onItemClick: (Int) -> Unit
 ) : RecyclerView.Adapter<OrganizationAdapter.ViewHolder>() {
+
+    private var organizations = listOf<OrganizationUnverified>()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int

@@ -57,4 +57,8 @@ class ErrorInterceptor(
             null
         }
     }
+
+    private fun showError() {
+
+    }
 }
