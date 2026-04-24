@@ -6,7 +6,7 @@ import javax.inject.Inject
 class UploadAvatarUseCase @Inject constructor(
     private val repository: VolunteeringRepository)
 {
-    suspend fun uploadAvatar(uri: String): Boolean {
-        return repository.uploadPhoto(uri)
+    suspend operator fun invoke(uri: String): Boolean {
+        return repository.uploadAvatar(uri)
     }
 }

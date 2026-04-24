@@ -6,6 +6,6 @@ import javax.inject.Inject
 class AuthorizationUserUseCase @Inject constructor(
     private val repository: VolunteeringRepository
 ) {
-    suspend fun authorizationUser(login: String, password: String) =
-        repository.authorizationUser(login, password)
+    suspend operator fun invoke(login: String, password: String) =
+        repository.login(login, password)
 }

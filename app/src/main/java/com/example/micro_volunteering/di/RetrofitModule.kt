@@ -1,6 +1,6 @@
 package com.example.micro_volunteering.di
 
-import com.example.micro_volunteering.data.local.TokenManager
+import com.example.micro_volunteering.data.local.TokenPreferences
 import com.example.micro_volunteering.data.remote.api.VolunteeringApiService
 import com.example.micro_volunteering.data.remote.interceptors.AuthInterceptor
 import com.example.micro_volunteering.data.remote.interceptors.ErrorInterceptor
@@ -20,7 +20,7 @@ import javax.inject.Provider
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
     @Provides
-    fun provideOkHttp(tokenManager: TokenManager, apiProvider: Provider<VolunteeringApiService>) : OkHttpClient {
+    fun provideOkHttp(tokenManager: TokenPreferences, apiProvider: Provider<VolunteeringApiService>) : OkHttpClient {
 
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY

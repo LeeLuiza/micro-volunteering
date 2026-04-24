@@ -7,7 +7,7 @@ import javax.inject.Inject
 class UpdateUserInfoUseCase @Inject constructor(
     private val repository: VolunteeringRepository
 ) {
-    suspend fun updateUserInfo(userInfo: UpdateProfileParams) : Boolean {
+    suspend operator fun invoke(userInfo: UpdateProfileParams) : Boolean {
         return when (userInfo) {
             is UpdateProfileParams.Volunteer -> {
                 repository.updateVolunteerInfo(userInfo)

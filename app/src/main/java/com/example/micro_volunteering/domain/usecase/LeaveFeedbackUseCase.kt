@@ -6,6 +6,6 @@ import javax.inject.Inject
 class LeaveFeedbackUseCase @Inject constructor(
     private val repository: VolunteeringRepository
 ) {
-    suspend fun leaveFeedback(idVolunteer: Int, idTask: Int, text: String, countStar: Float) =
+    suspend operator fun invoke(idVolunteer: Int, idTask: Int, text: String, countStar: Float) =
         repository.leaveFeedback(idVolunteer, idTask, text, countStar)
 }

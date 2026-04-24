@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetFeedbacksUseCase @Inject constructor(
     private val repository: VolunteeringRepository
 ) {
-    suspend fun getFeedback() = repository.getFeedbacks()
+    suspend operator fun invoke() = repository.getFeedbacks()
 }

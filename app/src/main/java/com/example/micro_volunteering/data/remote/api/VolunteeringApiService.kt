@@ -37,15 +37,15 @@ interface VolunteeringApiService {
 
     @POST("/registration/volunteer")
     @Headers("NO_AUTH: true")
-    suspend fun registrationVolunteer(@Body request: RegisterVolunteerRequest) : Boolean
+    suspend fun registerVolunteer(@Body request: RegisterVolunteerRequest) : Boolean
 
     @POST("/registration/organization")
     @Headers("NO_AUTH: true")
-    suspend fun registrationOrganization(@Body request: RegisterOrganizationRequest) : Boolean
+    suspend fun registerOrganization(@Body request: RegisterOrganizationRequest) : Boolean
 
     @POST("/authorization")
     @Headers("NO_AUTH: true")
-    suspend fun authorization(@Body request: LoginRequest) : AuthResponse
+    suspend fun login(@Body request: LoginRequest) : AuthResponse
 
     @POST("/refresh-token")
     @Headers("NO_AUTH: true")
@@ -53,7 +53,7 @@ interface VolunteeringApiService {
 
     @POST("/repeat-code")
     @Headers("NO_AUTH: true")
-    suspend fun repeatCode(@Body() request: EmailRequest) : Boolean
+    suspend fun resendCode(@Body() request: EmailRequest) : Boolean
 
     @POST("/verify-email")
     @Headers("NO_AUTH: true")
@@ -97,7 +97,7 @@ interface VolunteeringApiService {
 
     @Multipart
     @POST("/upload/avatar")
-    suspend fun uploadPhoto(@Part image: MultipartBody.Part): Boolean
+    suspend fun uploadAvatar(@Part image: MultipartBody.Part): Boolean
 
     @Multipart
     @POST("/upload/organization/document")
@@ -107,7 +107,7 @@ interface VolunteeringApiService {
     suspend fun getNotification() : List<NotificationResponse>
 
     @GET("/task/volunteer-respond/{id}")
-    suspend fun getVolunteerRespond(@Path("id") idTask: Int) : List<VolunteerRespondResponse>
+    suspend fun getTaskResponders(@Path("id") idTask: Int) : List<VolunteerRespondResponse>
 
     @POST("/feedbacks/{id}")
     suspend fun leaveFeedback(@Path("id") idVolunteer: Int, @Body request: VolunteerRespondRequest) : Boolean
@@ -116,13 +116,13 @@ interface VolunteeringApiService {
     suspend fun completeTask(@Path("id") id: Int) : Boolean
 
     @POST("task/{id}/respond")
-    suspend fun respond(@Path("id") idTask: Int) : Boolean
+    suspend fun respondToTask(@Path("id") idTask: Int) : Boolean
 
     @POST("task/{id}/accept")
     suspend fun acceptVolunteer(@Path("id") idTask: Int, @Query("volunteerId") idVolunteer: Int) : Boolean
 
-    @POST("task/{id}/dismiss")
-    suspend fun dismissVolunteer(@Path("id") idTask: Int, @Query("volunteerId") idVolunteer: Int) : Boolean
+    @POST("task/{id}/reject")
+    suspend fun rejectVolunteer(@Path("id") idTask: Int, @Query("volunteerId") idVolunteer: Int) : Boolean
 
     @POST("token")
     suspend fun updateFcmToken(@Body request: TokenRequest) : Boolean
@@ -137,5 +137,5 @@ interface VolunteeringApiService {
     suspend fun verifyOrganization(@Path("id") id: Int) : Boolean
 
     @POST("admin/organization/{id}/reject")
-    suspend fun dismissOrganization(@Path("id") id: Int): Boolean
+    suspend fun rejectOrganization(@Path("id") id: Int): Boolean
 }

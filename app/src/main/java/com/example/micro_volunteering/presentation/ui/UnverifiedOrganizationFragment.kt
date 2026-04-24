@@ -1,11 +1,6 @@
 package com.example.micro_volunteering.presentation.ui
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -16,67 +11,47 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
 @AndroidEntryPoint
-class UnverifiedOrganizationFragment : Fragment() {
+class UnverifiedOrganizationFragment : BaseFragment<FragmentUnverifiedOrganizationBinding, UnverifiedOrganizationViewModel>(
+    FragmentUnverifiedOrganizationBinding::inflate
+) {
 
-    private lateinit var binding: FragmentUnverifiedOrganizationBinding
-    private val viewModel: UnverifiedOrganizationViewModel by viewModels()
-
+    override val viewModel: UnverifiedOrganizationViewModel by viewModels()
     private val args: UnverifiedOrganizationFragmentArgs by navArgs()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentUnverifiedOrganizationBinding.inflate(inflater)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val idOrganization = args.id
-
-        viewModel.loadOrganization(idOrganization)
-        observeViewModel(idOrganization)
+    override fun setupViews() {
         setupListener()
     }
 
-    private fun observeViewModel(idOrganization: Int) {
+    private fun setupListener() {
         binding.btnVerified.setOnClickListener {
-            viewModel.verified(idOrganization)
+            viewModel.verify()
         }
 
         binding.btnNotVerified.setOnClickListener {
-            viewModel.dismiss(idOrganization)
+            viewModel.reject()
         }
     }
 
-    private fun setupListener() {
+    override fun observeViewModel() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                binding.progressBar.isVisible = true
-                binding.content.isVisible = false
-            }
-            else {
-                binding.progressBar.isVisible = false
-                binding.content.isVisible = true
-            }
+            binding.progressBar.isVisible = isLoading
+            binding.content.isVisible = !isLoading
         }
 
         viewModel.organization.observe(viewLifecycleOwner) { organization ->
-            if (organization != null) {
-                binding.progressBar.isVisible = false
-                binding.content.isVisible = true
-
-                binding.legalName.text = organization.legalName
-                binding.legalAddress.text = organization.legalAddress
-                binding.inn.text = organization.inn
-                binding.mailOrg.text = organization.email
-                binding.cityOrg.text = organization.city
-                binding.legalAddress.text = organization.legalAddress
-                binding.displayName.text = organization.displayName
-                binding.managerPhone.text = organization.managerPhone
-                binding.phoneOrg.text = organization.phoneOrg
-                binding.imgDocument.load(organization.documentUrl)
+            organization?.let {
+                with(binding) {
+                    legalName.text = organization.legalName
+                    legalAddress.text = organization.legalAddress
+                    inn.text = organization.inn
+                    mailOrg.text = organization.email
+                    cityOrg.text = organization.city
+                    legalAddress.text = organization.legalAddress
+                    displayName.text = organization.displayName
+                    managerPhone.text = organization.managerPhone
+                    phoneOrg.text = organization.phoneOrg
+                    imgDocument.load(organization.documentUrl)
+                }
             }
         }
 
@@ -85,5 +60,9 @@ class UnverifiedOrganizationFragment : Fragment() {
                 findNavController().popBackStack()
             }
         }
+    }
+
+    override fun loadData() {
+        viewModel.loadOrganization(args.id)
     }
 }

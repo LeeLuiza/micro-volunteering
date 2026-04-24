@@ -6,5 +6,5 @@ import javax.inject.Inject
 class VerifyOrganizationUseCase @Inject constructor(
     private val repository: VolunteeringRepository
 ) {
-    suspend fun verifyOrganization(id: Int) = repository.verifyOrganization(id)
+    suspend operator fun invoke(id: Int) = repository.verifyOrganization(id)
 }

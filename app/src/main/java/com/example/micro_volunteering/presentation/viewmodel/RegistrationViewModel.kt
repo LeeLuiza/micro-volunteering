@@ -7,121 +7,115 @@ import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.domain.usecase.RegistrationUserUseCase
+import com.example.micro_volunteering.presentation.utils.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
-    private val useCase: RegistrationUserUseCase
+    private val registrationUseCase: RegistrationUserUseCase,
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private val _navigate = MutableLiveData<Boolean>(false)
-    val navigate: LiveData<Boolean> = _navigate
+    private val _navigate = MutableLiveData<String?>()
+    val navigate: LiveData<String?> = _navigate
 
-    private val _errorText = MutableLiveData<List<Int>>()
-    val errorText: LiveData<List<Int>> = _errorText
+    private val _errorText = MutableLiveData<String>()
+    val errorText: LiveData<String> = _errorText
 
-    fun registration(user: UserProfileRegister) {
-        when (user) {
-            is UserProfileRegister.Organization -> registrationOrganization(user)
-            is UserProfileRegister.Volunteer -> registrationVolunteer(user)
-        }
+    fun registerOrganization(
+        legalName: String,
+        inn: String,
+        address: String,
+        name: String,
+        managerPhone: String,
+        phone: String,
+        email: String,
+        city: String,
+        password: String
+    ) {
+        val user = UserProfileRegister.Organization(
+            legalName, inn, address, name, managerPhone, phone, email, city, false, password
+        )
+        registerUser(user)
     }
 
-    fun registrationVolunteer(user: UserProfileRegister.Volunteer) {
-        val errors = mutableListOf<Int>()
+    fun registerVolunteer(
+        fullName: String,
+        password: String,
+        phone: String,
+        email: String,
+        ageRaw: String,
+        city: String
+    ) {
+        val age = ageRaw.toIntOrNull() ?: 0
 
-        if (user.name.isBlank()){
-            errors.add(R.string.enter_full_name)
-        }
-        if (user.phone.length < 10) {
-            errors.add(R.string.incorrect_phone_number)
-        }
+        val user = UserProfileRegister.Volunteer(
+            fullName, password, phone, email, age, city
+        )
+        registerUser(user)
+    }
 
-        if (user.age < 14) {
-            errors.add(R.string.incorrect_age)
-        }
+    private fun registerUser(user: UserProfileRegister) {
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(user.email).matches()) {
-            errors.add(R.string.incorrect_email_address)
-        }
-
-        if (user.city.isBlank()) {
-            errors.add(R.string.enter_city)
-        }
-        if (user.password.length < 6) {
-            errors.add(R.string.password_short)
+        val errors = when (user) {
+            is UserProfileRegister.Volunteer -> validateVolunteer(user)
+            is UserProfileRegister.Organization -> validateOrganization(user)
         }
 
         if (errors.isNotEmpty()) {
-            _errorText.value = errors
+            _errorText.value = resourceProvider.formatErrors(errors)
             return
         }
 
-        _errorText.value = emptyList()
-
         _isLoading.value = true
         viewModelScope.launch {
-            val isSuccess  = useCase.registrationUser(user)
-            _isLoading.value = false
-            _navigate.value = isSuccess
-        }
-    }
-
-    fun registrationOrganization(user: UserProfileRegister.Organization) {
-        val errors = mutableListOf<Int>()
-
-        if (user.legalName.isBlank()) {
-            errors.add(R.string.enter_legal_name)
-        }
-        if (user.inn.length != 10 && user.inn.length != 12) {
-            errors.add(R.string.incorrect_INN)
-        }
-        if (user.legalAddress.isBlank()) {
-            errors.add(R.string.enter_registration_address)
-        }
-        if (user.displayName.isBlank()) {
-            errors.add(R.string.enter_public_name)
-        }
-        if (user.managerPhone.length < 10) {
-            errors.add(R.string.enter_phone_number)
-        }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(user.email).matches()) {
-            errors.add(R.string.incorrect_email_address)
-        }
-
-        if (user.phoneOrg.length < 10) {
-            errors.add(R.string.incorrect_phone_number)
-        }
-        if (user.city.isBlank()) {
-            errors.add(R.string.enter_city)
-        }
-        if (user.password.length < 6) {
-            errors.add(R.string.password_short)
-        }
-
-        if (errors.isNotEmpty()) {
-            _errorText.value = errors
-            return
-        }
-
-        _errorText.value = emptyList()
-
-        _isLoading.value = true
-        viewModelScope.launch {
-            val isSuccess  = useCase.registrationUser(user)
+            val isSuccess  = registrationUseCase(user)
             _isLoading.value = false
 
             if (isSuccess) {
-                _navigate.value = true
+                _navigate.value = user.email
             }
         }
     }
 
+    private fun validateVolunteer(user: UserProfileRegister.Volunteer) : List<Int> {
+        val errors = mutableListOf<Int>()
+
+        if (user.name.isBlank()) errors.add(R.string.enter_full_name)
+        if (user.phone.length < 10) errors.add(R.string.incorrect_phone_number)
+        if (user.age < 14) errors.add(R.string.incorrect_age)
+        if (!isEmailValid(user.email)) errors.add(R.string.incorrect_email_address)
+        if (user.city.isBlank()) errors.add(R.string.enter_city)
+        if (user.password.length < 6) errors.add(R.string.password_short)
+
+        return errors
+    }
+
+    private fun validateOrganization(user: UserProfileRegister.Organization) : List<Int> {
+        val errors = mutableListOf<Int>()
+
+        if (user.legalName.isBlank()) errors.add(R.string.enter_legal_name)
+        if (user.inn.length != 10 && user.inn.length != 12) errors.add(R.string.incorrect_INN)
+        if (user.legalAddress.isBlank()) errors.add(R.string.enter_registration_address)
+        if (user.displayName.isBlank()) errors.add(R.string.enter_public_name)
+        if (user.managerPhone.length < 10) errors.add(R.string.enter_phone_number)
+        if (!isEmailValid(user.email)) errors.add(R.string.incorrect_email_address)
+        if (user.phoneOrg.length < 10) errors.add(R.string.incorrect_phone_number)
+        if (user.city.isBlank()) errors.add(R.string.enter_city)
+        if (user.password.length < 6) errors.add(R.string.password_short)
+
+        return errors
+    }
+
+    private fun isEmailValid(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
     fun onNavigationDone() {
-        _navigate.value = false
+        _navigate.value = null
     }
 }

@@ -1,12 +1,7 @@
 package com.example.micro_volunteering.presentation.ui
 
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -14,32 +9,20 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentVerifyEmailBinding
-import com.example.micro_volunteering.presentation.extensions.navigate
+import com.example.micro_volunteering.presentation.utils.navigate
 import com.example.micro_volunteering.presentation.viewmodel.VerifyEmailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class VerifyEmailFragment : Fragment() {
+class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding, VerifyEmailViewModel>(
+    FragmentVerifyEmailBinding::inflate
+) {
 
-    private lateinit var binding: FragmentVerifyEmailBinding
-    private val viewModel: VerifyEmailViewModel by viewModels()
-
+    override val viewModel: VerifyEmailViewModel by viewModels()
     private val args: VerifyEmailFragmentArgs by navArgs()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentVerifyEmailBinding.inflate(inflater)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val email = args.email
-
-        observeViewModel()
-        setupListener(email)
+    override fun setupViews() {
+        setupListener(args.email)
     }
 
     private fun setupListener(email: String) {
@@ -64,12 +47,8 @@ class VerifyEmailFragment : Fragment() {
         }
 
         binding.enter.setOnClickListener {
-            if (fields.all { it.text?.length == 1 }) {
-                val code = fields.joinToString("") { it.text.toString() }
-                viewModel.verifyEmail(email, code)
-            } else {
-                Toast.makeText(requireContext(), R.string.error_input_code, Toast.LENGTH_SHORT).show()
-            }
+            val code = fields.joinToString("") { it.text.toString() }
+            viewModel.verifyEmail(email, code)
         }
 
         binding.btnRepeat.setOnClickListener {
@@ -77,24 +56,23 @@ class VerifyEmailFragment : Fragment() {
         }
     }
 
-    private fun observeViewModel() {
+    override fun observeViewModel() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                binding.progressBar.isVisible = true
-                binding.content.isVisible = false
-                binding.enter.isVisible = false
-            }
-            else {
-                binding.progressBar.isVisible = false
-                binding.content.isVisible = true
-                binding.enter.isVisible = true
-            }
+            binding.progressBar.isVisible = isLoading
+            binding.content.isVisible = !isLoading
+            binding.enter.isVisible = !isLoading
         }
 
         viewModel.isSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
-                val action = VerifyEmailFragmentDirections.actionVerifyEmailFragmentToTaskListFragment()
-                navigate(action)
+                navigate(VerifyEmailFragmentDirections.actionVerifyEmailFragmentToTaskListFragment())
+            }
+        }
+
+        viewModel.errorText.observe(viewLifecycleOwner) { errorText ->
+            errorText?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                viewModel.onErrorShown()
             }
         }
 

@@ -7,15 +7,17 @@ import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.domain.usecase.AuthorizationUserUseCase
-import com.example.micro_volunteering.domain.usecase.UpdateTokenUseCase
+import com.example.micro_volunteering.domain.usecase.CreateTokenUseCase
+import com.example.micro_volunteering.presentation.utils.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthorizationViewModel @Inject constructor(
-    private val useCase: AuthorizationUserUseCase,
-    private val tokenUseCase: UpdateTokenUseCase
+    private val authorizationUseCase: AuthorizationUserUseCase,
+    private val createTokenUseCase: CreateTokenUseCase,
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> = _isLoading
@@ -23,11 +25,11 @@ class AuthorizationViewModel @Inject constructor(
     private val _navigationRole = MutableLiveData<UserRole?>()
     val navigationRole: LiveData<UserRole?> = _navigationRole
 
-    private val _errorText = MutableLiveData<List<Int>>()
-    val errorText: LiveData<List<Int>> = _errorText
+    private val _errorText = MutableLiveData<String>()
+    val errorText: LiveData<String> = _errorText
 
-    fun authorizationUser(login: String, password: String) {
-        val isValid = validateInput(login, password)
+    fun login(email: String, password: String) {
+        val isValid = validateInput(email, password)
 
         if (!isValid) {
             return
@@ -36,10 +38,10 @@ class AuthorizationViewModel @Inject constructor(
         _isLoading.value = true
 
         viewModelScope.launch {
-            val userRole = useCase.authorizationUser(login, password)
+            val userRole = authorizationUseCase(email, password)
 
             if (userRole != null) {
-                tokenUseCase.updateToken()
+                createTokenUseCase()
 
                 _navigationRole.value = userRole
             }
@@ -61,14 +63,9 @@ class AuthorizationViewModel @Inject constructor(
             errors.add(R.string.password_short)
         }
 
-        if (errors.isNotEmpty()) {
-            _errorText.value = errors
-            return false
-        }
+        _errorText.value = resourceProvider.formatErrors(errors)
 
-        _errorText.value = emptyList()
-
-        return true
+        return errors.isEmpty()
     }
 
     fun onNavigationDone() {

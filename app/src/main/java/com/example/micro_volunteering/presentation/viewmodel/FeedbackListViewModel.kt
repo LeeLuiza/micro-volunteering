@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedbackListViewModel @Inject constructor(
-    private val useCase: GetFeedbacksUseCase
+    private val getFeedbacksUseCase: GetFeedbacksUseCase
 ) : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
@@ -21,11 +21,15 @@ class FeedbackListViewModel @Inject constructor(
     private val _feedbacks = MutableLiveData<List<Feedback>>()
     val feedbacks: LiveData<List<Feedback>> = _feedbacks
 
-    fun loadFeedback() {
+    init {
+        loadFeedbacks()
+    }
+
+    fun loadFeedbacks() {
         _isLoading.value = true
 
         viewModelScope.launch {
-            val result  = useCase.getFeedback()
+            val result  = getFeedbacksUseCase()
             _feedbacks.value  = result
             _isLoading.value = false
         }

@@ -1,48 +1,29 @@
 package com.example.micro_volunteering.presentation.ui
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.example.micro_volunteering.databinding.FragmentRoleSelectionBinding
 import com.example.micro_volunteering.domain.model.UserRole
-import com.example.micro_volunteering.presentation.extensions.navigate
+import com.example.micro_volunteering.presentation.utils.navigate
 import com.example.micro_volunteering.presentation.viewmodel.RoleSelectionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RoleSelectionFragment : Fragment() {
+class RoleSelectionFragment : BaseFragment<FragmentRoleSelectionBinding, RoleSelectionViewModel>(FragmentRoleSelectionBinding::inflate) {
 
-    private lateinit var binding: FragmentRoleSelectionBinding
-    private val viewModel: RoleSelectionViewModel by viewModels()
+    override val viewModel: RoleSelectionViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentRoleSelectionBinding.inflate(inflater)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun setupViews() {
         val isUserLogged = viewModel.isUserLogged()
         val role = viewModel.getUserRole()
 
         if (isUserLogged && role != null) {
             when (role) {
                 UserRole.ADMIN -> {
-                    val action = RoleSelectionFragmentDirections.actionRoleSelectionFragmentToAdminPanelFragment()
-                    navigate(action)
+                    navigate(RoleSelectionFragmentDirections.actionRoleSelectionFragmentToAdminPanelFragment())
                 }
                 UserRole.ORGANIZATION, UserRole.VOLUNTEER -> {
-                    val action = RoleSelectionFragmentDirections.actionRoleSelectionFragmentToTaskListFragment()
-                    navigate(action)
+                    navigate(RoleSelectionFragmentDirections.actionRoleSelectionFragmentToTaskListFragment())
                 }
             }
         }
@@ -64,7 +45,6 @@ class RoleSelectionFragment : Fragment() {
     }
 
     private fun navigateToAuth(role: UserRole) {
-        val action = RoleSelectionFragmentDirections.actionRoleSelectionFragmentToRegistrationFragment(role)
-        navigate(action)
+        navigate(RoleSelectionFragmentDirections.actionRoleSelectionFragmentToRegistrationFragment(role))
     }
 }

@@ -6,5 +6,5 @@ import javax.inject.Inject
 class CompleteTaskUseCase @Inject constructor(
     private val repository: VolunteeringRepository
 ) {
-    suspend fun completeTask(id: Int) = repository.completeTask(id)
+    suspend operator fun invoke(id: Int) = repository.completeTask(id)
 }

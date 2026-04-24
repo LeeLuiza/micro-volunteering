@@ -6,31 +6,35 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.domain.model.OrganizationUnverified
 import com.example.micro_volunteering.domain.usecase.LogoutUseCase
-import com.example.micro_volunteering.domain.usecase.UnverifiedOrganizationListUseCase
+import com.example.micro_volunteering.domain.usecase.GetUnverifiedOrganizationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AdminPanelViewModel @Inject constructor(
-    private val useCase: UnverifiedOrganizationListUseCase,
+    private val getUnverifiedOrganizationsUseCase: GetUnverifiedOrganizationsUseCase,
     private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private val _unverifiedOrganization = MutableLiveData<List<OrganizationUnverified>>()
-    val unverifiedOrganization: LiveData<List<OrganizationUnverified>> = _unverifiedOrganization
+    private val _unverifiedOrganizations = MutableLiveData<List<OrganizationUnverified>>()
+    val unverifiedOrganizations: LiveData<List<OrganizationUnverified>> = _unverifiedOrganizations
 
     private val _logoutSuccess = MutableLiveData<Boolean>()
     val logoutSuccess: LiveData<Boolean> = _logoutSuccess
 
-    fun loadUnverifiedOrganizationList() {
+    init {
+        loadUnverifiedOrganizations()
+    }
+
+    fun loadUnverifiedOrganizations() {
         _isLoading.value = true
 
         viewModelScope.launch {
-            _unverifiedOrganization.value = useCase.getUnverifiedOrganizationList()
+            _unverifiedOrganizations.value = getUnverifiedOrganizationsUseCase()
             _isLoading.value = false
         }
     }
@@ -39,7 +43,7 @@ class AdminPanelViewModel @Inject constructor(
         _isLoading.value = true
 
         viewModelScope.launch {
-            logoutUseCase.logout()
+            logoutUseCase()
             _isLoading.value = false
 
             _logoutSuccess.value = true

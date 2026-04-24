@@ -6,18 +6,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.micro_volunteering.domain.usecase.RepeatCodeUseCase
-import com.example.micro_volunteering.domain.usecase.UpdateTokenUseCase
+import com.example.micro_volunteering.domain.usecase.ResendCodeUseCase
+import com.example.micro_volunteering.domain.usecase.CreateTokenUseCase
 import com.example.micro_volunteering.domain.usecase.VerifyEmailUseCase
+import com.example.micro_volunteering.presentation.utils.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class VerifyEmailViewModel @Inject constructor(
-    private val useCase: VerifyEmailUseCase,
-    private val tokenUseCase: UpdateTokenUseCase,
-    private val repeatCodeUseCase: RepeatCodeUseCase
+    private val verifyEmailUseCase: VerifyEmailUseCase,
+    private val createTokenUseCase: CreateTokenUseCase,
+    private val resendCodeUseCase: ResendCodeUseCase,
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>(false)
@@ -35,6 +37,9 @@ class VerifyEmailViewModel @Inject constructor(
     private val _isResendEnabled = MutableLiveData<Boolean>(false)
     val isResendEnabled: LiveData<Boolean> = _isResendEnabled
 
+    private val _errorText = MutableLiveData<String?>()
+    val errorText: LiveData<String?> = _errorText
+
     private var timer: CountDownTimer? = null
 
     init {
@@ -42,13 +47,18 @@ class VerifyEmailViewModel @Inject constructor(
     }
 
     fun verifyEmail(email: String, code: String) {
+        if (code.length != 6) {
+            _errorText.value = resourceProvider.getString(R.string.error_input_code)
+            return
+        }
+
         _isLoading.value = true
         _isResendEnabled.value = false
         viewModelScope.launch {
-            val isSuccess = useCase.verifyEmail(email, code)
+            val isSuccess = verifyEmailUseCase(email, code)
 
             if (isSuccess) {
-                tokenUseCase.updateToken()
+                createTokenUseCase()
                 startTimer()
             }
 
@@ -61,7 +71,7 @@ class VerifyEmailViewModel @Inject constructor(
     fun repeatCode(email: String) {
         _isLoading.value = true
         viewModelScope.launch {
-            val isSuccess = repeatCodeUseCase.repeatCode(email)
+            val isSuccess = resendCodeUseCase(email)
 
             if (isSuccess) {
                 startTimer()
@@ -94,5 +104,9 @@ class VerifyEmailViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         timer?.cancel()
+    }
+
+    fun onErrorShown() {
+        _errorText.value = null
     }
 }

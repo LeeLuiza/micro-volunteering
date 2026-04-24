@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetUserRoleUseCase @Inject constructor(
     private val repository: VolunteeringRepository
 ) {
-    fun getUserRole(): UserRole? {
+    operator fun invoke(): UserRole? {
         return repository.getCurrentUserRole()
     }
 }

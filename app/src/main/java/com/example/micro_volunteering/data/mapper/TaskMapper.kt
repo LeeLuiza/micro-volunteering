@@ -3,8 +3,9 @@ package com.example.micro_volunteering.data.mapper
 import com.example.micro_volunteering.data.remote.dto.response.TaskResponse
 import com.example.micro_volunteering.domain.model.CategoryTask
 import com.example.micro_volunteering.domain.model.Task
+import javax.inject.Inject
 
-class TaskMapper {
+class TaskMapper @Inject constructor() {
 
     fun toDomain(task: TaskResponse) = Task(
         id = task.id,

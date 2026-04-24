@@ -1,6 +1,6 @@
 package com.example.micro_volunteering.data.remote.interceptors
 
-import com.example.micro_volunteering.data.local.TokenManager
+import com.example.micro_volunteering.data.local.TokenPreferences
 import com.example.micro_volunteering.data.constants.AppConstants.HEADER_AUTHORIZATION
 import com.example.micro_volunteering.data.constants.AppConstants.HEADER_BEARER_PREFIX
 import com.example.micro_volunteering.data.constants.AppConstants.NO_AUTH_HEADER
@@ -13,7 +13,7 @@ import okhttp3.Response
 import java.net.HttpURLConnection
 
 class AuthInterceptor(
-    private val tokenManager: TokenManager,
+    private val tokenManager: TokenPreferences,
     private val apiService: Provider<VolunteeringApiService>
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {

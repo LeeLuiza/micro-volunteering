@@ -6,5 +6,5 @@ import javax.inject.Inject
 class NotificationPermissionRequestedUseCase @Inject constructor(
     private val repository: VolunteeringRepository
 ) {
-    suspend fun isNotificationPermissionRequested() = repository.isNotificationPermissionRequested()
+    suspend operator fun invoke() = repository.isNotificationPermissionRequested()
 }

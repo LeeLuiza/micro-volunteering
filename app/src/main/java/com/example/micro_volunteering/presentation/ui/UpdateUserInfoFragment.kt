@@ -1,45 +1,33 @@
 package com.example.micro_volunteering.presentation.ui
 
 import android.app.AlertDialog
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentUpdateUserInfoBinding
-import com.example.micro_volunteering.domain.model.UpdateProfileParams
 import com.example.micro_volunteering.domain.model.UserProfile
-import com.example.micro_volunteering.presentation.extensions.navigate
+import com.example.micro_volunteering.presentation.utils.navigate
 import com.example.micro_volunteering.presentation.viewmodel.UpdateUserInfoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
 @AndroidEntryPoint
-class UpdateUserInfoFragment : Fragment() {
+class UpdateUserInfoFragment : BaseFragment<FragmentUpdateUserInfoBinding, UpdateUserInfoViewModel>(
+    FragmentUpdateUserInfoBinding::inflate
+) {
 
-    private lateinit var binding: FragmentUpdateUserInfoBinding
-    private val viewModel: UpdateUserInfoViewModel by viewModels()
-
+    override val viewModel: UpdateUserInfoViewModel by viewModels()
     private val args: UpdateUserInfoFragmentArgs by navArgs()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentUpdateUserInfoBinding.inflate(inflater)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun setupViews() {
         val user = args.user
 
-        observeViewModel()
         setupListeners(user)
+
+        binding.editInfoVolunteer.isVisible = user is UserProfile.Volunteer
+        binding.editInfoOrganization.isVisible = user is UserProfile.Organization
 
         when (user) {
             is UserProfile.Volunteer -> setupVolunteerUI(user)
@@ -57,77 +45,71 @@ class UpdateUserInfoFragment : Fragment() {
         }
     }
 
-    private fun observeViewModel() {
+    override fun observeViewModel() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                binding.editInfoOrganization.isVisible = false
-                binding.editInfoVolunteer.isVisible = false
-                binding.progressBar.isVisible = true
-            }
+            binding.editInfoOrganization.isVisible = isLoading
+            binding.editInfoVolunteer.isVisible = isLoading
+            binding.progressBar.isVisible = !isLoading
         }
 
         viewModel.updateSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
-                val action = UpdateUserInfoFragmentDirections.actionUpdateUserInfoFragmentToUserInfoFragment()
-                navigate(action)
+                navigate(UpdateUserInfoFragmentDirections.actionUpdateUserInfoFragmentToUserInfoFragment())
             }
         }
 
         viewModel.deleteSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
-                val action = UpdateUserInfoFragmentDirections.actionUpdateUserInfoFragmentToRoleSelectionFragment()
-                navigate(action)
+                navigate(UpdateUserInfoFragmentDirections.actionUpdateUserInfoFragmentToRoleSelectionFragment())
             }
         }
     }
 
     private fun setupVolunteerUI(user: UserProfile.Volunteer) {
-        binding.editInfoVolunteer.isVisible = true
-        binding.editInfoOrganization.isVisible = false
-
-        binding.fullName.setText(user.name)
-        binding.mail.setText(user.email)
-        binding.city.setText(user.city)
-        binding.age.setText(user.age.toString())
-        binding.phone.setText(user.phone.toString())
+        with(binding) {
+            fullName.setText(user.name)
+            mail.setText(user.email)
+            city.setText(user.city)
+            age.setText(user.age.toString())
+            phone.setText(user.phone.toString())
+        }
     }
 
     private fun setupOrganizationUI(user: UserProfile.Organization) {
-        binding.editInfoVolunteer.isVisible = false
-        binding.editInfoOrganization.isVisible = true
-
-        binding.legalName.setText(user.legalName)
-        binding.inn.setText(user.inn)
-        binding.mailOrg.setText(user.email)
-        binding.cityOrg.setText(user.city)
-        binding.legalAddress.setText(user.legalAddress)
-        binding.displayName.setText(user.displayName)
-        binding.managerPhone.setText(user.managerPhone)
-        binding.phoneOrg.setText(user.phoneOrg)
+        with(binding) {
+            legalName.setText(user.legalName)
+            inn.setText(user.inn)
+            mailOrg.setText(user.email)
+            cityOrg.setText(user.city)
+            legalAddress.setText(user.legalAddress)
+            displayName.setText(user.displayName)
+            managerPhone.setText(user.managerPhone)
+            phoneOrg.setText(user.phoneOrg)
+        }
     }
 
     private fun saveChange(user: UserProfile) {
-        val user = when (user) {
-            is UserProfile.Volunteer -> UpdateProfileParams.Volunteer(
-                binding.fullName.text.toString(),
-                binding.phone.text.toString(),
-                binding.mail.text.toString(),
-                binding.age.text.toString().toIntOrNull() ?: 0,
-                binding.city.text.toString()
-            )
-            is UserProfile.Organization -> UpdateProfileParams.Organization(
-                binding.legalName.text.toString(),
-                binding.inn.text.toString(),
-                binding.legalAddress.text.toString(),
-                binding.displayName.text.toString(),
-                binding.managerPhone.text.toString(),
-                binding.phoneOrg.text.toString(),
-                binding.mailOrg.text.toString(),
-                binding.cityOrg.text.toString(),
-            )
+        with(binding) {
+            when (user) {
+                is UserProfile.Volunteer -> viewModel.updateVolunteer(
+                    name = fullName.text.toString(),
+                    phone = phone.text.toString(),
+                    email = mail.text.toString(),
+                    ageRaw = age.text.toString(),
+                    city = city.text.toString()
+                )
+                is UserProfile.Organization -> viewModel.updateOrganization(
+                    legalName = legalName.text.toString(),
+                    inn = inn.text.toString(),
+                    legalAddress = legalAddress.text.toString(),
+                    displayName = displayName.text.toString(),
+                    managerPhone = managerPhone.text.toString(),
+                    phone = phoneOrg.text.toString(),
+                    email = mailOrg.text.toString(),
+                    city = cityOrg.text.toString()
+                )
+            }
         }
-
-        viewModel.updateUserInfo(user)
     }
 
     private fun showDeleteDialog() {

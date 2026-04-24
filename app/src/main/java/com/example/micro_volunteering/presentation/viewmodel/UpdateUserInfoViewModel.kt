@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UpdateUserInfoViewModel @Inject constructor(
-    private val useCase: UpdateUserInfoUseCase,
+    private val updateUserInfoUseCase: UpdateUserInfoUseCase,
     private val deleteUserUseCase: DeleteUserUseCase
 ) : ViewModel() {
 
@@ -27,11 +27,40 @@ class UpdateUserInfoViewModel @Inject constructor(
     private val _deleteSuccess = MutableLiveData<Boolean>()
     val deleteSuccess: LiveData<Boolean> = _deleteSuccess
 
-    fun updateUserInfo(user: UpdateProfileParams) {
+    fun updateVolunteer(
+        name: String,
+        phone: String,
+        email: String,
+        ageRaw: String,
+        city: String
+    ) {
+        val age = ageRaw.toIntOrNull() ?: 0
+
+        val params = UpdateProfileParams.Volunteer(name, phone, email, age, city)
+        updateUserInfo(params)
+    }
+
+    fun updateOrganization(
+        legalName: String,
+        inn: String,
+        legalAddress: String,
+        displayName: String,
+        managerPhone: String,
+        phone: String,
+        email: String,
+        city: String
+    ) {
+        val params = UpdateProfileParams.Organization(
+            legalName, inn, legalAddress, displayName, managerPhone, phone, email, city
+        )
+        updateUserInfo(params)
+    }
+
+    private fun updateUserInfo(user: UpdateProfileParams) {
         _isLoading.value = true
 
         viewModelScope.launch {
-            val isSuccess = useCase.updateUserInfo(user)
+            val isSuccess = updateUserInfoUseCase(user)
             _updateSuccess.value = isSuccess
 
             _isLoading.value = false
@@ -42,7 +71,7 @@ class UpdateUserInfoViewModel @Inject constructor(
         _isLoading.value = true
 
         viewModelScope.launch {
-            val isSuccess = deleteUserUseCase.deleteUser()
+            val isSuccess = deleteUserUseCase()
             _deleteSuccess.value = isSuccess
 
             _isLoading.value = false

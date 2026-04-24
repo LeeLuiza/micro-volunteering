@@ -6,7 +6,7 @@ import javax.inject.Inject
 class UploadDocumentUseCase @Inject constructor(
     private val repository: VolunteeringRepository
 ) {
-    suspend fun uploadDocument(uri: String): Boolean {
+    suspend operator fun invoke(uri: String): Boolean {
         return repository.uploadDocument(uri)
     }
 }

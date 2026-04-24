@@ -4,41 +4,45 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.micro_volunteering.R
 import com.example.micro_volunteering.domain.model.Notification
 import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.domain.usecase.AcceptVolunteerUseCase
-import com.example.micro_volunteering.domain.usecase.DismissVolunteerUseCase
-import com.example.micro_volunteering.domain.usecase.GetNotificationUseCase
+import com.example.micro_volunteering.domain.usecase.RejectVolunteerUseCase
+import com.example.micro_volunteering.domain.usecase.GetNotificationsUseCase
 import com.example.micro_volunteering.domain.usecase.GetUserRoleUseCase
+import com.example.micro_volunteering.presentation.utils.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
-    private val useCase: GetNotificationUseCase,
-    private val userRoleUseCase: GetUserRoleUseCase,
-    private val dismissVolunteerUseCase: DismissVolunteerUseCase,
-    private val acceptVolunteerUseCase: AcceptVolunteerUseCase
+    private val getNotificationsUseCase: GetNotificationsUseCase,
+    private val getUserRoleUseCase: GetUserRoleUseCase,
+    private val rejectVolunteerUseCase: RejectVolunteerUseCase,
+    private val acceptVolunteerUseCase: AcceptVolunteerUseCase,
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private val _notification = MutableLiveData<List<Notification>>()
-    val notification: LiveData<List<Notification>> = _notification
+    private val _notifications = MutableLiveData<List<Notification>>()
+    val notifications: LiveData<List<Notification>> = _notifications
 
-    private val _isAccept = MutableLiveData<Boolean>(false)
-    val isAccept: LiveData<Boolean> = _isAccept
+    private val _toastMessage = MutableLiveData<String?>()
+    val toastMessage: LiveData<String?> = _toastMessage
 
-    private val _isDismiss = MutableLiveData<Boolean>(false)
-    val isDismiss: LiveData<Boolean> = _isDismiss
+    init {
+        loadNotifications()
+    }
 
-    fun loadNotification() {
+    fun loadNotifications() {
         _isLoading.value = true
 
         viewModelScope.launch {
-            _notification.value = useCase.getNotification()
+            _notifications.value = getNotificationsUseCase()
             _isLoading.value = false
         }
     }
@@ -47,16 +51,16 @@ class NotificationViewModel @Inject constructor(
         _isLoading.value = true
 
         viewModelScope.launch {
-            val isSuccess = acceptVolunteerUseCase.acceptVolunteer(idTask, idVolunteer)
+            val isSuccess = acceptVolunteerUseCase(idTask, idVolunteer)
 
             if (isSuccess) {
-                val currentList = _notification.value ?: emptyList()
+                val currentList = _notifications.value ?: emptyList()
                 val newNotification = currentList.filter { notification ->
                     !(notification.idTask == idTask && notification.idUser == idVolunteer)
                 }
-                _notification.value = newNotification
+                _notifications.value = newNotification
 
-                _isAccept.value = true
+                _toastMessage.value = resourceProvider.getString(R.string.accepted_user)
             }
 
             _isLoading.value = false
@@ -67,16 +71,16 @@ class NotificationViewModel @Inject constructor(
         _isLoading.value = true
 
         viewModelScope.launch {
-            val isSuccess = dismissVolunteerUseCase.dismissVolunteer(idTask, idVolunteer)
+            val isSuccess = rejectVolunteerUseCase(idTask, idVolunteer)
 
             if (isSuccess) {
-                val currentList = _notification.value ?: emptyList()
+                val currentList = _notifications.value ?: emptyList()
                 val newNotification = currentList.filter { notification ->
                     !(notification.idTask == idTask && notification.idUser == idVolunteer)
                 }
-                _notification.value = newNotification
+                _notifications.value = newNotification
 
-                _isDismiss.value = true
+                _toastMessage.value = resourceProvider.getString(R.string.dismiss_user)
             }
 
             _isLoading.value = false
@@ -84,14 +88,10 @@ class NotificationViewModel @Inject constructor(
     }
 
     fun isUserOrganization(): Boolean {
-        return userRoleUseCase.getUserRole() == UserRole.ORGANIZATION
+        return getUserRoleUseCase() == UserRole.ORGANIZATION
     }
 
-    fun onAcceptMessageShown() {
-        _isAccept.value = false
-    }
-
-    fun onDismissMessageShown() {
-        _isDismiss.value = false
+    fun onToastShown() {
+        _toastMessage.value = null
     }
 }

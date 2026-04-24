@@ -1,11 +1,6 @@
 package com.example.micro_volunteering.presentation.ui
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -16,48 +11,36 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
 @AndroidEntryPoint
-class LeaveFeedbackFragment : Fragment() {
+class LeaveFeedbackFragment : BaseFragment<FragmentLeaveFeedbackBinding, LeaveFeedbackViewModel>(FragmentLeaveFeedbackBinding::inflate) {
 
-    private lateinit var binding: FragmentLeaveFeedbackBinding
-    private val viewModel: LeaveFeedbackViewModel by viewModels()
-
+    override val viewModel: LeaveFeedbackViewModel by viewModels()
     private val args: LeaveFeedbackFragmentArgs by navArgs()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentLeaveFeedbackBinding.inflate(inflater)
-        return binding.root
-    }
+    override fun setupViews() {
+        with (binding) {
+            ratingBar.rating = args.rating
+            name.text = args.name
+            img.load(args.url)
+        }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.ratingBar.rating = args.rating
-        binding.name.text = args.name
-        binding.img.load(args.url)
-
-        observeViewModel()
         setupListeners()
     }
 
     private fun setupListeners() {
         binding.btnSave.setOnClickListener {
-            viewModel.leaveFeedback(args.idVolunteer, args.idTask, binding.editFeedback.text.toString(), binding.ratingBar.rating)
+            viewModel.leaveFeedback(
+                args.idVolunteer,
+                args.idTask,
+                binding.editFeedback.text.toString(),
+                binding.ratingBar.rating
+            )
         }
     }
 
-    private fun observeViewModel() {
+    override fun observeViewModel() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                binding.progressBar.isVisible = true
-                binding.content.isVisible = false
-            }
-            else {
-                binding.progressBar.isVisible = false
-                binding.content.isVisible = true
-            }
+            binding.progressBar.isVisible = isLoading
+            binding.content.isVisible = !isLoading
         }
 
         viewModel.isSuccess.observe(viewLifecycleOwner) { isSuccess ->
@@ -67,12 +50,10 @@ class LeaveFeedbackFragment : Fragment() {
         }
 
         viewModel.errorText.observe(viewLifecycleOwner) { errorText ->
-            if (errorText != null) {
-                binding.errorText.text = getString(errorText)
-                binding.errorText.isVisible = true
-            } else {
-                binding.errorText.isVisible = false
+            errorText?.let {
+                binding.errorText.text = errorText
             }
+            binding.errorText.isVisible = !errorText.isNullOrEmpty()
         }
     }
 }

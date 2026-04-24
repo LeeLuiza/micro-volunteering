@@ -1,10 +1,5 @@
 package com.example.micro_volunteering.presentation.ui
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -12,73 +7,48 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentTaskBinding
-import com.example.micro_volunteering.domain.model.CategoryTask
-import com.example.micro_volunteering.presentation.extensions.navigate
+import com.example.micro_volunteering.presentation.utils.getDisplayName
+import com.example.micro_volunteering.presentation.utils.navigate
 import com.example.micro_volunteering.presentation.viewmodel.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
 @AndroidEntryPoint
-class TaskFragment : Fragment() {
-    private lateinit var binding: FragmentTaskBinding
-    private val viewModel: TaskViewModel by viewModels()
+class TaskFragment : BaseFragment<FragmentTaskBinding, TaskViewModel>(FragmentTaskBinding::inflate) {
 
+    override val viewModel: TaskViewModel by viewModels()
     private val args: TaskFragmentArgs by navArgs()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentTaskBinding.inflate(inflater)
-        return binding.root
+    override fun setupViews() {
+        setupListeners()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val idTask = args.id
-
-        observeViewModel()
-        loadTasks(idTask)
-        setupListeners(idTask)
-    }
-
-    private fun setupListeners(idTask: Int) {
+    private fun setupListeners() {
+        val currentId = args.id
 
         binding.btnCorrect.setOnClickListener {
-            val currentTask = viewModel.tasks.value
-
-            if (currentTask != null) {
-                val action = TaskFragmentDirections.actionTaskFragmentToUpdateTaskFragment(currentTask)
-                navigate(action)
+            viewModel.task.value?.let { currentTask ->
+                navigate(TaskFragmentDirections.actionTaskFragmentToUpdateTaskFragment(currentTask))
             }
         }
 
         binding.btnComplete.setOnClickListener {
-            viewModel.completeTask(idTask)
+            viewModel.completeTask(currentId)
         }
 
         binding.btnViewParticipants.setOnClickListener {
-            val action = TaskFragmentDirections.actionTaskFragmentToVolunteerRespondFragment(idTask)
-            navigate(action)
+            navigate(TaskFragmentDirections.actionTaskFragmentToVolunteerRespondFragment(currentId))
         }
 
         binding.btnRespond.setOnClickListener {
-            viewModel.respond(idTask)
+            viewModel.respond(currentId)
         }
     }
 
-    private fun observeViewModel() {
+    override fun observeViewModel() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                binding.progressBar.isVisible = true
-                binding.content.isVisible = false
-            }
-            else {
-                binding.progressBar.isVisible = false
-                binding.content.isVisible = true
-            }
+            binding.progressBar.isVisible = isLoading
+            binding.content.isVisible = !isLoading
         }
 
         viewModel.isComplete.observe(viewLifecycleOwner) { isComplete ->
@@ -87,22 +57,24 @@ class TaskFragment : Fragment() {
             }
         }
 
-        viewModel.tasks.observe(viewLifecycleOwner) { task ->
-            if (task != null) {
-                binding.progressBar.isVisible = false
-                binding.content.isVisible = true
+        viewModel.task.observe(viewLifecycleOwner) { task ->
+            task?.let {
+                with(binding) {
+                    progressBar.isVisible = false
+                    content.isVisible = true
 
-                binding.title.text = task.title
-                binding.description.text = task.description
-                binding.category.text = getCategoryName(task.category)
-                binding.countVol.text = getString(R.string.number_volunteers, task.volunteersNeeded.toString())
-                binding.address.text = task.address
-                binding.date.text = task.date
-                binding.organization.text = task.organizationName
-                binding.btnCorrect.isVisible = viewModel.isUserOrganization()
-                binding.btnViewParticipants.isVisible = viewModel.isUserOrganization()
-                binding.btnComplete.isVisible = viewModel.isUserOrganization()
-                binding.btnRespond.isVisible = !viewModel.isUserOrganization()
+                    title.text = task.title
+                    description.text = task.description
+                    category.text = task.category.getDisplayName(requireContext())
+                    countVol.text = getString(R.string.number_volunteers, task.volunteersNeeded.toString())
+                    address.text = task.address
+                    date.text = task.date
+                    organization.text = task.organizationName
+                    btnCorrect.isVisible = viewModel.isUserOrganization()
+                    btnViewParticipants.isVisible = viewModel.isUserOrganization()
+                    btnComplete.isVisible = viewModel.isUserOrganization()
+                    btnRespond.isVisible = !viewModel.isUserOrganization()
+                }
             }
         }
 
@@ -113,20 +85,7 @@ class TaskFragment : Fragment() {
         }
     }
 
-    private fun getCategoryName(category: CategoryTask): String {
-        val resId = when (category) {
-            CategoryTask.ECOLOGY -> R.string.ecology
-            CategoryTask.ANIMAL -> R.string.animal
-            CategoryTask.SOCIAL_ASSIST -> R.string.social_assist
-            CategoryTask.CAR -> R.string.car
-            CategoryTask.MENTAL -> R.string.mental
-            CategoryTask.EVENT -> R.string.event
-            CategoryTask.OTHER -> R.string.other
-        }
-        return getString(resId)
-    }
-
-    private fun loadTasks(idTask: Int) {
-        viewModel.loadTasks(idTask)
+    override fun loadData() {
+        viewModel.loadTask(args.id)
     }
 }

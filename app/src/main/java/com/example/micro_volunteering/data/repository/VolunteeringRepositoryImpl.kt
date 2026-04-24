@@ -1,6 +1,6 @@
 package com.example.micro_volunteering.data.repository
 
-import com.example.micro_volunteering.data.local.TokenManager
+import com.example.micro_volunteering.data.local.TokenPreferences
 import com.example.micro_volunteering.data.local.UserPreferences
 import com.example.micro_volunteering.data.mapper.FeedbackMapper
 import com.example.micro_volunteering.data.mapper.NotificationMapper
@@ -32,7 +32,7 @@ import javax.inject.Inject
 
 class VolunteeringRepositoryImpl @Inject constructor(
     private val api: VolunteeringApiService,
-    private val tokenManager: TokenManager,
+    private val tokenManager: TokenPreferences,
     private val userPreferences: UserPreferences,
     private val userMapper: UserMapper,
     private val taskMapper: TaskMapper,
@@ -40,27 +40,27 @@ class VolunteeringRepositoryImpl @Inject constructor(
     private val notificationMapper: NotificationMapper,
     private val uriConverter: UriConverter
 ) : VolunteeringRepository {
-    override suspend fun registrationVolunteer(user: UserProfileRegister.Volunteer) : Boolean {
+    override suspend fun registerVolunteer(user: UserProfileRegister.Volunteer) : Boolean {
         return try {
-            api.registrationVolunteer(userMapper.toDtoUserProfile(user))
+            api.registerVolunteer(userMapper.toDtoUserProfile(user))
         }
         catch (e: Exception) {
             false
         }
     }
 
-    override suspend fun registrationOrganization(user: UserProfileRegister.Organization) : Boolean {
+    override suspend fun registerOrganization(user: UserProfileRegister.Organization) : Boolean {
         return try {
-            api.registrationOrganization(userMapper.toDtoUserProfile(user))
+            api.registerOrganization(userMapper.toDtoUserProfile(user))
         }
         catch (e: Exception) {
             false
         }
     }
 
-    override suspend fun authorizationUser(login: String, password: String) : UserRole? {
+    override suspend fun login(email: String, password: String) : UserRole? {
         return try {
-            val response = api.authorization(LoginRequest(login, password))
+            val response = api.login(LoginRequest(email, password))
             val userRole = response.user.role
             tokenManager.saveTokens(response.accessToken, response.refreshToken)
             userPreferences.saveUserId(response.user.id.toString())
@@ -90,9 +90,9 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun repeatCode(email: String): Boolean {
+    override suspend fun resendCode(email: String): Boolean {
         return try {
-            api.repeatCode(EmailRequest(email))
+            api.resendCode(EmailRequest(email))
         }
         catch (e: Exception) {
             false
@@ -261,7 +261,7 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun uploadPhoto(uriString: String): Boolean {
+    override suspend fun uploadAvatar(uriString: String): Boolean {
         val imagePart = uriConverter.prepareImageBody(uriString)
 
         if (imagePart == null) {
@@ -269,7 +269,7 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
 
         return try {
-            api.uploadPhoto(imagePart)
+            api.uploadAvatar(imagePart)
             true
         } catch (e: Exception) {
             false
@@ -291,7 +291,7 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getNotification(): List<Notification> {
+    override suspend fun getNotifications(): List<Notification> {
         return try {
             api.getNotification().map { it -> notificationMapper.toDomain(it) }
         } catch (e: Exception) {
@@ -299,9 +299,9 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getVolunteerRespond(idTask: Int): List<VolunteerRespond> {
+    override suspend fun getTaskResponders(idTask: Int): List<VolunteerRespond> {
         return try {
-            api.getVolunteerRespond(idTask).map { it -> userMapper.toDomainVolunteerRespond(it) }
+            api.getTaskResponders(idTask).map { it -> userMapper.toDomainVolunteerRespond(it) }
         } catch (e: Exception) {
             emptyList<VolunteerRespond>()
         }
@@ -330,9 +330,9 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun respond(idTask: Int): Boolean {
+    override suspend fun respondToTask(idTask: Int): Boolean {
         return try {
-            api.respond(idTask)
+            api.respondToTask(idTask)
             true
         } catch (e: Exception) {
             false
@@ -351,12 +351,12 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun dismissVolunteer(
+    override suspend fun rejectVolunteer(
         idTask: Int,
         idVolunteer: Int
     ): Boolean {
         return try {
-            api.dismissVolunteer(idTask, idVolunteer)
+            api.rejectVolunteer(idTask, idVolunteer)
             true
         } catch (e: Exception) {
             false
@@ -388,7 +388,7 @@ class VolunteeringRepositoryImpl @Inject constructor(
         userPreferences.setNotificationPermissionRequested()
     }
 
-    override suspend fun getUnverifiedOrganizationList(): List<OrganizationUnverified> {
+    override suspend fun getUnverifiedOrganizations(): List<OrganizationUnverified> {
         return try {
             val response = api.getUnverifiedOrganizations()
             response.map { it -> userMapper.toDomainOrganizationUnverified(it)}
@@ -417,9 +417,9 @@ class VolunteeringRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun dismissOrganization(id: Int): Boolean {
+    override suspend fun rejectOrganization(id: Int): Boolean {
         return try {
-            api.dismissOrganization(id)
+            api.rejectOrganization(id)
         }
         catch (e: Exception) {
             false

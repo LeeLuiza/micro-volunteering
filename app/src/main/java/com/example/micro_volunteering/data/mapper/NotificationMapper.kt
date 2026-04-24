@@ -2,8 +2,9 @@ package com.example.micro_volunteering.data.mapper
 
 import com.example.micro_volunteering.data.remote.dto.response.NotificationResponse
 import com.example.micro_volunteering.domain.model.Notification
+import javax.inject.Inject
 
-class NotificationMapper {
+class NotificationMapper @Inject constructor() {
 
     fun toDomain(notification: NotificationResponse) = Notification(
         message = notification.message,

@@ -1,7 +1,7 @@
 package com.example.micro_volunteering.data.remote.interceptors
 
 import com.example.micro_volunteering.data.constants.AppConstants.MESSAGE
-import com.example.micro_volunteering.data.local.TokenManager
+import com.example.micro_volunteering.data.local.TokenPreferences
 import com.example.micro_volunteering.domain.event.NetworkErrorManager
 import com.example.micro_volunteering.domain.model.AppError
 import okhttp3.Interceptor
@@ -10,7 +10,7 @@ import org.json.JSONObject
 import java.io.IOException
 
 class ErrorInterceptor(
-    private val tokenManager: TokenManager
+    private val tokenManager: TokenPreferences
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()

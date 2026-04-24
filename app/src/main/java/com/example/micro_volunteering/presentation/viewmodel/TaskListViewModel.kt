@@ -11,21 +11,21 @@ import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.domain.usecase.GetUserRoleUseCase
 import com.example.micro_volunteering.domain.usecase.NotificationPermissionRequestedUseCase
 import com.example.micro_volunteering.domain.usecase.SetNotificationPermissionRequestedUseCase
-import com.example.micro_volunteering.domain.usecase.TaskListOrganizationUseCase
-import com.example.micro_volunteering.domain.usecase.TaskListUseCase
-import com.example.micro_volunteering.domain.usecase.VerifiedUseCase
+import com.example.micro_volunteering.domain.usecase.GetTasksOrganizationUseCase
+import com.example.micro_volunteering.domain.usecase.GetTasksUseCase
+import com.example.micro_volunteering.domain.usecase.CheckOrganizationVerifiedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TaskListViewModel @Inject constructor(
-    private val taskListUseCase: TaskListUseCase,
-    private val taskListOrganizationUseCase: TaskListOrganizationUseCase,
-    private val userRoleUseCase: GetUserRoleUseCase,
+    private val getTasksUseCase: GetTasksUseCase,
+    private val getTasksOrganizationUseCase: GetTasksOrganizationUseCase,
+    private val getUserRoleUseCase: GetUserRoleUseCase,
     private val notificationPermissionRequestedUseCase: NotificationPermissionRequestedUseCase,
     private val setNotificationPermissionRequestedUseCase: SetNotificationPermissionRequestedUseCase,
-    private val verifiedUseCase: VerifiedUseCase
+    private val checkOrganizationVerifiedUseCase: CheckOrganizationVerifiedUseCase
 ) : ViewModel() {
     private var allTasks: List<Task> = emptyList()
     private val _tasks = MutableLiveData<List<Task>>()
@@ -39,6 +39,11 @@ class TaskListViewModel @Inject constructor(
 
     private val _selectedTab = MutableLiveData<TaskStatus>(TaskStatus.ACTIVE)
     val selectedTab: LiveData<TaskStatus> = _selectedTab
+
+    init {
+        loadTasks()
+        checkPermissionStatus()
+    }
 
     fun loadTasks() {
         if (isUserOrganization()) {
@@ -60,7 +65,7 @@ class TaskListViewModel @Inject constructor(
         _isLoading.value = true
 
         viewModelScope.launch {
-            val result = taskListUseCase.getTasks()
+            val result = getTasksUseCase()
             _tasks.value = result
             allTasks = result
             _isLoading.value = false
@@ -71,7 +76,7 @@ class TaskListViewModel @Inject constructor(
         _isLoading.value = true
 
         viewModelScope.launch {
-            val result = taskListOrganizationUseCase.getTasksOrganization(status)
+            val result = getTasksOrganizationUseCase(status)
             _tasks.value = result
             allTasks = result
             _isLoading.value = false
@@ -80,7 +85,7 @@ class TaskListViewModel @Inject constructor(
 
     fun checkPermissionStatus() {
         viewModelScope.launch {
-            val result = notificationPermissionRequestedUseCase.isNotificationPermissionRequested()
+            val result = notificationPermissionRequestedUseCase()
             _isNotificationPermissionRequested.value = !result
         }
     }
@@ -106,16 +111,16 @@ class TaskListViewModel @Inject constructor(
     }
 
     fun isUserOrganization(): Boolean {
-        return userRoleUseCase.getUserRole() == UserRole.ORGANIZATION
+        return getUserRoleUseCase() == UserRole.ORGANIZATION
     }
 
     fun setNotificationPermissionRequested() {
         viewModelScope.launch {
-            setNotificationPermissionRequestedUseCase.setNotificationPermissionRequested()
+            setNotificationPermissionRequestedUseCase()
         }
     }
 
     fun isVerified(): Boolean {
-        return verifiedUseCase.isVerified()
+        return checkOrganizationVerifiedUseCase()
     }
 }

@@ -6,5 +6,5 @@ import javax.inject.Inject
 class DeleteTaskUseCase @Inject constructor(
     private val repository: VolunteeringRepository
 ) {
-    suspend fun deleteTask(id: Int) = repository.deleteTask(id)
+    suspend operator fun invoke(id: Int) = repository.deleteTask(id)
 }

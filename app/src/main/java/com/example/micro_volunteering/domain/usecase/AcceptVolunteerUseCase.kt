@@ -6,5 +6,5 @@ import javax.inject.Inject
 class AcceptVolunteerUseCase @Inject constructor(
     private val repository: VolunteeringRepository
 ) {
-    suspend fun acceptVolunteer(idTask: Int, idVolunteer: Int) = repository.acceptVolunteer(idTask, idVolunteer)
+    suspend operator fun invoke(idTask: Int, idVolunteer: Int) = repository.acceptVolunteer(idTask, idVolunteer)
 }

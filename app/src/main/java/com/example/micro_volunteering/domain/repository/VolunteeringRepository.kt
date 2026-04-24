@@ -12,11 +12,11 @@ import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.domain.model.VolunteerRespond
 
 interface VolunteeringRepository {
-    suspend fun registrationVolunteer(user: UserProfileRegister.Volunteer) : Boolean
-    suspend fun registrationOrganization(user: UserProfileRegister.Organization) : Boolean
-    suspend fun authorizationUser(login: String, password: String) : UserRole?
+    suspend fun registerVolunteer(user: UserProfileRegister.Volunteer) : Boolean
+    suspend fun registerOrganization(user: UserProfileRegister.Organization) : Boolean
+    suspend fun login(login: String, password: String) : UserRole?
     suspend fun verifyEmail(email: String, code: String) : Boolean
-    suspend fun repeatCode(email: String) : Boolean
+    suspend fun resendCode(email: String) : Boolean
     suspend fun getTasks() : List<Task>
     suspend fun getTask(id: Int) : Task?
     suspend fun getTasksOrganization(status: TaskStatus) : List<Task>
@@ -37,23 +37,23 @@ interface VolunteeringRepository {
     suspend fun deleteUser() : Boolean
     suspend fun deleteTask(id: Int) : Boolean
     suspend fun logout()
-    suspend fun uploadPhoto(uri: String) : Boolean
+    suspend fun uploadAvatar(uri: String) : Boolean
     suspend fun uploadDocument(uri: String) : Boolean
-    suspend fun getNotification() : List<Notification>
-    suspend fun getVolunteerRespond(idTask: Int) : List<VolunteerRespond>
+    suspend fun getNotifications() : List<Notification>
+    suspend fun getTaskResponders(idTask: Int) : List<VolunteerRespond>
     suspend fun leaveFeedback(idVolunteer: Int, idTask: Int, text: String, countStars: Float) : Boolean
     suspend fun completeTask(id: Int) : Boolean
-    suspend fun respond(idTask: Int) : Boolean
+    suspend fun respondToTask(idTask: Int) : Boolean
     suspend fun acceptVolunteer(idTask: Int, idVolunteer: Int) : Boolean
-    suspend fun dismissVolunteer(idTask: Int, idVolunteer: Int) : Boolean
+    suspend fun rejectVolunteer(idTask: Int, idVolunteer: Int) : Boolean
     suspend fun updateFcmToken(token: String) : Boolean
     suspend fun createFcmToken() : Boolean
     suspend fun isNotificationPermissionRequested() : Boolean
     suspend fun setNotificationPermissionRequested()
-    suspend fun getUnverifiedOrganizationList() : List<OrganizationUnverified>
+    suspend fun getUnverifiedOrganizations() : List<OrganizationUnverified>
     suspend fun getUnverifiedOrganization(id: Int) : UserProfile.Organization?
     suspend fun verifyOrganization(id: Int) : Boolean
-    suspend fun dismissOrganization(id: Int): Boolean
+    suspend fun rejectOrganization(id: Int): Boolean
     fun isVerified(): Boolean
     fun isUserLogged(): Boolean
 }

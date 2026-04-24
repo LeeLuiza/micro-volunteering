@@ -1,73 +1,52 @@
 package com.example.micro_volunteering.presentation.ui
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.example.micro_volunteering.databinding.FragmentVolunteerRespondBinding
-import com.example.micro_volunteering.presentation.adapter.VolunteerRespondAdapter
-import com.example.micro_volunteering.presentation.extensions.navigate
-import com.example.micro_volunteering.presentation.viewmodel.VolunteerRespondViewModel
+import com.example.micro_volunteering.presentation.adapter.RespondersAdapter
+import com.example.micro_volunteering.presentation.utils.navigate
+import com.example.micro_volunteering.presentation.viewmodel.TaskRespondersViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
 @AndroidEntryPoint
-class VolunteerRespondFragment : Fragment() {
+class VolunteerRespondFragment : BaseFragment<FragmentVolunteerRespondBinding, TaskRespondersViewModel>(
+    FragmentVolunteerRespondBinding::inflate
+) {
 
-    private lateinit var binding: FragmentVolunteerRespondBinding
-    private val viewModel: VolunteerRespondViewModel by viewModels()
+    override val viewModel: TaskRespondersViewModel by viewModels()
     private val args: VolunteerRespondFragmentArgs by navArgs()
+    private lateinit var adapter: RespondersAdapter
 
-    private lateinit var adapter: VolunteerRespondAdapter
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentVolunteerRespondBinding.inflate(inflater)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        viewModel.loadVolunteerRespond(args.id)
+    override fun setupViews() {
         setUpRecyclerView()
-        observeViewModel()
     }
 
-    private fun observeViewModel() {
+    override fun observeViewModel() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                binding.progressBar.isVisible = true
-                binding.recyclerViewVolunteer.isVisible = false
-            }
-            else {
-                binding.progressBar.isVisible = false
-                binding.recyclerViewVolunteer.isVisible = true
-            }
+            binding.progressBar.isVisible = isLoading
+            binding.recyclerViewVolunteer.isVisible = !isLoading
         }
 
-        viewModel.volunteerRespond.observe(viewLifecycleOwner) { volunteerRespond ->
-            if (volunteerRespond.isNotEmpty()) {
-                binding.progressBar.isVisible = false
-                binding.recyclerViewVolunteer.isVisible = true
-            }
+        viewModel.volunteerResponders.observe(viewLifecycleOwner) { volunteerRespond ->
+            binding.progressBar.isVisible = false
+            binding.recyclerViewVolunteer.isVisible = volunteerRespond.isNotEmpty()
             adapter.update(volunteerRespond)
         }
     }
 
     private fun setUpRecyclerView() {
-        adapter = VolunteerRespondAdapter { idVolunteer, rating, name, url ->
+        adapter = RespondersAdapter { idVolunteer, rating, name, url ->
             val action = VolunteerRespondFragmentDirections.actionVolunteerRespondFragmentToLeaveFeedbackFragment(
                 idVolunteer, args.id, name, url, rating
             )
             navigate(action)
         }
         binding.recyclerViewVolunteer.adapter = adapter
+    }
+
+    override fun loadData() {
+        viewModel.loadResponders(args.id)
     }
 }

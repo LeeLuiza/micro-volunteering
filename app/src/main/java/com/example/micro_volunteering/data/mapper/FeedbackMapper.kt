@@ -2,8 +2,9 @@ package com.example.micro_volunteering.data.mapper
 
 import com.example.micro_volunteering.data.remote.dto.response.FeedbackResponse
 import com.example.micro_volunteering.domain.model.Feedback
+import javax.inject.Inject
 
-class FeedbackMapper {
+class FeedbackMapper @Inject constructor() {
 
     fun toDomain(dto: FeedbackResponse) = Feedback(
         id = dto.id,

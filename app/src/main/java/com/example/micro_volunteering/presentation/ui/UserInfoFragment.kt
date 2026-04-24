@@ -1,28 +1,24 @@
 package com.example.micro_volunteering.presentation.ui
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.micro_volunteering.R
 import com.example.micro_volunteering.databinding.FragmentUserInfoBinding
 import com.example.micro_volunteering.domain.model.UserProfile
 import coil.load
-import com.example.micro_volunteering.presentation.extensions.navigate
+import com.example.micro_volunteering.presentation.utils.navigate
 import com.example.micro_volunteering.presentation.viewmodel.UserInfoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class UserInfoFragment : Fragment() {
+class UserInfoFragment : BaseFragment<FragmentUserInfoBinding, UserInfoViewModel>(
+    FragmentUserInfoBinding::inflate
+) {
 
-    private lateinit var binding: FragmentUserInfoBinding
-    private val viewModel: UserInfoViewModel by viewModels()
+    override val viewModel: UserInfoViewModel by viewModels()
 
     private val pickMedia = registerForActivityResult(PickVisualMedia()) { uri ->
         if (uri != null) {
@@ -32,35 +28,20 @@ class UserInfoFragment : Fragment() {
     }
 
     private val pickDocument = registerForActivityResult(PickVisualMedia()) { uri ->
-        if (uri != null) {
+        uri?.let {
             binding.imgDocument.load(uri)
             viewModel.uploadDocument(uri)
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentUserInfoBinding.inflate(inflater)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        observeViewModel()
-        viewModel.loadUserInfo()
+    override fun setupViews() {
         setupListeners()
     }
 
     private fun setupListeners() {
         binding.btnCorrect.setOnClickListener {
-            val currentUser = viewModel.profile.value
-
-            if (currentUser != null) {
-                val action = UserInfoFragmentDirections.actionUserInfoFragmentToUpdateUserInfoFragment(currentUser)
-                navigate(action)
+            viewModel.profile.value?.let { user ->
+                navigate(UserInfoFragmentDirections.actionUserInfoFragmentToUpdateUserInfoFragment(user))
             }
         }
 
@@ -69,8 +50,7 @@ class UserInfoFragment : Fragment() {
         }
 
         binding.reviews.setOnClickListener {
-            val action = UserInfoFragmentDirections.actionUserInfoFragmentToFeedbackListFragment()
-            navigate(action)
+            navigate(UserInfoFragmentDirections.actionUserInfoFragmentToFeedbackListFragment())
         }
 
         binding.btnAddImg.setOnClickListener {
@@ -82,59 +62,62 @@ class UserInfoFragment : Fragment() {
         }
     }
 
-    private fun observeViewModel() {
+    override fun observeViewModel() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                binding.progressBar.isVisible = true
-                binding.contentVolunteerInfo.isVisible = false
-                binding.contentOrganizationInfo.isVisible = false
-            }
-            else {
-                binding.progressBar.isVisible = false
-            }
+            binding.progressBar.isVisible = isLoading
         }
 
         viewModel.profile.observe(viewLifecycleOwner) { profile ->
-            if (profile != null) {
-                when (profile) {
-                    is UserProfile.Volunteer -> {
-                        binding.contentVolunteerInfo.isVisible = true
-                        binding.contentOrganizationInfo.isVisible = false
-
-                        binding.fullName.text = profile.name
-                        binding.img.load(profile.avatarUrl)
-                        binding.mail.text = getString(R.string.mail, profile.email)
-                        binding.city.text = getString(R.string.city_profile, profile.city)
-                        binding.phone.text = getString(R.string.number_profile, profile.phone)
-                        binding.age.text = getString(R.string.age_profile, profile.age.toString())
-                        binding.ratingBar.rating = profile.rating
-                        binding.countTask.text = getString(R.string.count_task, profile.countTask.toString())
-                        binding.reviews.text = getString(R.string.reviews, profile.countFeedback.toString())
-                    }
-                    is UserProfile.Organization -> {
-                        binding.contentVolunteerInfo.isVisible = false
-                        binding.contentOrganizationInfo.isVisible = true
-
-                        binding.legalName.text = profile.legalName
-                        binding.img.load(profile.avatarUrl)
-                        binding.inn.text = getString(R.string.inn_profile, profile.inn)
-                        binding.mailOrg.text = getString(R.string.mail, profile.email)
-                        binding.cityOrg.text = getString(R.string.city_profile, profile.city)
-                        binding.legalAddress.text = getString(R.string.address_profile, profile.legalAddress)
-                        binding.displayName.text = getString(R.string.name_profile, profile.displayName)
-                        binding.managerPhone.text = getString(R.string.manager_phone_profile, profile.managerPhone)
-                        binding.phoneOrg.text = getString(R.string.phone_organization, profile.phoneOrg)
-                        binding.imgDocument.load(profile.documentUrl)
-
-                        if (profile.isVerified) {
-                            binding.isVerified.text = getString(R.string.account_verified)
-                            binding.isVerified.setTextColor(ContextCompat.getColor(requireContext(), R.color.brand_primary))
-                            binding.btnUploadDocument.isVisible = false
+            profile?.let { profile ->
+                with(binding) {
+                    when (profile) {
+                        is UserProfile.Volunteer -> {
+                            contentVolunteerInfo.isVisible = true
+                            contentOrganizationInfo.isVisible = false
+                            fullName.text = profile.name
+                            img.load(profile.avatarUrl)
+                            mail.text = getString(R.string.mail, profile.email)
+                            city.text = getString(R.string.city_profile, profile.city)
+                            phone.text = getString(R.string.number_profile, profile.phone)
+                            age.text = getString(R.string.age_profile, profile.age.toString())
+                            ratingBar.rating = profile.rating
+                            countTask.text = getString(R.string.count_task, profile.countTask.toString())
+                            reviews.text = getString(R.string.reviews, profile.countFeedback.toString())
                         }
-                        else {
-                            binding.isVerified.text = getString(R.string.account_not_verified)
-                            binding.isVerified.setTextColor(ContextCompat.getColor(requireContext(), R.color.error))
-                            binding.btnUploadDocument.isVisible = true
+
+                        is UserProfile.Organization -> {
+                            contentOrganizationInfo.isVisible = true
+                            contentVolunteerInfo.isVisible = false
+                            legalName.text = profile.legalName
+                            img.load(profile.avatarUrl)
+                            inn.text = getString(R.string.inn_profile, profile.inn)
+                            mailOrg.text = getString(R.string.mail, profile.email)
+                            cityOrg.text = getString(R.string.city_profile, profile.city)
+                            legalAddress.text = getString(R.string.address_profile, profile.legalAddress)
+                            displayName.text = getString(R.string.name_profile, profile.displayName)
+                            managerPhone.text = getString(R.string.manager_phone_profile, profile.managerPhone)
+                            phoneOrg.text = getString(R.string.phone_organization, profile.phoneOrg)
+                            imgDocument.load(profile.documentUrl)
+
+                            if (profile.isVerified) {
+                                isVerified.text = getString(R.string.account_verified)
+                                isVerified.setTextColor(
+                                    ContextCompat.getColor(
+                                        root.context,
+                                        R.color.brand_primary
+                                    )
+                                )
+                                btnUploadDocument.isVisible = false
+                            } else {
+                                isVerified.text = getString(R.string.account_not_verified)
+                                isVerified.setTextColor(
+                                    ContextCompat.getColor(
+                                        root.context,
+                                        R.color.error
+                                    )
+                                )
+                                btnUploadDocument.isVisible = true
+                            }
                         }
                     }
                 }
@@ -143,8 +126,7 @@ class UserInfoFragment : Fragment() {
 
         viewModel.logoutSuccess.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
-                val action = UserInfoFragmentDirections.actionUserInfoFragmentToRoleSelectionFragment()
-                navigate(action)
+                navigate(UserInfoFragmentDirections.actionUserInfoFragmentToRoleSelectionFragment())
             }
         }
     }

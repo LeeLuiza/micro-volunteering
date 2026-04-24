@@ -8,6 +8,7 @@ import com.example.micro_volunteering.R
 import com.example.micro_volunteering.domain.model.CategoryTask
 import com.example.micro_volunteering.domain.usecase.DeleteTaskUseCase
 import com.example.micro_volunteering.domain.usecase.UpdateTaskUseCase
+import com.example.micro_volunteering.presentation.utils.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,8 +16,9 @@ import kotlin.text.toIntOrNull
 
 @HiltViewModel
 class UpdateTaskViewModel @Inject constructor(
-    private val useCase: UpdateTaskUseCase,
-    private val deleteTaskUseCase: DeleteTaskUseCase
+    private val updateTaskUseCase: UpdateTaskUseCase,
+    private val deleteTaskUseCase: DeleteTaskUseCase,
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
@@ -28,12 +30,54 @@ class UpdateTaskViewModel @Inject constructor(
     private val _isSuccessDeleteTask = MutableLiveData<Boolean>()
     val isSuccessDeleteTask: LiveData<Boolean> = _isSuccessDeleteTask
 
-    private val _errorText = MutableLiveData<List<Int>>()
-    val errorText: LiveData<List<Int>> = _errorText
+    private val _errorText = MutableLiveData<String>()
+    val errorText: LiveData<String> = _errorText
 
     fun updateTask(
-        id: Int, title: String, description: String, address: String, selectedPositionCategory: Int, volunteersNeeded: String
+        id: Int,
+        title: String,
+        description: String,
+        address: String,
+        selectedPositionCategory: Int,
+        volunteersNeeded: String
     ) {
+        val errors = validateInput(title, description, address, selectedPositionCategory, volunteersNeeded)
+
+        if (errors.isEmpty()) {
+            _errorText.value = resourceProvider.formatErrors(errors)
+            return
+        }
+
+        val volunteersInt = volunteersNeeded.toInt()
+
+        _isLoading.value = true
+
+        viewModelScope.launch {
+            val result = updateTaskUseCase(
+                id, title, description, address, CategoryTask.entries[selectedPositionCategory].category, volunteersInt
+            )
+            _taskId.value = result
+            _isLoading.value = false
+        }
+    }
+
+    fun deleteTask(id: Int) {
+        _isLoading.value = true
+
+        viewModelScope.launch {
+            val result = deleteTaskUseCase(id)
+            _isSuccessDeleteTask.value = result
+            _isLoading.value = false
+        }
+    }
+
+    private fun validateInput(
+        title: String,
+        description: String,
+        address: String,
+        selectedPositionCategory: Int,
+        volunteersNeeded: String
+    ) : List<Int> {
         val errors = mutableListOf<Int>()
 
         if (title.isBlank()) {
@@ -60,29 +104,6 @@ class UpdateTaskViewModel @Inject constructor(
             errors.add(R.string.error_invalid_volunteers)
         }
 
-        if (errors.isNotEmpty()) {
-            _errorText.value = errors
-            return
-        }
-
-        _isLoading.value = true
-
-        viewModelScope.launch {
-            val result = useCase.updateTask(
-                id, title, description, address, CategoryTask.entries[selectedPositionCategory].category, volunteersInt!!
-            )
-            _taskId.value = result
-            _isLoading.value = false
-        }
-    }
-
-    fun deleteTask(id: Int) {
-        _isLoading.value = true
-
-        viewModelScope.launch {
-            val result = deleteTaskUseCase.deleteTask(id)
-            _isSuccessDeleteTask.value = result
-            _isLoading.value = false
-        }
+        return errors
     }
 }

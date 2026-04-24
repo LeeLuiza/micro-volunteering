@@ -6,7 +6,7 @@ import javax.inject.Inject
 class CreateTaskUseCase  @Inject constructor(
     private val repository: VolunteeringRepository
 ) {
-    suspend fun createTask(
+    suspend operator fun invoke(
         title: String, description: String, address: String,
         category: String, volunteersNeeded: Int
     ) : Int? =

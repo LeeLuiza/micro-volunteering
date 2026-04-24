@@ -13,8 +13,9 @@ import com.example.micro_volunteering.domain.model.UpdateProfileParams
 import com.example.micro_volunteering.domain.model.UserProfile
 import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.domain.model.VolunteerRespond
+import javax.inject.Inject
 
-class UserMapper {
+class UserMapper @Inject constructor() {
 
     fun toDomainUserInfo(user: VolunteerProfileResponse) = UserProfile.Volunteer(
         name = user.name,

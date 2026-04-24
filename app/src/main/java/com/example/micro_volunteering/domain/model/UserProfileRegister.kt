@@ -6,12 +6,14 @@ import kotlinx.parcelize.Parcelize
 
 sealed class UserProfileRegister : Parcelable {
 
+    abstract val email: String
+
     @Parcelize
     data class Volunteer(
         val name: String,
         val password: String,
         val phone: String,
-        val email: String,
+        override val email: String,
         val age: Int,
         val city: String
     ) : UserProfileRegister()
@@ -24,7 +26,7 @@ sealed class UserProfileRegister : Parcelable {
         val displayName: String,
         val managerPhone: String,
         val phoneOrg: String,
-        val email: String,
+        override val email: String,
         val city: String,
         val isVerified: Boolean,
         val password: String

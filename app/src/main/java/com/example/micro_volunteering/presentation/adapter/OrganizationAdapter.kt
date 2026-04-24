@@ -6,43 +6,31 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.micro_volunteering.databinding.ItemOrganizationBinding
 import com.example.micro_volunteering.domain.model.OrganizationUnverified
-import com.example.micro_volunteering.presentation.diffcallback.OrganizationDiffCallback
+import com.example.micro_volunteering.presentation.diffutil.OrganizationDiffCallback
+import com.example.micro_volunteering.presentation.viewholder.OrganizationViewHolder
 
 class OrganizationAdapter (
     private val onItemClick: (Int) -> Unit
-) : RecyclerView.Adapter<OrganizationAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<OrganizationViewHolder>() {
 
     private var organizations = listOf<OrganizationUnverified>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ViewHolder {
+    ): OrganizationViewHolder {
         val binding = ItemOrganizationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return OrganizationViewHolder(binding)
     }
 
     override fun onBindViewHolder(
-        holder: ViewHolder,
+        holder: OrganizationViewHolder,
         position: Int
     ) {
         holder.bind(organizations[position], onItemClick)
     }
 
     override fun getItemCount() = organizations.size
-
-    class ViewHolder(private val binding: ItemOrganizationBinding) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(item: OrganizationUnverified, onItemClick: (Int) -> Unit) {
-            binding.name.text = item.legalName
-            binding.city.text = item.city
-            binding.inn.text = item.inn
-
-            binding.root.setOnClickListener {
-                onItemClick(item.id)
-            }
-        }
-    }
 
     fun updateOrganizations(newOrganizations: List<OrganizationUnverified>) {
         val diffCallback = OrganizationDiffCallback(organizations, newOrganizations)
