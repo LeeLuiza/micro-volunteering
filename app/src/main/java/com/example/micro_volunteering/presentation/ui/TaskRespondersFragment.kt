@@ -11,7 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
 @AndroidEntryPoint
-class VolunteerRespondFragment : BaseFragment<FragmentVolunteerRespondBinding, TaskRespondersViewModel>(
+class TaskRespondersFragment : BaseFragment<FragmentVolunteerRespondBinding, TaskRespondersViewModel>(
     FragmentVolunteerRespondBinding::inflate
 ) {
 
@@ -24,12 +24,12 @@ class VolunteerRespondFragment : BaseFragment<FragmentVolunteerRespondBinding, T
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.progressBar.isVisible = isLoading
             binding.recyclerViewVolunteer.isVisible = !isLoading
         }
 
-        viewModel.volunteerResponders.observe(viewLifecycleOwner) { volunteerRespond ->
+        collectFlow(viewModel.volunteerResponders) { volunteerRespond ->
             binding.progressBar.isVisible = false
             binding.recyclerViewVolunteer.isVisible = volunteerRespond.isNotEmpty()
             adapter.update(volunteerRespond)

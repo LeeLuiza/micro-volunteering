@@ -1,7 +1,5 @@
 package com.example.micro_volunteering.presentation.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.R
@@ -9,6 +7,10 @@ import com.example.micro_volunteering.domain.model.UserProfileRegister
 import com.example.micro_volunteering.domain.usecase.RegistrationUserUseCase
 import com.example.micro_volunteering.presentation.utils.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,14 +19,14 @@ class RegistrationViewModel @Inject constructor(
     private val registrationUseCase: RegistrationUserUseCase,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
-    private val _isLoading = MutableLiveData<Boolean>(false)
-    val isLoading: LiveData<Boolean> = _isLoading
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _navigate = MutableLiveData<String?>()
-    val navigate: LiveData<String?> = _navigate
+    private val _navigate = MutableSharedFlow<String?>()
+    val navigate: SharedFlow<String?> = _navigate
 
-    private val _errorText = MutableLiveData<String>()
-    val errorText: LiveData<String> = _errorText
+    private val _errorText = MutableSharedFlow<String>()
+    val errorText: SharedFlow<String> = _errorText
 
     fun registerOrganization(
         legalName: String,
@@ -67,7 +69,9 @@ class RegistrationViewModel @Inject constructor(
         }
 
         if (errors.isNotEmpty()) {
-            _errorText.value = resourceProvider.formatErrors(errors)
+            viewModelScope.launch {
+                _errorText.emit(resourceProvider.formatErrors(errors))
+            }
             return
         }
 
@@ -77,7 +81,7 @@ class RegistrationViewModel @Inject constructor(
             _isLoading.value = false
 
             if (isSuccess) {
-                _navigate.value = user.email
+                _navigate.emit(user.email)
             }
         }
     }
@@ -113,9 +117,5 @@ class RegistrationViewModel @Inject constructor(
 
     private fun isEmailValid(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
-
-    fun onNavigationDone() {
-        _navigate.value = null
     }
 }

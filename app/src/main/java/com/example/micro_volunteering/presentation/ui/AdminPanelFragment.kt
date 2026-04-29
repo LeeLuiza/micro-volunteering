@@ -26,18 +26,18 @@ class AdminPanelFragment : BaseFragment<FragmentAdminBinding, AdminPanelViewMode
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.progressBar.isVisible = isLoading
             binding.recyclerViewOrganization.isVisible = !isLoading
         }
 
-        viewModel.unverifiedOrganizations.observe(viewLifecycleOwner) { unverifiedOrganization ->
+        collectFlow(viewModel.unverifiedOrganizations) { unverifiedOrganization ->
             binding.progressBar.isVisible = false
             binding.recyclerViewOrganization.isVisible = true
             adapter.updateOrganizations(unverifiedOrganization)
         }
 
-        viewModel.logoutSuccess.observe(viewLifecycleOwner) { isSuccess ->
+        collectFlow(viewModel.logoutSuccess) { isSuccess ->
             if (isSuccess) {
                 navigate(AdminPanelFragmentDirections.actionAdminPanelFragmentToRoleSelectionFragment())
             }

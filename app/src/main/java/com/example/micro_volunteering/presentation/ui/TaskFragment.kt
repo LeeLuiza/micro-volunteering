@@ -46,18 +46,12 @@ class TaskFragment : BaseFragment<FragmentTaskBinding, TaskViewModel>(FragmentTa
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.progressBar.isVisible = isLoading
             binding.content.isVisible = !isLoading
         }
 
-        viewModel.isComplete.observe(viewLifecycleOwner) { isComplete ->
-            if (isComplete) {
-                findNavController().popBackStack()
-            }
-        }
-
-        viewModel.task.observe(viewLifecycleOwner) { task ->
+        collectFlow(viewModel.task) { task ->
             task?.let {
                 with(binding) {
                     progressBar.isVisible = false
@@ -78,7 +72,13 @@ class TaskFragment : BaseFragment<FragmentTaskBinding, TaskViewModel>(FragmentTa
             }
         }
 
-        viewModel.isRespond.observe(viewLifecycleOwner) { isRespond ->
+        collectFlow(viewModel.isComplete) { isComplete ->
+            if (isComplete) {
+                findNavController().popBackStack()
+            }
+        }
+
+        collectFlow(viewModel.isRespond) { isRespond ->
             if (isRespond) {
                 Toast.makeText(requireContext(), R.string.successfully_responded, Toast.LENGTH_SHORT).show()
             }

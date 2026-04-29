@@ -12,9 +12,9 @@ class ResourceProviderImpl @Inject constructor(
         return context.getString(resId)
     }
 
-    override fun formatErrors(errorIds: List<Int>): String? {
+    override fun formatErrors(errorIds: List<Int>): String {
         if (errorIds.isEmpty()) {
-            return null
+            return ""
         }
 
         return errorIds.joinToString("\n") { id ->

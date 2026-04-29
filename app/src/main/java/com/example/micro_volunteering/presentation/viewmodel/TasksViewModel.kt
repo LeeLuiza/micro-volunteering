@@ -1,25 +1,25 @@
 package com.example.micro_volunteering.presentation.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.domain.model.CategoryTask
 import com.example.micro_volunteering.domain.model.Task
 import com.example.micro_volunteering.domain.model.TaskStatus
 import com.example.micro_volunteering.domain.model.UserRole
+import com.example.micro_volunteering.domain.usecase.CheckOrganizationVerifiedUseCase
+import com.example.micro_volunteering.domain.usecase.GetTasksOrganizationUseCase
+import com.example.micro_volunteering.domain.usecase.GetTasksUseCase
 import com.example.micro_volunteering.domain.usecase.GetUserRoleUseCase
 import com.example.micro_volunteering.domain.usecase.NotificationPermissionRequestedUseCase
 import com.example.micro_volunteering.domain.usecase.SetNotificationPermissionRequestedUseCase
-import com.example.micro_volunteering.domain.usecase.GetTasksOrganizationUseCase
-import com.example.micro_volunteering.domain.usecase.GetTasksUseCase
-import com.example.micro_volunteering.domain.usecase.CheckOrganizationVerifiedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TaskListViewModel @Inject constructor(
+class TasksViewModel @Inject constructor(
     private val getTasksUseCase: GetTasksUseCase,
     private val getTasksOrganizationUseCase: GetTasksOrganizationUseCase,
     private val getUserRoleUseCase: GetUserRoleUseCase,
@@ -28,17 +28,17 @@ class TaskListViewModel @Inject constructor(
     private val checkOrganizationVerifiedUseCase: CheckOrganizationVerifiedUseCase
 ) : ViewModel() {
     private var allTasks: List<Task> = emptyList()
-    private val _tasks = MutableLiveData<List<Task>>()
-    val tasks: LiveData<List<Task>> = _tasks
+    private val _tasks = MutableStateFlow<List<Task>>(emptyList())
+    val tasks: StateFlow<List<Task>> = _tasks
 
-    private val _isLoading = MutableLiveData<Boolean>(false)
-    val isLoading: LiveData<Boolean> = _isLoading
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _isNotificationPermissionRequested = MutableLiveData<Boolean>(false)
-    val isNotificationPermissionRequested: LiveData<Boolean> = _isNotificationPermissionRequested
+    private val _isNotificationPermissionRequested = MutableStateFlow<Boolean>(false)
+    val isNotificationPermissionRequested: StateFlow<Boolean> = _isNotificationPermissionRequested
 
-    private val _selectedTab = MutableLiveData<TaskStatus>(TaskStatus.ACTIVE)
-    val selectedTab: LiveData<TaskStatus> = _selectedTab
+    private val _selectedTab = MutableStateFlow<TaskStatus>(TaskStatus.ACTIVE)
+    val selectedTab: StateFlow<TaskStatus> = _selectedTab
 
     init {
         loadTasks()
@@ -47,7 +47,7 @@ class TaskListViewModel @Inject constructor(
 
     fun loadTasks() {
         if (isUserOrganization()) {
-            val status = _selectedTab.value ?: TaskStatus.ACTIVE
+            val status = _selectedTab.value
             loadTasksOrganization(status)
         } else {
             loadTasksVolunteer()

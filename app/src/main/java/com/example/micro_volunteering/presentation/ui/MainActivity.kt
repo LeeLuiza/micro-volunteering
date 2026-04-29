@@ -6,7 +6,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -31,8 +33,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setUpNavigation()
-        viewModel.handleNotificationIntent(intent)
         observeViewModel()
+        viewModel.handleNotificationIntent(intent)
 
         lifecycleScope.launch {
             NetworkErrorManager.errorFlow.collect { error ->
@@ -48,14 +50,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun observeViewModel() {
-        viewModel.navigationEvent.observe(this) { fragmentId ->
-            if (fragmentId != null) {
-                try {
-                    navController.navigate(fragmentId)
-                } catch (e: Exception) {
-                    Toast.makeText(this, R.string.could_not_open_notification, Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigationEvent.collect { fragmentId ->
+                    if (fragmentId != null) {
+                        try {
+                            navController.navigate(fragmentId)
+                        } catch (e: Exception) {
+                            Toast.makeText(this@MainActivity, R.string.could_not_open_notification, Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
-                viewModel.onNavigationHandled()
             }
         }
     }

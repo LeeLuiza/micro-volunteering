@@ -36,20 +36,19 @@ class RegistrationFragment : BaseFragment<FragmentRegistrationBinding, Registrat
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.progressBar.isVisible = isLoading
             binding.content.isVisible = !isLoading
         }
 
-        viewModel.errorText.observe(viewLifecycleOwner) { errorText ->
+        collectFlow(viewModel.errorText) { errorText ->
             binding.errorText.text = errorText
             binding.errorText.isVisible = errorText.isNotEmpty()
         }
 
-        viewModel.navigate.observe(viewLifecycleOwner) { email ->
+        collectFlow(viewModel.navigate) { email ->
             email?.let {
                 navigate(RegistrationFragmentDirections.actionRegistrationFragmentToVerifyEmailFragment(email))
-                viewModel.onNavigationDone()
             }
         }
     }

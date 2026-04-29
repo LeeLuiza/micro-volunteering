@@ -1,16 +1,18 @@
 package com.example.micro_volunteering.presentation.viewmodel
 
 import android.net.Uri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.domain.model.UserProfile
+import com.example.micro_volunteering.domain.usecase.GetUserInfoUseCase
 import com.example.micro_volunteering.domain.usecase.LogoutUseCase
 import com.example.micro_volunteering.domain.usecase.UploadAvatarUseCase
 import com.example.micro_volunteering.domain.usecase.UploadDocumentUseCase
-import com.example.micro_volunteering.domain.usecase.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,14 +24,14 @@ class UserInfoViewModel @Inject constructor(
     private val uploadDocumentUseCase: UploadDocumentUseCase
 ) : ViewModel() {
 
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _profile = MutableLiveData<UserProfile?>()
-    val profile: LiveData<UserProfile?> = _profile
+    private val _profile = MutableStateFlow<UserProfile?>(null)
+    val profile: StateFlow<UserProfile?> = _profile
 
-    private val _logoutSuccess = MutableLiveData<Boolean>()
-    val logoutSuccess: LiveData<Boolean> = _logoutSuccess
+    private val _logoutSuccess = MutableSharedFlow<Boolean>()
+    val logoutSuccess: SharedFlow<Boolean> = _logoutSuccess
 
     init {
         loadUserInfo()
@@ -51,7 +53,7 @@ class UserInfoViewModel @Inject constructor(
             logoutUseCase()
             _isLoading.value = false
 
-            _logoutSuccess.value = true
+            _logoutSuccess.emit(true)
         }
     }
 

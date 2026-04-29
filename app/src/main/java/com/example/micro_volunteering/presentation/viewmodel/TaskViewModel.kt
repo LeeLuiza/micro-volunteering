@@ -1,16 +1,18 @@
 package com.example.micro_volunteering.presentation.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.domain.model.Task
 import com.example.micro_volunteering.domain.model.UserRole
 import com.example.micro_volunteering.domain.usecase.CompleteTaskUseCase
+import com.example.micro_volunteering.domain.usecase.GetTaskDetailsUseCase
 import com.example.micro_volunteering.domain.usecase.GetUserRoleUseCase
 import com.example.micro_volunteering.domain.usecase.RespondToTaskUseCase
-import com.example.micro_volunteering.domain.usecase.GetTaskDetailsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,17 +23,17 @@ class TaskViewModel @Inject constructor(
     private val completeTaskUseCase: CompleteTaskUseCase,
     private val respondToTaskUseCase: RespondToTaskUseCase
 ) : ViewModel() {
-    private val _task = MutableLiveData<Task?>()
-    val task: LiveData<Task?> = _task
+    private val _task = MutableStateFlow<Task?>(null)
+    val task: StateFlow<Task?> = _task
 
-    private val _isLoading = MutableLiveData<Boolean>(false)
-    val isLoading: LiveData<Boolean> = _isLoading
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _isComplete = MutableLiveData<Boolean>(false)
-    val isComplete: LiveData<Boolean> = _isComplete
+    private val _isComplete = MutableSharedFlow<Boolean>()
+    val isComplete: SharedFlow<Boolean> = _isComplete
 
-    private val _isRespond = MutableLiveData<Boolean>(false)
-    val isRespond: LiveData<Boolean> = _isRespond
+    private val _isRespond = MutableSharedFlow<Boolean>()
+    val isRespond: SharedFlow<Boolean> = _isRespond
 
     fun loadTask(id: Int) {
         _isLoading.value = true
@@ -47,7 +49,7 @@ class TaskViewModel @Inject constructor(
         _isLoading.value = true
 
         viewModelScope.launch {
-            _isComplete.value = completeTaskUseCase(id)
+            _isComplete.emit(completeTaskUseCase(id))
             _isLoading.value = false
         }
     }
@@ -56,7 +58,7 @@ class TaskViewModel @Inject constructor(
         _isLoading.value = true
 
         viewModelScope.launch {
-            _isRespond.value = respondToTaskUseCase(idTask)
+            _isRespond.emit(respondToTaskUseCase(idTask))
             _isLoading.value = false
         }
     }

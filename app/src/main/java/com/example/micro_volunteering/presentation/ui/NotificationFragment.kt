@@ -19,21 +19,20 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding, Notificat
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.progressBar.isVisible = isLoading
             binding.content.isVisible = !isLoading
         }
 
-        viewModel.notifications.observe(viewLifecycleOwner) { notification ->
+        collectFlow(viewModel.notifications) { notification ->
             binding.progressBar.isVisible = false
             binding.content.isVisible = !notification.isEmpty()
             adapter.updateNotification(notification)
         }
 
-        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+        collectFlow(viewModel.toastMessage) { message ->
             message?.let { message ->
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                viewModel.onToastShown()
             }
         }
     }

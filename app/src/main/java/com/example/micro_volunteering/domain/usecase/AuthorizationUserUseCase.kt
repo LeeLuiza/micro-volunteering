@@ -1,11 +1,7 @@
 package com.example.micro_volunteering.domain.usecase
 
-import com.example.micro_volunteering.domain.repository.VolunteeringRepository
-import javax.inject.Inject
+import com.example.micro_volunteering.domain.model.UserRole
 
-class AuthorizationUserUseCase @Inject constructor(
-    private val repository: VolunteeringRepository
-) {
-    suspend operator fun invoke(login: String, password: String) =
-        repository.login(login, password)
+interface AuthorizationUserUseCase {
+    suspend operator fun invoke(login: String, password: String): UserRole?
 }

@@ -2,15 +2,17 @@ package com.example.micro_volunteering.presentation.viewmodel
 
 import android.os.CountDownTimer
 import com.example.micro_volunteering.R
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.micro_volunteering.domain.usecase.ResendCodeUseCase
 import com.example.micro_volunteering.domain.usecase.CreateTokenUseCase
+import com.example.micro_volunteering.domain.usecase.ResendCodeUseCase
 import com.example.micro_volunteering.domain.usecase.VerifyEmailUseCase
 import com.example.micro_volunteering.presentation.utils.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,23 +24,23 @@ class VerifyEmailViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
 
-    private val _isLoading = MutableLiveData<Boolean>(false)
-    val isLoading: LiveData<Boolean> = _isLoading
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _isSuccess = MutableLiveData<Boolean>(false)
-    val isSuccess: LiveData<Boolean> = _isSuccess
+    private val _isSuccess = MutableSharedFlow<Boolean>()
+    val isSuccess: SharedFlow<Boolean> = _isSuccess
 
-    private val _timerText = MutableLiveData<Int>()
-    val timerText: LiveData<Int> = _timerText
+    private val _timerText = MutableSharedFlow<Int>()
+    val timerText: SharedFlow<Int> = _timerText
 
-    private val _timerSeconds = MutableLiveData<Long>()
-    val timerSeconds: LiveData<Long> = _timerSeconds
+    private val _timerSeconds = MutableStateFlow<Long>(0L)
+    val timerSeconds: StateFlow<Long> = _timerSeconds
 
-    private val _isResendEnabled = MutableLiveData<Boolean>(false)
-    val isResendEnabled: LiveData<Boolean> = _isResendEnabled
+    private val _isResendEnabled = MutableStateFlow<Boolean>(false)
+    val isResendEnabled: StateFlow<Boolean> = _isResendEnabled
 
-    private val _errorText = MutableLiveData<String?>()
-    val errorText: LiveData<String?> = _errorText
+    private val _errorText = MutableSharedFlow<String?>()
+    val errorText: SharedFlow<String?> = _errorText
 
     private var timer: CountDownTimer? = null
 
@@ -48,7 +50,9 @@ class VerifyEmailViewModel @Inject constructor(
 
     fun verifyEmail(email: String, code: String) {
         if (code.length != 6) {
-            _errorText.value = resourceProvider.getString(R.string.error_input_code)
+            viewModelScope.launch {
+                _errorText.emit(resourceProvider.getString(R.string.error_input_code))
+            }
             return
         }
 
@@ -59,16 +63,15 @@ class VerifyEmailViewModel @Inject constructor(
 
             if (isSuccess) {
                 createTokenUseCase()
-                startTimer()
             }
 
             _isResendEnabled.value = true
-            _isSuccess.value = isSuccess
+            _isSuccess.emit(isSuccess)
             _isLoading.value = false
         }
     }
 
-    fun repeatCode(email: String) {
+    fun resendCode(email: String) {
         _isLoading.value = true
         viewModelScope.launch {
             val isSuccess = resendCodeUseCase(email)
@@ -95,7 +98,9 @@ class VerifyEmailViewModel @Inject constructor(
             }
 
             override fun onFinish() {
-                _timerText.value = R.string.resend_button
+                viewModelScope.launch {
+                    _timerText.emit(R.string.resend_button)
+                }
                 _isResendEnabled.value = true
             }
         }.start()
@@ -104,9 +109,5 @@ class VerifyEmailViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         timer?.cancel()
-    }
-
-    fun onErrorShown() {
-        _errorText.value = null
     }
 }

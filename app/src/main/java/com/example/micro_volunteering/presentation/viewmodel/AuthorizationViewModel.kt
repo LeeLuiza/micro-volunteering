@@ -1,7 +1,5 @@
 package com.example.micro_volunteering.presentation.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.R
@@ -10,6 +8,12 @@ import com.example.micro_volunteering.domain.usecase.AuthorizationUserUseCase
 import com.example.micro_volunteering.domain.usecase.CreateTokenUseCase
 import com.example.micro_volunteering.presentation.utils.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,19 +23,22 @@ class AuthorizationViewModel @Inject constructor(
     private val createTokenUseCase: CreateTokenUseCase,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
-    private val _isLoading = MutableLiveData<Boolean>(false)
-    val isLoading: LiveData<Boolean> = _isLoading
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private val _navigationRole = MutableLiveData<UserRole?>()
-    val navigationRole: LiveData<UserRole?> = _navigationRole
+    private val _navigationRole = MutableStateFlow<UserRole?>(null)
+    val navigationRole: StateFlow<UserRole?> = _navigationRole.asStateFlow()
 
-    private val _errorText = MutableLiveData<String>()
-    val errorText: LiveData<String> = _errorText
+    private val _errorText = MutableSharedFlow<String>()
+    val errorText: SharedFlow<String> = _errorText.asSharedFlow()
 
     fun login(email: String, password: String) {
-        val isValid = validateInput(email, password)
+        val errors = validateInput(email, password)
 
-        if (!isValid) {
+        if (errors.isNotEmpty()) {
+            viewModelScope.launch {
+                _errorText.emit(resourceProvider.formatErrors(errors))
+            }
             return
         }
 
@@ -50,7 +57,7 @@ class AuthorizationViewModel @Inject constructor(
         }
     }
 
-    private fun validateInput(login: String, password: String) : Boolean {
+    private fun validateInput(login: String, password: String) : List<Int> {
         val errors = mutableListOf<Int>()
 
         if (login.isBlank()) {
@@ -63,9 +70,7 @@ class AuthorizationViewModel @Inject constructor(
             errors.add(R.string.password_short)
         }
 
-        _errorText.value = resourceProvider.formatErrors(errors)
-
-        return errors.isEmpty()
+        return errors
     }
 
     fun onNavigationDone() {

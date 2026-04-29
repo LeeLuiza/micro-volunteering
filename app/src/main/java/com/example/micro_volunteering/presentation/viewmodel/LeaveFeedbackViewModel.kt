@@ -1,14 +1,16 @@
 package com.example.micro_volunteering.presentation.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.micro_volunteering.domain.usecase.LeaveFeedbackUseCase
 import kotlinx.coroutines.launch
 import com.example.micro_volunteering.R
+import com.example.micro_volunteering.domain.usecase.LeaveFeedbackUseCase
 import com.example.micro_volunteering.presentation.utils.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,28 +19,30 @@ class LeaveFeedbackViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
 
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _isSuccess = MutableLiveData<Boolean>()
-    val isSuccess: LiveData<Boolean> = _isSuccess
+    private val _isSuccess = MutableSharedFlow<Boolean>()
+    val isSuccess: SharedFlow<Boolean> = _isSuccess
 
-    private val _errorText = MutableLiveData<String?>()
-    val errorText: LiveData<String?> = _errorText
+    private val _errorText = MutableSharedFlow<String>()
+    val errorText: SharedFlow<String> = _errorText
 
     fun leaveFeedback(idVolunteer: Int, idTask: Int, message: String, rating: Float) {
 
         val errors = validateInput(message, rating)
 
         if (errors.isNotEmpty()) {
-            _errorText.value = resourceProvider.formatErrors(errors)
+            viewModelScope.launch {
+                _errorText.emit(resourceProvider.formatErrors(errors))
+            }
             return
         }
 
         _isLoading.value = true
 
         viewModelScope.launch {
-            _isSuccess.value = leaveFeedbackUseCase(idVolunteer, idTask, message, rating)
+            _isSuccess.emit(leaveFeedbackUseCase(idVolunteer, idTask, message, rating))
             _isLoading.value = false
         }
     }

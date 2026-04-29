@@ -52,39 +52,38 @@ class VerifyEmailFragment : BaseFragment<FragmentVerifyEmailBinding, VerifyEmail
         }
 
         binding.btnRepeat.setOnClickListener {
-            viewModel.repeatCode(email)
+            viewModel.resendCode(email)
         }
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.progressBar.isVisible = isLoading
             binding.content.isVisible = !isLoading
             binding.enter.isVisible = !isLoading
         }
 
-        viewModel.isSuccess.observe(viewLifecycleOwner) { isSuccess ->
+        collectFlow(viewModel.isSuccess) { isSuccess ->
             if (isSuccess) {
                 navigate(VerifyEmailFragmentDirections.actionVerifyEmailFragmentToTaskListFragment())
             }
         }
 
-        viewModel.errorText.observe(viewLifecycleOwner) { errorText ->
+        collectFlow(viewModel.errorText) { errorText ->
             errorText?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                viewModel.onErrorShown()
             }
         }
 
-        viewModel.timerText.observe(viewLifecycleOwner) { textId ->
+        collectFlow(viewModel.timerText) { textId ->
             binding.btnRepeat.text = getString(textId)
         }
 
-        viewModel.timerSeconds.observe(viewLifecycleOwner) { seconds ->
+        collectFlow(viewModel.timerSeconds) { seconds ->
             binding.btnRepeat.text = getString(R.string.resend_timer, seconds)
         }
 
-        viewModel.isResendEnabled.observe(viewLifecycleOwner) { isEnabled ->
+        collectFlow(viewModel.isResendEnabled) { isEnabled ->
             binding.btnRepeat.isEnabled = isEnabled
 
             if (isEnabled) {

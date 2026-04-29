@@ -29,19 +29,17 @@ class AuthorizationFragment : BaseFragment<FragmentAuthorizationBinding, Authori
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.progressBar.isVisible = isLoading
             binding.content.isVisible = !isLoading
         }
 
-        viewModel.errorText.observe(viewLifecycleOwner) { errorText ->
-            binding.errorText.isVisible = !errorText.isNullOrEmpty()
-            errorText?.let {
-                binding.errorText.text = errorText
-            }
+        collectFlow(viewModel.errorText) { errorText ->
+            binding.errorText.isVisible = errorText.isNotEmpty()
+            binding.errorText.text = errorText
         }
 
-        viewModel.navigationRole.observe(viewLifecycleOwner) { role ->
+        collectFlow(viewModel.navigationRole) { role ->
             if (role != null) {
                 val action = when (role) {
                     UserRole.ADMIN ->

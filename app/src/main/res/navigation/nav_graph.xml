@@ -155,7 +155,7 @@
         tools:layout="@layout/fragment_notification" />
     <fragment
         android:id="@+id/volunteerRespondFragment"
-        android:name="com.example.micro_volunteering.presentation.ui.VolunteerRespondFragment"
+        android:name="com.example.micro_volunteering.presentation.ui.TaskRespondersFragment"
         android:label="fragment_volunteer_respond"
         tools:layout="@layout/fragment_volunteer_respond" >
         <action

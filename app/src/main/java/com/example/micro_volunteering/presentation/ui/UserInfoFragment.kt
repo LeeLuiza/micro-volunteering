@@ -63,11 +63,11 @@ class UserInfoFragment : BaseFragment<FragmentUserInfoBinding, UserInfoViewModel
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.progressBar.isVisible = isLoading
         }
 
-        viewModel.profile.observe(viewLifecycleOwner) { profile ->
+        collectFlow(viewModel.profile) { profile ->
             profile?.let { profile ->
                 with(binding) {
                     when (profile) {
@@ -124,7 +124,7 @@ class UserInfoFragment : BaseFragment<FragmentUserInfoBinding, UserInfoViewModel
             }
         }
 
-        viewModel.logoutSuccess.observe(viewLifecycleOwner) { isSuccess ->
+        collectFlow(viewModel.logoutSuccess) { isSuccess ->
             if (isSuccess) {
                 navigate(UserInfoFragmentDirections.actionUserInfoFragmentToRoleSelectionFragment())
             }

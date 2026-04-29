@@ -1,13 +1,15 @@
 package com.example.micro_volunteering.presentation.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.domain.model.UpdateProfileParams
 import com.example.micro_volunteering.domain.usecase.DeleteUserUseCase
 import com.example.micro_volunteering.domain.usecase.UpdateUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,14 +20,14 @@ class UpdateUserInfoViewModel @Inject constructor(
     private val deleteUserUseCase: DeleteUserUseCase
 ) : ViewModel() {
 
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _updateSuccess = MutableLiveData<Boolean>()
-    val updateSuccess: LiveData<Boolean> = _updateSuccess
+    private val _updateSuccess = MutableSharedFlow<Boolean>()
+    val updateSuccess: SharedFlow<Boolean> = _updateSuccess
 
-    private val _deleteSuccess = MutableLiveData<Boolean>()
-    val deleteSuccess: LiveData<Boolean> = _deleteSuccess
+    private val _deleteSuccess = MutableSharedFlow<Boolean>()
+    val deleteSuccess: SharedFlow<Boolean> = _deleteSuccess
 
     fun updateVolunteer(
         name: String,
@@ -61,7 +63,7 @@ class UpdateUserInfoViewModel @Inject constructor(
 
         viewModelScope.launch {
             val isSuccess = updateUserInfoUseCase(user)
-            _updateSuccess.value = isSuccess
+            _updateSuccess.emit(isSuccess)
 
             _isLoading.value = false
         }
@@ -72,7 +74,7 @@ class UpdateUserInfoViewModel @Inject constructor(
 
         viewModelScope.launch {
             val isSuccess = deleteUserUseCase()
-            _deleteSuccess.value = isSuccess
+            _deleteSuccess.emit(isSuccess)
 
             _isLoading.value = false
         }

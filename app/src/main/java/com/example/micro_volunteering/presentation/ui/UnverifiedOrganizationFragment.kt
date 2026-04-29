@@ -33,12 +33,12 @@ class UnverifiedOrganizationFragment : BaseFragment<FragmentUnverifiedOrganizati
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.progressBar.isVisible = isLoading
             binding.content.isVisible = !isLoading
         }
 
-        viewModel.organization.observe(viewLifecycleOwner) { organization ->
+        collectFlow(viewModel.organization) { organization ->
             organization?.let {
                 with(binding) {
                     legalName.text = organization.legalName
@@ -55,7 +55,7 @@ class UnverifiedOrganizationFragment : BaseFragment<FragmentUnverifiedOrganizati
             }
         }
 
-        viewModel.isNavigate.observe(viewLifecycleOwner) { isNavigate ->
+        collectFlow(viewModel.isNavigate) { isNavigate ->
             if (isNavigate) {
                 findNavController().popBackStack()
             }

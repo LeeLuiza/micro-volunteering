@@ -38,22 +38,20 @@ class LeaveFeedbackFragment : BaseFragment<FragmentLeaveFeedbackBinding, LeaveFe
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.progressBar.isVisible = isLoading
             binding.content.isVisible = !isLoading
         }
 
-        viewModel.isSuccess.observe(viewLifecycleOwner) { isSuccess ->
+        collectFlow(viewModel.isSuccess) { isSuccess ->
             if (isSuccess) {
                 findNavController().popBackStack()
             }
         }
 
-        viewModel.errorText.observe(viewLifecycleOwner) { errorText ->
-            errorText?.let {
-                binding.errorText.text = errorText
-            }
-            binding.errorText.isVisible = !errorText.isNullOrEmpty()
+        collectFlow(viewModel.errorText) { errorText ->
+            binding.errorText.isVisible = errorText.isNotEmpty()
+            binding.errorText.text = errorText
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.example.micro_volunteering.presentation.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.R
@@ -10,6 +8,10 @@ import com.example.micro_volunteering.domain.usecase.DeleteTaskUseCase
 import com.example.micro_volunteering.domain.usecase.UpdateTaskUseCase
 import com.example.micro_volunteering.presentation.utils.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.text.toIntOrNull
@@ -21,17 +23,17 @@ class UpdateTaskViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
 
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _taskId = MutableLiveData<Int?>()
-    val taskId: LiveData<Int?> = _taskId
+    private val _taskId = MutableSharedFlow<Int?>()
+    val taskId: SharedFlow<Int?> = _taskId
 
-    private val _isSuccessDeleteTask = MutableLiveData<Boolean>()
-    val isSuccessDeleteTask: LiveData<Boolean> = _isSuccessDeleteTask
+    private val _isSuccessDeleteTask = MutableSharedFlow<Boolean>()
+    val isSuccessDeleteTask: SharedFlow<Boolean> = _isSuccessDeleteTask
 
-    private val _errorText = MutableLiveData<String>()
-    val errorText: LiveData<String> = _errorText
+    private val _errorText = MutableSharedFlow<String>()
+    val errorText: SharedFlow<String> = _errorText
 
     fun updateTask(
         id: Int,
@@ -43,8 +45,10 @@ class UpdateTaskViewModel @Inject constructor(
     ) {
         val errors = validateInput(title, description, address, selectedPositionCategory, volunteersNeeded)
 
-        if (errors.isEmpty()) {
-            _errorText.value = resourceProvider.formatErrors(errors)
+        if (errors.isNotEmpty()) {
+            viewModelScope.launch {
+                _errorText.emit(resourceProvider.formatErrors(errors))
+            }
             return
         }
 
@@ -56,7 +60,7 @@ class UpdateTaskViewModel @Inject constructor(
             val result = updateTaskUseCase(
                 id, title, description, address, CategoryTask.entries[selectedPositionCategory].category, volunteersInt
             )
-            _taskId.value = result
+            _taskId.emit(result)
             _isLoading.value = false
         }
     }
@@ -66,7 +70,7 @@ class UpdateTaskViewModel @Inject constructor(
 
         viewModelScope.launch {
             val result = deleteTaskUseCase(id)
-            _isSuccessDeleteTask.value = result
+            _isSuccessDeleteTask.emit(result)
             _isLoading.value = false
         }
     }

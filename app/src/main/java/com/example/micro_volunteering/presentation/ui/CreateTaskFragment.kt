@@ -37,18 +37,18 @@ class CreateTaskFragment : BaseFragment<FragmentCreateTaskBinding, CreateTaskVie
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.progressBar.isVisible = isLoading
             binding.content.isVisible = !isLoading
         }
 
-        viewModel.taskId.observe(viewLifecycleOwner) { taskId ->
+        collectFlow(viewModel.taskId) { taskId ->
             taskId?.let {
                 navigate(CreateTaskFragmentDirections.actionCreateTaskFragmentToTaskFragment(taskId))
             }
         }
 
-        viewModel.errorText.observe(viewLifecycleOwner) { errorText ->
+        collectFlow(viewModel.errorText) { errorText ->
             binding.errorText.text = errorText
             binding.errorText.isVisible = errorText.isNotEmpty()
         }

@@ -51,24 +51,24 @@ class UpdateTaskFragment : BaseFragment<FragmentUpdateTaskBinding, UpdateTaskVie
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.progressBar.isVisible = isLoading
             binding.content.isVisible = !isLoading
         }
 
-        viewModel.taskId.observe(viewLifecycleOwner) { taskId ->
+        collectFlow(viewModel.taskId) { taskId ->
             taskId?.let {
                 navigate(UpdateTaskFragmentDirections.actionUpdateTaskFragmentToTaskFragment(taskId))
             }
         }
 
-        viewModel.isSuccessDeleteTask.observe(viewLifecycleOwner) { isSuccess ->
+        collectFlow(viewModel.isSuccessDeleteTask) { isSuccess ->
             if (isSuccess) {
                 navigate(UpdateTaskFragmentDirections.actionUpdateTaskFragmentToTaskListFragment())
             }
         }
 
-        viewModel.errorText.observe(viewLifecycleOwner) { errorText ->
+        collectFlow(viewModel.errorText) { errorText ->
             binding.errorText.text = errorText
             binding.errorText.isVisible = errorText.isNotEmpty()
         }

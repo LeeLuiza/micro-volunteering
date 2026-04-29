@@ -23,12 +23,12 @@ class FeedbackListFragment : BaseFragment<FragmentFeedbackListBinding, FeedbackL
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.progressBar.isVisible = isLoading
             binding.recyclerViewFeedback.isVisible = !isLoading
         }
 
-        viewModel.feedbacks.observe(viewLifecycleOwner) { feedbacks ->
+        collectFlow(viewModel.feedbacks) { feedbacks ->
             adapter.updateFeedbacks(feedbacks)
         }
     }

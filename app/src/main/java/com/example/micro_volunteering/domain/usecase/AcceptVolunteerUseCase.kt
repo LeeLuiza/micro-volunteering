@@ -1,10 +1,5 @@
 package com.example.micro_volunteering.domain.usecase
 
-import com.example.micro_volunteering.domain.repository.VolunteeringRepository
-import javax.inject.Inject
-
-class AcceptVolunteerUseCase @Inject constructor(
-    private val repository: VolunteeringRepository
-) {
-    suspend operator fun invoke(idTask: Int, idVolunteer: Int) = repository.acceptVolunteer(idTask, idVolunteer)
+interface AcceptVolunteerUseCase {
+    suspend operator fun invoke(idTask: Int, idVolunteer: Int): Boolean
 }

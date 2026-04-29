@@ -18,14 +18,14 @@ import com.example.micro_volunteering.domain.model.TaskStatus
 import com.example.micro_volunteering.presentation.adapter.TaskAdapter
 import com.example.micro_volunteering.presentation.utils.getDisplayName
 import com.example.micro_volunteering.presentation.utils.navigate
-import com.example.micro_volunteering.presentation.viewmodel.TaskListViewModel
+import com.example.micro_volunteering.presentation.viewmodel.TasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
 @AndroidEntryPoint
-class TasksFragment : BaseFragment<FragmentTaskListBinding, TaskListViewModel>(FragmentTaskListBinding::inflate) {
+class TasksFragment : BaseFragment<FragmentTaskListBinding, TasksViewModel>(FragmentTaskListBinding::inflate) {
 
-    override val viewModel: TaskListViewModel by viewModels()
+    override val viewModel: TasksViewModel by viewModels()
     private lateinit var adapter: TaskAdapter
 
     private val requestPermissionLauncher = registerForActivityResult(
@@ -92,11 +92,11 @@ class TasksFragment : BaseFragment<FragmentTaskListBinding, TaskListViewModel>(F
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.progressBar.isVisible = isLoading
         }
 
-        viewModel.tasks.observe(viewLifecycleOwner) { tasks ->
+        collectFlow(viewModel.tasks) { tasks ->
             val isVerified = viewModel.isVerified()
             val isOrganization = viewModel.isUserOrganization()
 
@@ -114,13 +114,13 @@ class TasksFragment : BaseFragment<FragmentTaskListBinding, TaskListViewModel>(F
             adapter.updateTasks(tasks)
         }
 
-        viewModel.isNotificationPermissionRequested.observe(viewLifecycleOwner) { isNotification ->
+        collectFlow(viewModel.isNotificationPermissionRequested) { isNotification ->
             if (isNotification) {
                 notificationPermissionRequested()
             }
         }
 
-        viewModel.selectedTab.observe(viewLifecycleOwner) { status ->
+        collectFlow(viewModel.selectedTab) { status ->
             updateTab(status)
         }
     }

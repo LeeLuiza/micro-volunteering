@@ -46,19 +46,19 @@ class UpdateUserInfoFragment : BaseFragment<FragmentUpdateUserInfoBinding, Updat
     }
 
     override fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        collectFlow(viewModel.isLoading) { isLoading ->
             binding.editInfoOrganization.isVisible = isLoading
             binding.editInfoVolunteer.isVisible = isLoading
             binding.progressBar.isVisible = !isLoading
         }
 
-        viewModel.updateSuccess.observe(viewLifecycleOwner) { isSuccess ->
+        collectFlow(viewModel.updateSuccess) { isSuccess ->
             if (isSuccess) {
                 navigate(UpdateUserInfoFragmentDirections.actionUpdateUserInfoFragmentToUserInfoFragment())
             }
         }
 
-        viewModel.deleteSuccess.observe(viewLifecycleOwner) { isSuccess ->
+        collectFlow(viewModel.deleteSuccess) { isSuccess ->
             if (isSuccess) {
                 navigate(UpdateUserInfoFragmentDirections.actionUpdateUserInfoFragmentToRoleSelectionFragment())
             }

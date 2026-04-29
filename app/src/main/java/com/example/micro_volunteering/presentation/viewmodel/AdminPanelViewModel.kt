@@ -1,13 +1,17 @@
 package com.example.micro_volunteering.presentation.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.micro_volunteering.domain.model.OrganizationUnverified
-import com.example.micro_volunteering.domain.usecase.LogoutUseCase
 import com.example.micro_volunteering.domain.usecase.GetUnverifiedOrganizationsUseCase
+import com.example.micro_volunteering.domain.usecase.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,14 +21,14 @@ class AdminPanelViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
-    private val _isLoading = MutableLiveData<Boolean>(false)
-    val isLoading: LiveData<Boolean> = _isLoading
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private val _unverifiedOrganizations = MutableLiveData<List<OrganizationUnverified>>()
-    val unverifiedOrganizations: LiveData<List<OrganizationUnverified>> = _unverifiedOrganizations
+    private val _unverifiedOrganizations = MutableStateFlow<List<OrganizationUnverified>>(emptyList())
+    val unverifiedOrganizations: StateFlow<List<OrganizationUnverified>> = _unverifiedOrganizations.asStateFlow()
 
-    private val _logoutSuccess = MutableLiveData<Boolean>()
-    val logoutSuccess: LiveData<Boolean> = _logoutSuccess
+    private val _logoutSuccess = MutableSharedFlow<Boolean>()
+    val logoutSuccess: SharedFlow<Boolean> = _logoutSuccess.asSharedFlow()
 
     init {
         loadUnverifiedOrganizations()
@@ -46,7 +50,7 @@ class AdminPanelViewModel @Inject constructor(
             logoutUseCase()
             _isLoading.value = false
 
-            _logoutSuccess.value = true
+            _logoutSuccess.emit(true)
         }
     }
 }
